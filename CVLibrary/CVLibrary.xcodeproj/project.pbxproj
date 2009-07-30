@@ -1,0 +1,615 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		BD32D9C70FF3FAFE002DA5AF /* CVImageLoadingService.h in Headers */ = {isa = PBXBuildFile; fileRef = BD32D9C60FF3FAFE002DA5AF /* CVImageLoadingService.h */; };
+		BD4A29DB101E9BD200044AEE /* CVSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4A29D1101E9BD200044AEE /* CVSettingsViewController.m */; };
+		BD4A29DC101E9BD200044AEE /* TextCellHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4A29D4101E9BD200044AEE /* TextCellHandler.m */; };
+		BD4A29DD101E9BD200044AEE /* EnumCellHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4A29D6101E9BD200044AEE /* EnumCellHandler.m */; };
+		BD4A29DE101E9BD200044AEE /* EnumOptionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4A29D8101E9BD200044AEE /* EnumOptionsViewController.m */; };
+		BD4A29DF101E9BD200044AEE /* BoolCellHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4A29DA101E9BD200044AEE /* BoolCellHandler.m */; };
+		BD4A29E0101E9BD200044AEE /* CVSettingsViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = BD4A29D0101E9BD200044AEE /* CVSettingsViewController.h */; };
+		BD4A29E1101E9BD200044AEE /* CVSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4A29D1101E9BD200044AEE /* CVSettingsViewController.m */; };
+		BD4A29E2101E9BD200044AEE /* CellHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = BD4A29D2101E9BD200044AEE /* CellHandler.h */; };
+		BD4A29E3101E9BD200044AEE /* TextCellHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = BD4A29D3101E9BD200044AEE /* TextCellHandler.h */; };
+		BD4A29E4101E9BD200044AEE /* TextCellHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4A29D4101E9BD200044AEE /* TextCellHandler.m */; };
+		BD4A29E5101E9BD200044AEE /* EnumCellHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = BD4A29D5101E9BD200044AEE /* EnumCellHandler.h */; };
+		BD4A29E6101E9BD200044AEE /* EnumCellHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4A29D6101E9BD200044AEE /* EnumCellHandler.m */; };
+		BD4A29E7101E9BD200044AEE /* EnumOptionsViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = BD4A29D7101E9BD200044AEE /* EnumOptionsViewController.h */; };
+		BD4A29E8101E9BD200044AEE /* EnumOptionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4A29D8101E9BD200044AEE /* EnumOptionsViewController.m */; };
+		BD4A29E9101E9BD200044AEE /* BoolCellHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = BD4A29D9101E9BD200044AEE /* BoolCellHandler.h */; };
+		BD4A29EA101E9BD200044AEE /* BoolCellHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4A29DA101E9BD200044AEE /* BoolCellHandler.m */; };
+		BD6668550F83F84100ABF98B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD6668540F83F84100ABF98B /* Foundation.framework */; };
+		BD6668570F83F84100ABF98B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD6668560F83F84100ABF98B /* UIKit.framework */; };
+		BD6668F80F83F87C00ABF98B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD6668F70F83F87C00ABF98B /* CoreGraphics.framework */; };
+		BD7B0189101961520091CA26 /* CVImageCacheTest.m in Sources */ = {isa = PBXBuildFile; fileRef = BD7B0188101961520091CA26 /* CVImageCacheTest.m */; };
+		BD7B01AE101A3C4A0091CA26 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD6668F70F83F87C00ABF98B /* CoreGraphics.framework */; };
+		BD7B01AF101A3C5C0091CA26 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD6668540F83F84100ABF98B /* Foundation.framework */; };
+		BD7B01B0101A3C5C0091CA26 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD6668560F83F84100ABF98B /* UIKit.framework */; };
+		BD7B9F620FBF67DB00E49BF7 /* CGUtils.c in Sources */ = {isa = PBXBuildFile; fileRef = BD7B9F610FBF67DB00E49BF7 /* CGUtils.c */; };
+		BD7B9F630FBF67DB00E49BF7 /* CGUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = BD7B9F600FBF67DB00E49BF7 /* CGUtils.h */; };
+		BD7B9F640FBF67DB00E49BF7 /* CGUtils.c in Sources */ = {isa = PBXBuildFile; fileRef = BD7B9F610FBF67DB00E49BF7 /* CGUtils.c */; };
+		BD7B9FF20FC09CA700E49BF7 /* CVImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = BD7B9FF10FC09CA700E49BF7 /* CVImageCache.m */; };
+		BD7B9FF30FC09CA700E49BF7 /* CVImageCache.h in Headers */ = {isa = PBXBuildFile; fileRef = BD7B9FF00FC09CA700E49BF7 /* CVImageCache.h */; };
+		BD7B9FF40FC09CA700E49BF7 /* CVImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = BD7B9FF10FC09CA700E49BF7 /* CVImageCache.m */; };
+		BD7BA0B70FC87E9D00E49BF7 /* SynthesizeSingleton.h in Headers */ = {isa = PBXBuildFile; fileRef = BD7BA0B60FC87E9D00E49BF7 /* SynthesizeSingleton.h */; };
+		BD7BA0EF0FCA35D700E49BF7 /* CVImage.m in Sources */ = {isa = PBXBuildFile; fileRef = BD7BA0EE0FCA35D700E49BF7 /* CVImage.m */; };
+		BD7BA0F00FCA35D700E49BF7 /* CVImage.h in Headers */ = {isa = PBXBuildFile; fileRef = BD7BA0ED0FCA35D700E49BF7 /* CVImage.h */; };
+		BD7BA0F10FCA35D700E49BF7 /* CVImage.m in Sources */ = {isa = PBXBuildFile; fileRef = BD7BA0EE0FCA35D700E49BF7 /* CVImage.m */; };
+		BD80A3EC0F8A69980067878C /* OCMock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD80A3EB0F8A69980067878C /* OCMock.framework */; };
+		BD80A3F90F8A6A180067878C /* OCMock.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BD80A3EB0F8A69980067878C /* OCMock.framework */; };
+		BD80A6F20F8C87A60067878C /* UnitTest-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BD80A6F10F8C87A60067878C /* UnitTest-Info.plist */; };
+		BD80A79A0F8D2EA50067878C /* GTMSenTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = BD80A7950F8D2EA50067878C /* GTMSenTestCase.m */; };
+		BD80A79B0F8D2EA50067878C /* GTMIPhoneUnitTestMain.m in Sources */ = {isa = PBXBuildFile; fileRef = BD80A7970F8D2EA50067878C /* GTMIPhoneUnitTestMain.m */; };
+		BD80A79C0F8D2EA50067878C /* GTMIPhoneUnitTestDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BD80A7980F8D2EA50067878C /* GTMIPhoneUnitTestDelegate.m */; };
+		BDA485200F91700F0048C704 /* CVLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = BDA4851F0F91700F0048C704 /* CVLibrary.h */; };
+		BDC291220FD8A9A400E1B892 /* UIImage+Adornments.m in Sources */ = {isa = PBXBuildFile; fileRef = BDC291210FD8A9A400E1B892 /* UIImage+Adornments.m */; };
+		BDC291230FD8A9A400E1B892 /* UIImage+Adornments.h in Headers */ = {isa = PBXBuildFile; fileRef = BDC291200FD8A9A400E1B892 /* UIImage+Adornments.h */; };
+		BDC291240FD8A9A400E1B892 /* UIImage+Adornments.m in Sources */ = {isa = PBXBuildFile; fileRef = BDC291210FD8A9A400E1B892 /* UIImage+Adornments.m */; };
+		BDE55D6A0F90866E004EBA23 /* CVThumbnailGridViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = BDE55D640F90866E004EBA23 /* CVThumbnailGridViewController.h */; };
+		BDE55D6B0F90866E004EBA23 /* CVThumbnailGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BDE55D650F90866E004EBA23 /* CVThumbnailGridViewController.m */; };
+		BDE55D6C0F90866E004EBA23 /* CVThumbnailGridViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BDE55D660F90866E004EBA23 /* CVThumbnailGridViewCell.m */; };
+		BDE55D6D0F90866E004EBA23 /* CVThumbnailGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = BDE55D670F90866E004EBA23 /* CVThumbnailGridView.m */; };
+		BDE55D6E0F90866E004EBA23 /* CVThumbnailGridViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = BDE55D680F90866E004EBA23 /* CVThumbnailGridViewCell.h */; };
+		BDE55D6F0F90866E004EBA23 /* CVThumbnailGridView.h in Headers */ = {isa = PBXBuildFile; fileRef = BDE55D690F90866E004EBA23 /* CVThumbnailGridView.h */; };
+		BDE55D700F90866E004EBA23 /* CVThumbnailGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BDE55D650F90866E004EBA23 /* CVThumbnailGridViewController.m */; };
+		BDE55D710F90866E004EBA23 /* CVThumbnailGridViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BDE55D660F90866E004EBA23 /* CVThumbnailGridViewCell.m */; };
+		BDE55D720F90866E004EBA23 /* CVThumbnailGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = BDE55D670F90866E004EBA23 /* CVThumbnailGridView.m */; };
+		BDF8764E0FBCD5C500D8973C /* CVStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = BDF8764C0FBCD5C500D8973C /* CVStyle.h */; };
+		BDF8764F0FBCD5C500D8973C /* CVStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = BDF8764D0FBCD5C500D8973C /* CVStyle.m */; };
+		BDF876500FBCD5C500D8973C /* CVStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = BDF8764D0FBCD5C500D8973C /* CVStyle.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		BD80A5590F8BC7BF0067878C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC07D0554694100DB518D;
+			remoteInfo = CVLibrary;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		BD80A3F80F8A69DC0067878C /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				BD80A3F90F8A6A180067878C /* OCMock.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		32DBCF5E0370ADEE00C91783 /* CVLibrary_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVLibrary_Prefix.pch; sourceTree = "<group>"; };
+		BD32D9C60FF3FAFE002DA5AF /* CVImageLoadingService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVImageLoadingService.h; sourceTree = "<group>"; };
+		BD4A29D0101E9BD200044AEE /* CVSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVSettingsViewController.h; sourceTree = "<group>"; };
+		BD4A29D1101E9BD200044AEE /* CVSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVSettingsViewController.m; sourceTree = "<group>"; };
+		BD4A29D2101E9BD200044AEE /* CellHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CellHandler.h; sourceTree = "<group>"; };
+		BD4A29D3101E9BD200044AEE /* TextCellHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextCellHandler.h; sourceTree = "<group>"; };
+		BD4A29D4101E9BD200044AEE /* TextCellHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextCellHandler.m; sourceTree = "<group>"; };
+		BD4A29D5101E9BD200044AEE /* EnumCellHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EnumCellHandler.h; sourceTree = "<group>"; };
+		BD4A29D6101E9BD200044AEE /* EnumCellHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EnumCellHandler.m; sourceTree = "<group>"; };
+		BD4A29D7101E9BD200044AEE /* EnumOptionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EnumOptionsViewController.h; sourceTree = "<group>"; };
+		BD4A29D8101E9BD200044AEE /* EnumOptionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EnumOptionsViewController.m; sourceTree = "<group>"; };
+		BD4A29D9101E9BD200044AEE /* BoolCellHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BoolCellHandler.h; sourceTree = "<group>"; };
+		BD4A29DA101E9BD200044AEE /* BoolCellHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BoolCellHandler.m; sourceTree = "<group>"; };
+		BD6668540F83F84100ABF98B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		BD6668560F83F84100ABF98B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		BD6668F70F83F87C00ABF98B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		BD7B0188101961520091CA26 /* CVImageCacheTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVImageCacheTest.m; sourceTree = "<group>"; };
+		BD7B9F600FBF67DB00E49BF7 /* CGUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGUtils.h; sourceTree = "<group>"; };
+		BD7B9F610FBF67DB00E49BF7 /* CGUtils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CGUtils.c; sourceTree = "<group>"; };
+		BD7B9FF00FC09CA700E49BF7 /* CVImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVImageCache.h; sourceTree = "<group>"; };
+		BD7B9FF10FC09CA700E49BF7 /* CVImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVImageCache.m; sourceTree = "<group>"; };
+		BD7BA0B60FC87E9D00E49BF7 /* SynthesizeSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SynthesizeSingleton.h; sourceTree = "<group>"; };
+		BD7BA0ED0FCA35D700E49BF7 /* CVImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVImage.h; sourceTree = "<group>"; };
+		BD7BA0EE0FCA35D700E49BF7 /* CVImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVImage.m; sourceTree = "<group>"; };
+		BD80A3A20F894C7F0067878C /* UnitTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnitTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BD80A3EB0F8A69980067878C /* OCMock.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OCMock.framework; path = Frameworks/OCMock.framework; sourceTree = "<group>"; };
+		BD80A6F10F8C87A60067878C /* UnitTest-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "UnitTest-Info.plist"; sourceTree = SOURCE_ROOT; };
+		BD80A7940F8D2EA50067878C /* GTMIPhoneUnitTestDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMIPhoneUnitTestDelegate.h; sourceTree = SOURCE_ROOT; };
+		BD80A7950F8D2EA50067878C /* GTMSenTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMSenTestCase.m; sourceTree = SOURCE_ROOT; };
+		BD80A7960F8D2EA50067878C /* GTMSenTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMSenTestCase.h; sourceTree = SOURCE_ROOT; };
+		BD80A7970F8D2EA50067878C /* GTMIPhoneUnitTestMain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMIPhoneUnitTestMain.m; sourceTree = SOURCE_ROOT; };
+		BD80A7980F8D2EA50067878C /* GTMIPhoneUnitTestDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMIPhoneUnitTestDelegate.m; sourceTree = SOURCE_ROOT; };
+		BD80A7990F8D2EA50067878C /* GTMDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMDefines.h; sourceTree = SOURCE_ROOT; };
+		BD80A79E0F8D3B310067878C /* RunIPhoneUnitTest.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = RunIPhoneUnitTest.sh; sourceTree = SOURCE_ROOT; };
+		BDA4851F0F91700F0048C704 /* CVLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVLibrary.h; sourceTree = "<group>"; };
+		BDC291200FD8A9A400E1B892 /* UIImage+Adornments.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Adornments.h"; sourceTree = "<group>"; };
+		BDC291210FD8A9A400E1B892 /* UIImage+Adornments.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Adornments.m"; sourceTree = "<group>"; };
+		BDE55D640F90866E004EBA23 /* CVThumbnailGridViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVThumbnailGridViewController.h; sourceTree = "<group>"; };
+		BDE55D650F90866E004EBA23 /* CVThumbnailGridViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVThumbnailGridViewController.m; sourceTree = "<group>"; };
+		BDE55D660F90866E004EBA23 /* CVThumbnailGridViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVThumbnailGridViewCell.m; sourceTree = "<group>"; };
+		BDE55D670F90866E004EBA23 /* CVThumbnailGridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVThumbnailGridView.m; sourceTree = "<group>"; };
+		BDE55D680F90866E004EBA23 /* CVThumbnailGridViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVThumbnailGridViewCell.h; sourceTree = "<group>"; };
+		BDE55D690F90866E004EBA23 /* CVThumbnailGridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVThumbnailGridView.h; sourceTree = "<group>"; };
+		BDF8764C0FBCD5C500D8973C /* CVStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVStyle.h; sourceTree = "<group>"; };
+		BDF8764D0FBCD5C500D8973C /* CVStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVStyle.m; sourceTree = "<group>"; };
+		D2AAC07E0554694100DB518D /* libCVLibrary.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCVLibrary.a; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		BD80A3A00F894C7F0067878C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BD80A3EC0F8A69980067878C /* OCMock.framework in Frameworks */,
+				BD7B01AE101A3C4A0091CA26 /* CoreGraphics.framework in Frameworks */,
+				BD7B01AF101A3C5C0091CA26 /* Foundation.framework in Frameworks */,
+				BD7B01B0101A3C5C0091CA26 /* UIKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D2AAC07C0554694100DB518D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BD6668550F83F84100ABF98B /* Foundation.framework in Frameworks */,
+				BD6668570F83F84100ABF98B /* UIKit.framework in Frameworks */,
+				BD6668F80F83F87C00ABF98B /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		034768DFFF38A50411DB9C8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2AAC07E0554694100DB518D /* libCVLibrary.a */,
+				BD80A3A20F894C7F0067878C /* UnitTest.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0867D691FE84028FC02AAC07 /* CVLibrary */ = {
+			isa = PBXGroup;
+			children = (
+				BD849B6E0F8921ED00EB1682 /* GoogleToolbox */,
+				BD849B6C0F8921BB00EB1682 /* UnitTests */,
+				08FB77AEFE84172EC02AAC07 /* Source */,
+				32C88DFF0371C24200C91783 /* Other Sources */,
+				0867D69AFE84028FC02AAC07 /* Frameworks */,
+				034768DFFF38A50411DB9C8B /* Products */,
+				BD80A6F10F8C87A60067878C /* UnitTest-Info.plist */,
+				BD80A79E0F8D3B310067878C /* RunIPhoneUnitTest.sh */,
+			);
+			name = CVLibrary;
+			sourceTree = "<group>";
+		};
+		0867D69AFE84028FC02AAC07 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BD80A3EB0F8A69980067878C /* OCMock.framework */,
+				BD6668560F83F84100ABF98B /* UIKit.framework */,
+				BD6668540F83F84100ABF98B /* Foundation.framework */,
+				BD6668F70F83F87C00ABF98B /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		08FB77AEFE84172EC02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				BD4A29CF101E94C800044AEE /* CVSettingsViewController */,
+				BD4A29CE101E948D00044AEE /* CVImageCache */,
+				BD4A29CC101E946500044AEE /* CVThumbnailGridView */,
+				BD7BA0B60FC87E9D00E49BF7 /* SynthesizeSingleton.h */,
+				BDA4851F0F91700F0048C704 /* CVLibrary.h */,
+				BDF8764C0FBCD5C500D8973C /* CVStyle.h */,
+				BDF8764D0FBCD5C500D8973C /* CVStyle.m */,
+				BD7B9F600FBF67DB00E49BF7 /* CGUtils.h */,
+				BD7B9F610FBF67DB00E49BF7 /* CGUtils.c */,
+				BDC291200FD8A9A400E1B892 /* UIImage+Adornments.h */,
+				BDC291210FD8A9A400E1B892 /* UIImage+Adornments.m */,
+				BD32D9C60FF3FAFE002DA5AF /* CVImageLoadingService.h */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		32C88DFF0371C24200C91783 /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				32DBCF5E0370ADEE00C91783 /* CVLibrary_Prefix.pch */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		BD4A29CC101E946500044AEE /* CVThumbnailGridView */ = {
+			isa = PBXGroup;
+			children = (
+				BDE55D640F90866E004EBA23 /* CVThumbnailGridViewController.h */,
+				BDE55D650F90866E004EBA23 /* CVThumbnailGridViewController.m */,
+				BDE55D680F90866E004EBA23 /* CVThumbnailGridViewCell.h */,
+				BDE55D660F90866E004EBA23 /* CVThumbnailGridViewCell.m */,
+				BDE55D690F90866E004EBA23 /* CVThumbnailGridView.h */,
+				BDE55D670F90866E004EBA23 /* CVThumbnailGridView.m */,
+			);
+			name = CVThumbnailGridView;
+			sourceTree = "<group>";
+		};
+		BD4A29CE101E948D00044AEE /* CVImageCache */ = {
+			isa = PBXGroup;
+			children = (
+				BD7B9FF00FC09CA700E49BF7 /* CVImageCache.h */,
+				BD7B9FF10FC09CA700E49BF7 /* CVImageCache.m */,
+				BD7BA0ED0FCA35D700E49BF7 /* CVImage.h */,
+				BD7BA0EE0FCA35D700E49BF7 /* CVImage.m */,
+			);
+			name = CVImageCache;
+			sourceTree = "<group>";
+		};
+		BD4A29CF101E94C800044AEE /* CVSettingsViewController */ = {
+			isa = PBXGroup;
+			children = (
+				BD4A29D0101E9BD200044AEE /* CVSettingsViewController.h */,
+				BD4A29D1101E9BD200044AEE /* CVSettingsViewController.m */,
+				BD4A29D2101E9BD200044AEE /* CellHandler.h */,
+				BD4A29D3101E9BD200044AEE /* TextCellHandler.h */,
+				BD4A29D4101E9BD200044AEE /* TextCellHandler.m */,
+				BD4A29D5101E9BD200044AEE /* EnumCellHandler.h */,
+				BD4A29D6101E9BD200044AEE /* EnumCellHandler.m */,
+				BD4A29D7101E9BD200044AEE /* EnumOptionsViewController.h */,
+				BD4A29D8101E9BD200044AEE /* EnumOptionsViewController.m */,
+				BD4A29D9101E9BD200044AEE /* BoolCellHandler.h */,
+				BD4A29DA101E9BD200044AEE /* BoolCellHandler.m */,
+			);
+			name = CVSettingsViewController;
+			sourceTree = "<group>";
+		};
+		BD849B6C0F8921BB00EB1682 /* UnitTests */ = {
+			isa = PBXGroup;
+			children = (
+				BD7B0188101961520091CA26 /* CVImageCacheTest.m */,
+			);
+			name = UnitTests;
+			sourceTree = "<group>";
+		};
+		BD849B6E0F8921ED00EB1682 /* GoogleToolbox */ = {
+			isa = PBXGroup;
+			children = (
+				BD80A7990F8D2EA50067878C /* GTMDefines.h */,
+				BD80A7960F8D2EA50067878C /* GTMSenTestCase.h */,
+				BD80A7950F8D2EA50067878C /* GTMSenTestCase.m */,
+				BD80A7970F8D2EA50067878C /* GTMIPhoneUnitTestMain.m */,
+				BD80A7940F8D2EA50067878C /* GTMIPhoneUnitTestDelegate.h */,
+				BD80A7980F8D2EA50067878C /* GTMIPhoneUnitTestDelegate.m */,
+			);
+			name = GoogleToolbox;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D2AAC07A0554694100DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BDE55D6A0F90866E004EBA23 /* CVThumbnailGridViewController.h in Headers */,
+				BDE55D6E0F90866E004EBA23 /* CVThumbnailGridViewCell.h in Headers */,
+				BDE55D6F0F90866E004EBA23 /* CVThumbnailGridView.h in Headers */,
+				BDA485200F91700F0048C704 /* CVLibrary.h in Headers */,
+				BDF8764E0FBCD5C500D8973C /* CVStyle.h in Headers */,
+				BD7B9F630FBF67DB00E49BF7 /* CGUtils.h in Headers */,
+				BD7B9FF30FC09CA700E49BF7 /* CVImageCache.h in Headers */,
+				BD7BA0B70FC87E9D00E49BF7 /* SynthesizeSingleton.h in Headers */,
+				BD7BA0F00FCA35D700E49BF7 /* CVImage.h in Headers */,
+				BDC291230FD8A9A400E1B892 /* UIImage+Adornments.h in Headers */,
+				BD32D9C70FF3FAFE002DA5AF /* CVImageLoadingService.h in Headers */,
+				BD4A29E0101E9BD200044AEE /* CVSettingsViewController.h in Headers */,
+				BD4A29E2101E9BD200044AEE /* CellHandler.h in Headers */,
+				BD4A29E3101E9BD200044AEE /* TextCellHandler.h in Headers */,
+				BD4A29E5101E9BD200044AEE /* EnumCellHandler.h in Headers */,
+				BD4A29E7101E9BD200044AEE /* EnumOptionsViewController.h in Headers */,
+				BD4A29E9101E9BD200044AEE /* BoolCellHandler.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		BD80A3A10F894C7F0067878C /* UnitTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BD80A3B30F894CAE0067878C /* Build configuration list for PBXNativeTarget "UnitTest" */;
+			buildPhases = (
+				BD80A3F80F8A69DC0067878C /* CopyFiles */,
+				BD80A39E0F894C7F0067878C /* Resources */,
+				BD80A39F0F894C7F0067878C /* Sources */,
+				BD80A3A00F894C7F0067878C /* Frameworks */,
+				BD80A3C90F894CDD0067878C /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BD80A55A0F8BC7BF0067878C /* PBXTargetDependency */,
+			);
+			name = UnitTest;
+			productName = UnitTest;
+			productReference = BD80A3A20F894C7F0067878C /* UnitTest.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D2AAC07D0554694100DB518D /* CVLibrary */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "CVLibrary" */;
+			buildPhases = (
+				D2AAC07A0554694100DB518D /* Headers */,
+				D2AAC07B0554694100DB518D /* Sources */,
+				D2AAC07C0554694100DB518D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CVLibrary;
+			productName = CVLibrary;
+			productReference = D2AAC07E0554694100DB518D /* libCVLibrary.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0867D690FE84028FC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "CVLibrary" */;
+			compatibilityVersion = "Xcode 3.1";
+			hasScannedForEncodings = 1;
+			mainGroup = 0867D691FE84028FC02AAC07 /* CVLibrary */;
+			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D2AAC07D0554694100DB518D /* CVLibrary */,
+				BD80A3A10F894C7F0067878C /* UnitTest */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		BD80A39E0F894C7F0067878C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BD80A6F20F8C87A60067878C /* UnitTest-Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		BD80A3C90F894CDD0067878C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#\"$GTM_PATH/UnitTesting/RunIPhoneUnitTest.sh\"\n\n\"$PROJECT_DIR/RunIPhoneUnitTest.sh\"";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		BD80A39F0F894C7F0067878C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BD80A79A0F8D2EA50067878C /* GTMSenTestCase.m in Sources */,
+				BD80A79B0F8D2EA50067878C /* GTMIPhoneUnitTestMain.m in Sources */,
+				BD80A79C0F8D2EA50067878C /* GTMIPhoneUnitTestDelegate.m in Sources */,
+				BDE55D700F90866E004EBA23 /* CVThumbnailGridViewController.m in Sources */,
+				BDE55D710F90866E004EBA23 /* CVThumbnailGridViewCell.m in Sources */,
+				BDE55D720F90866E004EBA23 /* CVThumbnailGridView.m in Sources */,
+				BDF876500FBCD5C500D8973C /* CVStyle.m in Sources */,
+				BD7B9F620FBF67DB00E49BF7 /* CGUtils.c in Sources */,
+				BD7B9FF20FC09CA700E49BF7 /* CVImageCache.m in Sources */,
+				BD7BA0EF0FCA35D700E49BF7 /* CVImage.m in Sources */,
+				BDC291220FD8A9A400E1B892 /* UIImage+Adornments.m in Sources */,
+				BD7B0189101961520091CA26 /* CVImageCacheTest.m in Sources */,
+				BD4A29DB101E9BD200044AEE /* CVSettingsViewController.m in Sources */,
+				BD4A29DC101E9BD200044AEE /* TextCellHandler.m in Sources */,
+				BD4A29DD101E9BD200044AEE /* EnumCellHandler.m in Sources */,
+				BD4A29DE101E9BD200044AEE /* EnumOptionsViewController.m in Sources */,
+				BD4A29DF101E9BD200044AEE /* BoolCellHandler.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D2AAC07B0554694100DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BDE55D6B0F90866E004EBA23 /* CVThumbnailGridViewController.m in Sources */,
+				BDE55D6C0F90866E004EBA23 /* CVThumbnailGridViewCell.m in Sources */,
+				BDE55D6D0F90866E004EBA23 /* CVThumbnailGridView.m in Sources */,
+				BDF8764F0FBCD5C500D8973C /* CVStyle.m in Sources */,
+				BD7B9F640FBF67DB00E49BF7 /* CGUtils.c in Sources */,
+				BD7B9FF40FC09CA700E49BF7 /* CVImageCache.m in Sources */,
+				BD7BA0F10FCA35D700E49BF7 /* CVImage.m in Sources */,
+				BDC291240FD8A9A400E1B892 /* UIImage+Adornments.m in Sources */,
+				BD4A29E1101E9BD200044AEE /* CVSettingsViewController.m in Sources */,
+				BD4A29E4101E9BD200044AEE /* TextCellHandler.m in Sources */,
+				BD4A29E6101E9BD200044AEE /* EnumCellHandler.m in Sources */,
+				BD4A29E8101E9BD200044AEE /* EnumOptionsViewController.m in Sources */,
+				BD4A29EA101E9BD200044AEE /* BoolCellHandler.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		BD80A55A0F8BC7BF0067878C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D2AAC07D0554694100DB518D /* CVLibrary */;
+			targetProxy = BD80A5590F8BC7BF0067878C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB921F08733DC00010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = CVLibrary_Prefix.pch;
+				INSTALL_PATH = /usr/local/lib;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "-DDEBUG=1";
+				PRODUCT_NAME = CVLibrary;
+			};
+			name = Debug;
+		};
+		1DEB922008733DC00010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = CVLibrary_Prefix.pch;
+				INSTALL_PATH = /usr/local/lib;
+				OTHER_CFLAGS = "";
+				PRODUCT_NAME = CVLibrary;
+			};
+			name = Release;
+		};
+		1DEB922308733DC00010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				SDKROOT = iphonesimulator2.2.1;
+			};
+			name = Debug;
+		};
+		1DEB922408733DC00010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = iphonesimulator2.2.1;
+			};
+			name = Release;
+		};
+		BD80A3A40F894C800067878C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Frameworks\"",
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = CVLibrary_Prefix.pch;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks\"/**";
+				INFOPLIST_FILE = "UnitTest-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_CFLAGS = "-DDEBUG=1";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					UIKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = UnitTest;
+				SDKROOT = iphonesimulator2.2.1;
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks\"/**";
+			};
+			name = Debug;
+		};
+		BD80A3A50F894C800067878C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Frameworks\"",
+				);
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = GTM_Prefix.pch;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks\"/**";
+				INFOPLIST_FILE = "UnitTest-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					UIKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = UnitTest;
+				SDKROOT = iphonesimulator2.2.1;
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks\"/**";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "CVLibrary" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB921F08733DC00010E9CD /* Debug */,
+				1DEB922008733DC00010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "CVLibrary" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB922308733DC00010E9CD /* Debug */,
+				1DEB922408733DC00010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BD80A3B30F894CAE0067878C /* Build configuration list for PBXNativeTarget "UnitTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BD80A3A40F894C800067878C /* Debug */,
+				BD80A3A50F894C800067878C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0867D690FE84028FC02AAC07 /* Project object */;
+}

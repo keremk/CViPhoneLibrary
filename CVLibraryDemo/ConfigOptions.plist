@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>sectionName</key>
+		<string>GridView General Config</string>
+		<key>sectionOptions</key>
+		<array>
+			<dict>
+				<key>identifier</key>
+				<string>BoolCell</string>
+				<key>label</key>
+				<string>Auto Columns</string>
+				<key>keyPath</key>
+				<string>fitNumberOfColumnsToFullWidth</string>
+				<key>cellHandlerClass</key>
+				<string>BoolCellHandler</string>
+			</dict>
+			<dict>
+				<key>identifier</key>
+				<string>TextCell</string>
+				<key>label</key>
+				<string># of Columns</string>
+				<key>keyPath</key>
+				<string>numOfColumns</string>
+				<key>cellHandlerClass</key>
+				<string>TextCellHandler</string>
+				<key>keyboardType</key>
+				<string>Numeric</string>
+			</dict>
+		</array>    
+    </dict>
+	<dict>
+		<key>sectionName</key>
+		<string>Thumbnail Config</string>
+		<key>sectionOptions</key>
+		<array>
+			<dict>
+				<key>identifier</key>
+				<string>TextCell</string>
+				<key>label</key>
+				<string>Width</string>
+				<key>keyPath</key>
+				<string>thumbnailWidth</string>
+				<key>cellHandlerClass</key>
+				<string>TextCellHandler</string>
+				<key>keyboardType</key>
+				<string>Numeric</string>
+			</dict>
+			<dict>
+				<key>identifier</key>
+				<string>TextCell</string>
+				<key>label</key>
+				<string>Height</string>
+				<key>keyPath</key>
+				<string>thumbnailHeight</string>
+				<key>cellHandlerClass</key>
+				<string>TextCellHandler</string>
+				<key>keyboardType</key>
+				<string>Numeric</string>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>sectionName</key>
+		<string>Border Config</string>
+		<key>sectionOptions</key>
+		<array>
+			<dict>
+				<key>identifier</key>
+				<string>TextCell</string>
+				<key>label</key>
+				<string>Width</string>
+				<key>keyPath</key>
+				<string>borderWidth</string>
+				<key>cellHandlerClass</key>
+				<string>TextCellHandler</string>
+			</dict>
+			<dict>
+				<key>identifier</key>
+				<string>EnumCell</string>
+				<key>label</key>
+				<string>Color</string>
+				<key>keyPath</key>
+				<string>borderColor</string>
+				<key>cellHandlerClass</key>
+				<string>EnumCellHandler</string>
+				<key>options</key>
+				<string>red,orange,green,blue,yellow,black,white,cyan,magenta,purple,brown,gray,lightGray,darkGray</string>
+				<key>dataConverter</key>
+				<string>ColorToStringConverter</string>
+			</dict>
+			<dict>
+				<key>identifier</key>
+				<string>TextCell</string>
+				<key>label</key>
+				<string>Radius</string>
+				<key>keyPath</key>
+				<string>borderRoundedRadius</string>
+				<key>cellHandlerClass</key>
+				<string>TextCellHandler</string>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>sectionName</key>
+		<string>Shadow Config</string>
+		<key>sectionOptions</key>
+		<array>
+			<dict>
+				<key>identifier</key>
+				<string>TextCell</string>
+				<key>label</key>
+				<string>Offset Width</string>
+				<key>keyPath</key>
+				<string>shadowOffsetWidth</string>
+				<key>cellHandlerClass</key>
+				<string>TextCellHandler</string>
+			</dict>
+			<dict>
+				<key>identifier</key>
+				<string>TextCell</string>
+				<key>label</key>
+				<string>Offset Height</string>
+				<key>keyPath</key>
+				<string>shadowOffsetHeight</string>
+				<key>cellHandlerClass</key>
+				<string>TextCellHandler</string>
+			</dict>
+            <dict>
+				<key>identifier</key>
+				<string>TextCell</string>
+				<key>label</key>
+				<string>Blur</string>
+				<key>keyPath</key>
+				<string>shadowBlur</string>
+				<key>cellHandlerClass</key>
+				<string>TextCellHandler</string>
+			</dict>
+		</array>
+	</dict>
+</array>
+</plist>
