@@ -22,35 +22,36 @@
 		BD351EE0100E312A006C3588 /* Checkmark_Off.png in Resources */ = {isa = PBXBuildFile; fileRef = BD351EDE100E312A006C3588 /* Checkmark_Off.png */; };
 		BD351EE1100E312A006C3588 /* Checkmark_On.png in Resources */ = {isa = PBXBuildFile; fileRef = BD351EDF100E312A006C3588 /* Checkmark_On.png */; };
 		BD351F3E100EA3C1006C3588 /* ColorToStringConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = BD351F3D100EA3C1006C3588 /* ColorToStringConverter.m */; };
-		BD4A2BE4101F5F7B00044AEE /* libObjectiveFlickr.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BD4A2BE3101F5BD700044AEE /* libObjectiveFlickr.a */; };
 		BD4A2BF9101F609900044AEE /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD4A2BF8101F609900044AEE /* CFNetwork.framework */; };
 		BD4A2BFF101F61A000044AEE /* FlickrDataService.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4A2BFE101F61A000044AEE /* FlickrDataService.m */; };
 		BD4A2CA7101FF6FC00044AEE /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD4A2CA6101FF6FC00044AEE /* SystemConfiguration.framework */; };
+		BD4A2EDA1022731300044AEE /* libObjectiveFlickr.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BD4A2ED1102272AE00044AEE /* libObjectiveFlickr.a */; };
 		BD7B0345101D1BF00091CA26 /* ConfigOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = BD7B0344101D1BF00091CA26 /* ConfigOptions.m */; };
+		BD82BC591024EE1900B9A1CE /* BGTile.png in Resources */ = {isa = PBXBuildFile; fileRef = BD82BC581024EE1900B9A1CE /* BGTile.png */; };
 		BDFA7E6B0FF591D400E916BC /* libCVLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BDA07AEB0FE9AB9100CDD739 /* libCVLibrary.a */; };
 		BDFA7EE60FF6C2E600E916BC /* LoadingIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = BDFA7EE50FF6C2E600E916BC /* LoadingIcon.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		BD4A2BE0101F5BD700044AEE /* PBXContainerItemProxy */ = {
+		BD4A2ECE102272AE00044AEE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BD4A2BD7101F5BD700044AEE /* ObjectiveFlickr.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 6A8666490F9593B200325E1C /* ObjectiveFlickr.framework */;
+			remoteGlobalIDString = 6A8666490F9593B200325E1C;
 			remoteInfo = "ObjectiveFlickr (framework)";
 		};
-		BD4A2BE2101F5BD700044AEE /* PBXContainerItemProxy */ = {
+		BD4A2ED0102272AE00044AEE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BD4A2BD7101F5BD700044AEE /* ObjectiveFlickr.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 6ABF72E60F939BE600B9179E /* libObjectiveFlickr.a */;
+			remoteGlobalIDString = 6ABF72E60F939BE600B9179E;
 			remoteInfo = "ObjectiveFlickr (library)";
 		};
-		BD4A2BEA101F5FA100044AEE /* PBXContainerItemProxy */ = {
+		BD4A2EDB1022732B00044AEE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BD4A2BD7101F5BD700044AEE /* ObjectiveFlickr.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 6ABF72E50F939BE600B9179E /* ObjectiveFlickr (library) */;
+			remoteGlobalIDString = 6ABF72E50F939BE600B9179E;
 			remoteInfo = "ObjectiveFlickr (library)";
 		};
 		BDA07AEA0FE9AB9100CDD739 /* PBXContainerItemProxy */ = {
@@ -102,7 +103,7 @@
 		BD351EDF100E312A006C3588 /* Checkmark_On.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Checkmark_On.png; sourceTree = "<group>"; };
 		BD351F3C100EA3C1006C3588 /* ColorToStringConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorToStringConverter.h; sourceTree = "<group>"; };
 		BD351F3D100EA3C1006C3588 /* ColorToStringConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorToStringConverter.m; sourceTree = "<group>"; };
-		BD4A2BD7101F5BD700044AEE /* ObjectiveFlickr.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ObjectiveFlickr.xcodeproj; path = ../../Frameworks/objectiveflickr/ObjectiveFlickr.xcodeproj; sourceTree = SOURCE_ROOT; };
+		BD4A2BD7101F5BD700044AEE /* ObjectiveFlickr.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ObjectiveFlickr.xcodeproj; path = /Users/kkaratal/Developer/IPhone/Frameworks/objectiveflickr/ObjectiveFlickr.xcodeproj; sourceTree = "<absolute>"; };
 		BD4A2BF8101F609900044AEE /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		BD4A2BFD101F619F00044AEE /* FlickrDataService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlickrDataService.h; sourceTree = "<group>"; };
 		BD4A2BFE101F61A000044AEE /* FlickrDataService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlickrDataService.m; sourceTree = "<group>"; };
@@ -110,6 +111,7 @@
 		BD4A2CA6101FF6FC00044AEE /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		BD7B0343101D1BF00091CA26 /* ConfigOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigOptions.h; sourceTree = "<group>"; };
 		BD7B0344101D1BF00091CA26 /* ConfigOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigOptions.m; sourceTree = "<group>"; };
+		BD82BC581024EE1900B9A1CE /* BGTile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BGTile.png; sourceTree = "<group>"; };
 		BDA07AE50FE9AB9000CDD739 /* CVLibrary.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CVLibrary.xcodeproj; path = ../CVLibrary/CVLibrary.xcodeproj; sourceTree = SOURCE_ROOT; };
 		BDFA7EE50FF6C2E600E916BC /* LoadingIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LoadingIcon.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -124,8 +126,8 @@
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
 				2892E4100DC94CBA00A64D0F /* CoreGraphics.framework in Frameworks */,
 				BDFA7E6B0FF591D400E916BC /* libCVLibrary.a in Frameworks */,
-				BD4A2BE4101F5F7B00044AEE /* libObjectiveFlickr.a in Frameworks */,
 				BD4A2CA7101FF6FC00044AEE /* SystemConfiguration.framework in Frameworks */,
+				BD4A2EDA1022731300044AEE /* libObjectiveFlickr.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -185,6 +187,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				BD82BC581024EE1900B9A1CE /* BGTile.png */,
 				BD351EDE100E312A006C3588 /* Checkmark_Off.png */,
 				BD351EDF100E312A006C3588 /* Checkmark_On.png */,
 				BDFA7EE50FF6C2E600E916BC /* LoadingIcon.png */,
@@ -230,11 +233,11 @@
 			name = Services;
 			sourceTree = "<group>";
 		};
-		BD4A2BD8101F5BD700044AEE /* Products */ = {
+		BD4A2EC9102272AE00044AEE /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				BD4A2BE1101F5BD700044AEE /* ObjectiveFlickr.framework */,
-				BD4A2BE3101F5BD700044AEE /* libObjectiveFlickr.a */,
+				BD4A2ECF102272AE00044AEE /* ObjectiveFlickr */,
+				BD4A2ED1102272AE00044AEE /* libObjectiveFlickr.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -263,7 +266,7 @@
 			);
 			dependencies = (
 				BDA07AF20FE9ABCB00CDD739 /* PBXTargetDependency */,
-				BD4A2BEB101F5FA100044AEE /* PBXTargetDependency */,
+				BD4A2EDC1022732B00044AEE /* PBXTargetDependency */,
 			);
 			name = CVLibraryDemo;
 			productName = CVLibraryDemo;
@@ -293,7 +296,7 @@
 					ProjectRef = BDA07AE50FE9AB9000CDD739 /* CVLibrary.xcodeproj */;
 				},
 				{
-					ProductGroup = BD4A2BD8101F5BD700044AEE /* Products */;
+					ProductGroup = BD4A2EC9102272AE00044AEE /* Products */;
 					ProjectRef = BD4A2BD7101F5BD700044AEE /* ObjectiveFlickr.xcodeproj */;
 				},
 			);
@@ -305,18 +308,18 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		BD4A2BE1101F5BD700044AEE /* ObjectiveFlickr.framework */ = {
+		BD4A2ECF102272AE00044AEE /* ObjectiveFlickr */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			path = ObjectiveFlickr.framework;
-			remoteRef = BD4A2BE0101F5BD700044AEE /* PBXContainerItemProxy */;
+			path = ObjectiveFlickr;
+			remoteRef = BD4A2ECE102272AE00044AEE /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		BD4A2BE3101F5BD700044AEE /* libObjectiveFlickr.a */ = {
+		BD4A2ED1102272AE00044AEE /* libObjectiveFlickr.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libObjectiveFlickr.a;
-			remoteRef = BD4A2BE2101F5BD700044AEE /* PBXContainerItemProxy */;
+			remoteRef = BD4A2ED0102272AE00044AEE /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		BDA07AEB0FE9AB9100CDD739 /* libCVLibrary.a */ = {
@@ -346,6 +349,7 @@
 				BD351AA01007FE86006C3588 /* ConfigOptions.plist in Resources */,
 				BD351EE0100E312A006C3588 /* Checkmark_Off.png in Resources */,
 				BD351EE1100E312A006C3588 /* Checkmark_On.png in Resources */,
+				BD82BC591024EE1900B9A1CE /* BGTile.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -371,10 +375,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		BD4A2BEB101F5FA100044AEE /* PBXTargetDependency */ = {
+		BD4A2EDC1022732B00044AEE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "ObjectiveFlickr (library)";
-			targetProxy = BD4A2BEA101F5FA100044AEE /* PBXContainerItemProxy */;
+			targetProxy = BD4A2EDB1022732B00044AEE /* PBXContainerItemProxy */;
 		};
 		BDA07AF20FE9ABCB00CDD739 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -388,6 +392,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Kerem Karatal (RLQ78J98RM)";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -400,7 +405,12 @@
 					"../CVLibrary/**",
 				);
 				INFOPLIST_FILE = "CVLibraryDemo-Info.plist";
+				OTHER_LDFLAGS = (
+					"-all_load",
+					"-ObjC",
+				);
 				PRODUCT_NAME = CVLibraryDemo;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "5DB1477E-63C8-45B0-87A2-BFC5126ED90B";
 			};
 			name = Debug;
 		};
@@ -408,6 +418,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Kerem Karatal (RLQ78J98RM)";
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -418,7 +429,12 @@
 					"../CVLibrary/**",
 				);
 				INFOPLIST_FILE = "CVLibraryDemo-Info.plist";
+				OTHER_LDFLAGS = (
+					"-all_load",
+					"-ObjC",
+				);
 				PRODUCT_NAME = CVLibraryDemo;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "5DB1477E-63C8-45B0-87A2-BFC5126ED90B";
 			};
 			name = Release;
 		};

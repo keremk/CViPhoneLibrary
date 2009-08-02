@@ -70,17 +70,39 @@
     
     CVStyle *style = [args objectForKey:@"style"];
     CGSize size = {80, 87};
-    UIGraphicsBeginImageContext(size);    
-    CGContextRef context = UIGraphicsGetCurrentContext();
+//    UIGraphicsBeginImageContext(size);    
+//    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGColorSpaceRef colorSpaceRef = CGColorSpaceCreateDeviceRGB();
+    
+    CGContextRef context = CGBitmapContextCreate(NULL, size.width, size.height,
+                                                 8,
+                                                 4 * size.width,
+                                                 colorSpaceRef,
+                                                 kCGImageAlphaPremultipliedLast);
+
     CGRect rect = CGRectMake(0.0, 0.0, size.width, size.height);
+//    CGContextClearRect(context, rect);
+    
+//    CGContextScaleCTM(context, 1.0, -1.0);
     CGContextSetRGBFillColor(context, 0.0, 0.0, 1.0, 1.0);
     CGContextFillRect(context, rect);
     CGContextSetRGBFillColor(context, 0.0, 1.0, 1.0, 1.0);
     NSString *text = [NSString stringWithFormat:@"%@", url];
-    [text drawInRect:rect withFont:[UIFont boldSystemFontOfSize:64.0]];
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
+    NSUInteger textLen = [text length] + 1;  // +1 for the \0 string end
+    char *textChar = malloc(textLen);
+//    CGContextScaleCTM(context, 1.0, -1.0);
+    [text getCString:textChar maxLength:textLen encoding:NSUTF8StringEncoding];
+    CGContextSetTextMatrix(context, CGAffineTransformIdentity);
+    CGContextSelectFont(context, "Arial", 64.0, kCGEncodingMacRoman);
+    CGContextShowTextAtPoint(context, 5.0, 20.0, textChar, textLen - 1);
+    free(textChar);
+//    [text drawInRect:rect withFont:[UIFont boldSystemFontOfSize:64.0]];
+//    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+    CGImageRef cgImage = CGBitmapContextCreateImage(context);
+    UIImage *image = [UIImage imageWithCGImage:cgImage];
+    CGImageRelease(cgImage);
+    CGColorSpaceRelease(colorSpaceRef);
     
     if (nil != image && nil != cvImage) {        
         [cvImage setImage:image usingStyle:style];

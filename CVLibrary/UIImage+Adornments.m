@@ -33,8 +33,15 @@
 + (UIImage *) adornedImageFromImage:(UIImage *) image usingStyle:(CVStyle *) style  { 
     CGSize size = [UIImage adornedImageSizeForImageSize:style.imageSize usingStyle:style];
     
-    UIGraphicsBeginImageContext(size);    
-    CGContextRef context = UIGraphicsGetCurrentContext();
+//    UIGraphicsBeginImageContext(size);    
+//    CGContextRef context = UIGraphicsGetCurrentContext();
+
+    CGContextRef context = CGBitmapContextCreate(NULL, size.width, size.height,
+                                                 CGImageGetBitsPerComponent([image CGImage]),
+                                                 4 * size.width,
+                                                 CGImageGetColorSpace([image CGImage]),
+                                                 kCGImageAlphaPremultipliedFirst);
+    CGContextClearRect(context, CGRectMake(0.0, 0.0, size.width, size.height));
     
     CGSize borderSize = style.imageSize;
     borderSize.width += style.borderStyle.dimensions.left + style.borderStyle.dimensions.right;
@@ -51,7 +58,7 @@
     if (style.shadowStyle.offset.width < 0) {
         offset.x += abs(style.shadowStyle.offset.width) + SHADOW_BLUR_PIXELS;
     }
-    if (style.shadowStyle.offset.height > 0) {
+    if (style.shadowStyle.offset.height < 0) {
         offset.y += abs(style.shadowStyle.offset.height) + SHADOW_BLUR_PIXELS;
     }
     CGContextTranslateCTM(context, offset.x, offset.y);
@@ -60,8 +67,6 @@
     if (style.borderStyle.width > 0 ) {
         
         // Prepare the rounded rect path (or simple rect if radius = 0)
-//        rect = CGRectMake(0.0, 0.0, image.size.width + style.borderStyle.dimensions.left + style.borderStyle.dimensions.right,
-//                          image.size.height + style.borderStyle.dimensions.top + style.borderStyle.dimensions.bottom);
         rect = CGRectMake(0.0, 0.0, borderSize.width, borderSize.height);
         CGContextBeginPath(context);
         CVAddRoundedRectToPath(context, rect, style.borderStyle.cornerOvalWidth, style.borderStyle.cornerOvalHeight); 
@@ -76,9 +81,11 @@
     offset.y = style.borderStyle.dimensions.top;
     
     //CGPoint offset = CGPointMake(style.borderStyle.dimensions.left, style.borderStyle.dimensions.top);
+
+    CGContextTranslateCTM(context, offset.x, offset.y);
     
-    CGContextTranslateCTM(context, offset.x, style.imageSize.height + offset.y);
-    CGContextScaleCTM(context, 1.0, -1.0);
+//    CGContextTranslateCTM(context, offset.x, style.imageSize.height + offset.y);
+//    CGContextScaleCTM(context, 1.0, -1.0);
     
     // Clip the image with rounded rect
     if (style.borderStyle.cornerOvalWidth > 0 && style.borderStyle.cornerOvalHeight > 0) {
@@ -93,9 +100,13 @@
     CGContextDrawImage(context, CGRectMake(0.0, 0.0, style.imageSize.width, style.imageSize.height), [image CGImage]);
     
     CGContextEndTransparencyLayer(context);
+
+    CGImageRef cgImage = CGBitmapContextCreateImage(context);
+    UIImage *processedImage = [UIImage imageWithCGImage:cgImage];
+    CGImageRelease(cgImage);
     
-    UIImage *processedImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
+//    UIImage *processedImage = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
     
     return processedImage;
 }

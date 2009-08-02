@@ -19,9 +19,7 @@
 	NSUInteger numOfRows_, numOfColumns_, thumbnailCount_;
 	CGFloat leftMargin_, rightMargin_, topMargin_, bottomMargin_, rowSpacing_;
 	CGSize	thumbnailCellSize_;
-	UIImageView *backgroundImageView_;
-	UIImage *backgroundImage_; //*cellBackgroundImage_;
-	BOOL isAnimated_, isBackgroundImageTiled_, drawnFirstTime_, scrollDown_, firstTime_;
+	BOOL isAnimated_;
     CVStyle *cellStyle_;
     
     UIView *thumbnailContainerView_;
@@ -41,8 +39,6 @@
 @property (nonatomic) CGFloat topMargin;
 @property (nonatomic) CGFloat bottomMargin;
 @property (nonatomic) CGFloat rowSpacing;
-@property (nonatomic, retain) UIImage *backgroundImage;
-@property (nonatomic) BOOL isBackgroundImageTiled;
 @property (nonatomic, retain) CVStyle *cellStyle;
 @property (nonatomic) BOOL fitNumberOfColumnsToFullWidth;
 

@@ -85,21 +85,5 @@
         
     return imageSize + adornedImageSize;
 }
-//
-//- (NSUInteger) calculateMemSizeForImage:(UIImage *) image {
-//    if (nil == image) {
-//        return 0;
-//    }
-//    NSUInteger imageMemSize = 0;
-//    CGImageRef cgImage = [image CGImage];
-//    size_t width = CGImageGetWidth(cgImage);
-//    size_t height = CGImageGetHeight(cgImage);
-//    size_t bitsPerPixel = CGImageGetBitsPerPixel(cgImage);
-//    
-//    imageMemSize = width * height * bitsPerPixel / 8;
-//    return imageMemSize;
-//}
-
-
 
 @end

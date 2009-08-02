@@ -38,36 +38,26 @@
     }
 }
 
-
  // The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
         // Custom initialization
         demoItems_ = nil;
-//        adornedImageLoadingIcon_ = nil;
-//        imageLoadingIcon_ = [[UIImage imageNamed:@"LoadingIcon.png"] retain];
     }
     return self;
 }
-
-
-/*
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView {
-}
-*/
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.imageLoadingIcon = [UIImage imageNamed:@"LoadingIcon.png"];
-//    self.adornedImageLoadingIcon = [UIImage adornedImageFromImage:self.imageLoadingIcon usingStyle:self.thumbnailView.cellStyle];
     UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithTitle:@"Config" 
                                                                   style:UIBarButtonItemStyleBordered 
                                                                  target:self 
                                                                  action:@selector(configureGridViewSelected)]; 
     self.navigationItem.rightBarButtonItem = barButton;
     [barButton release];
+//    [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"BGTile.png"]]]; 
 }
 
 - (UIImage *) adornedImageLoadingIcon {

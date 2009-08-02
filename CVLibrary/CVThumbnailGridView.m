@@ -14,11 +14,9 @@
 @interface CVThumbnailGridView()
 - (void) commonInit;
 - (void) animateThumbnailViewCell:(CVThumbnailGridViewCell *) cell;
-- (UIImage *) createTiledImageUsingImage:(UIImage*)image withSize:(CGSize) imageSize;
 - (CGSize) recalculateThumbnailCellSize;
 - (NSUInteger) calculateNumOfColumns;
 @end 
-
 
 @implementation CVThumbnailGridView
 @synthesize dataSource = dataSource_;
@@ -31,14 +29,10 @@
 @synthesize bottomMargin = bottomMargin_;
 @synthesize rowSpacing = rowSpacing_;
 @synthesize thumbnailCount = thumbnailCount_;
-@synthesize backgroundImage = backgroundImage_;
-@synthesize isBackgroundImageTiled = isBackgroundImageTiled_;
 @synthesize cellStyle = cellStyle_;
 @synthesize fitNumberOfColumnsToFullWidth = fitNumberOfColumnsToFullWidth_;
 
 - (void)dealloc {
-	[backgroundImageView_ release];
-	[backgroundImage_ release];
     [cellStyle_ release];
     [reusableThumbnails_ release];
     [thumbnailContainerView_ release];
@@ -68,14 +62,12 @@
 }
 
 - (void) commonInit {
-    isBackgroundImageTiled_ = YES; // Defaults to tiled background image view
     leftMargin_ = LEFT_MARGIN_DEFAULT;
     rightMargin_ = RIGHT_MARGIN_DEFAULT;
     topMargin_ = TOP_MARGIN_DEFAULT;
     rowSpacing_ = ROW_SPACING_DEFAULT;
     numOfColumns_ = COLUMN_COUNT_DEFAULT;
     isAnimated_ = NO;
-    backgroundImageView_ = [[UIImageView alloc] initWithFrame:[self frame]];
     fitNumberOfColumnsToFullWidth_ = NO;
     
     cellStyle_ = [[CVStyle alloc] init];     
@@ -84,26 +76,9 @@
     firstVisibleRow_ = NSIntegerMax;
     lastVisibleRow_ = NSIntegerMin;
     thumbnailContainerView_ = [[UIView alloc] initWithFrame:CGRectZero];
+    self.backgroundColor = [UIColor clearColor];
+    thumbnailContainerView_.backgroundColor = [UIColor clearColor];
     [self addSubview:thumbnailContainerView_];
-}
-
-- (void) setBackgroundImage:(UIImage *) image {
-	// Overriding the property accessor for backgroundImage
-    if (backgroundImage_ != image) {
-        [backgroundImage_ release];
-        backgroundImage_ = [image retain];
-        
-        // Now we need to update the image view
-        if (isBackgroundImageTiled_) {
-            UIImage *tiledImage = [self createTiledImageUsingImage:backgroundImage_ withSize:backgroundImageView_.bounds.size];
-            [backgroundImageView_ setImage:tiledImage];
-        } else {
-            [backgroundImageView_ setImage:backgroundImage_];
-        }
-
-        [self setNeedsLayout];
-        [self layoutIfNeeded];		
-    }
 }
 
 - (void) setCellStyle:(CVStyle *) style {
@@ -148,16 +123,6 @@
     return cellSize;
 }
 
-- (UIImage *) createTiledImageUsingImage:(UIImage*)image withSize:(CGSize) imageSize {
-	UIGraphicsBeginImageContext(imageSize);
-	CGContextRef imageContext = UIGraphicsGetCurrentContext();
-	CGContextDrawTiledImage(imageContext, (CGRect){ CGPointZero, imageSize }, [image CGImage]);
-	UIImage *tiledImage = UIGraphicsGetImageFromCurrentImageContext();
-	UIGraphicsEndImageContext();
-	
-	return tiledImage;
-}
-
 - (void) reloadData {
     thumbnailCount_ = [dataSource_ numberOfCellsForThumbnailView:self];
     
@@ -190,7 +155,6 @@
     thumbnailCellSize_ = [self recalculateThumbnailCellSize];
     CGRect visibleBounds = [self bounds];
 
-//    CGFloat width = leftMargin_ + rightMargin_ + thumbnailCellSize_.width * numOfColumns_;
     if (fitNumberOfColumnsToFullWidth_) {
         // Calculate number of columns
         numOfColumns_ = [self calculateNumOfColumns];
