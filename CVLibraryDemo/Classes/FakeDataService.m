@@ -86,7 +86,7 @@
                                                  NUM_OF_COMPONENTS * size.width,
                                                  colorSpaceRef,
                                                  kCGImageAlphaPremultipliedLast);
-
+    CGColorSpaceRelease(colorSpaceRef);
     CGRect rect = CGRectMake(0.0, 0.0, size.width, size.height);
     CGContextClearRect(context, rect);
     
@@ -104,7 +104,7 @@
     CGImageRef cgImage = CGBitmapContextCreateImage(context);
     UIImage *image = [UIImage imageWithCGImage:cgImage];
     CGImageRelease(cgImage);
-    CGColorSpaceRelease(colorSpaceRef);
+    CGContextRelease(context);
     
     if (nil != image && nil != cvImage) {        
         [cvImage setImage:image usingStyle:style];

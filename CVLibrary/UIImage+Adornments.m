@@ -107,6 +107,7 @@
     CGImageRef cgImage = CGBitmapContextCreateImage(context);
     UIImage *processedImage = [UIImage imageWithCGImage:cgImage];
     CGImageRelease(cgImage);
+    CGContextRelease(context);
         
     return processedImage;
 }
