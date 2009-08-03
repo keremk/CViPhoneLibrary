@@ -62,6 +62,9 @@
     [self.delegate performSelectorOnMainThread:@selector(updatedWithItems:) withObject:demoItems waitUntilDone:YES];
 }
 
+#define BITS_PER_COMPONENT 8
+#define NUM_OF_COMPONENTS 4
+
 - (void) createFakeImageForUrl:(NSDictionary *) args {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
@@ -70,35 +73,34 @@
     
     CVStyle *style = [args objectForKey:@"style"];
     CGSize size = {80, 87};
-//    UIGraphicsBeginImageContext(size);    
-//    CGContextRef context = UIGraphicsGetCurrentContext();
+
+    // IMPORTANT NOTE:
+    // DONOT use UIGraphicsBeginImageContext here
+    // This is done in the background thread and the UI* calls are not threadsafe with the 
+    // main UI thread. So use the pure CoreGraphics APIs instead.
+
     CGColorSpaceRef colorSpaceRef = CGColorSpaceCreateDeviceRGB();
     
     CGContextRef context = CGBitmapContextCreate(NULL, size.width, size.height,
-                                                 8,
-                                                 4 * size.width,
+                                                 BITS_PER_COMPONENT,
+                                                 NUM_OF_COMPONENTS * size.width,
                                                  colorSpaceRef,
                                                  kCGImageAlphaPremultipliedLast);
 
     CGRect rect = CGRectMake(0.0, 0.0, size.width, size.height);
-//    CGContextClearRect(context, rect);
+    CGContextClearRect(context, rect);
     
-//    CGContextScaleCTM(context, 1.0, -1.0);
     CGContextSetRGBFillColor(context, 0.0, 0.0, 1.0, 1.0);
     CGContextFillRect(context, rect);
     CGContextSetRGBFillColor(context, 0.0, 1.0, 1.0, 1.0);
     NSString *text = [NSString stringWithFormat:@"%@", url];
     NSUInteger textLen = [text length] + 1;  // +1 for the \0 string end
     char *textChar = malloc(textLen);
-//    CGContextScaleCTM(context, 1.0, -1.0);
     [text getCString:textChar maxLength:textLen encoding:NSUTF8StringEncoding];
     CGContextSetTextMatrix(context, CGAffineTransformIdentity);
     CGContextSelectFont(context, "Arial", 64.0, kCGEncodingMacRoman);
     CGContextShowTextAtPoint(context, 5.0, 20.0, textChar, textLen - 1);
     free(textChar);
-//    [text drawInRect:rect withFont:[UIFont boldSystemFontOfSize:64.0]];
-//    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-//    UIGraphicsEndImageContext();
     CGImageRef cgImage = CGBitmapContextCreateImage(context);
     UIImage *image = [UIImage imageWithCGImage:cgImage];
     CGImageRelease(cgImage);

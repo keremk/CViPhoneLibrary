@@ -10,6 +10,8 @@
 #include "CGUtils.h"
 
 #define SHADOW_BLUR_PIXELS 3
+#define BITS_PER_COMPONENT 8
+#define NUM_OF_COMPONENTS 4
 
 @implementation UIImage (CVAdornments)
 
@@ -32,15 +34,19 @@
 
 + (UIImage *) adornedImageFromImage:(UIImage *) image usingStyle:(CVStyle *) style  { 
     CGSize size = [UIImage adornedImageSizeForImageSize:style.imageSize usingStyle:style];
-    
-//    UIGraphicsBeginImageContext(size);    
-//    CGContextRef context = UIGraphicsGetCurrentContext();
 
+    // IMPORTANT NOTE:
+    // DONOT use UIGraphicsBeginImageContext here
+    // This is done in the background thread and the UI* calls are not threadsafe with the 
+    // main UI thread. So use the pure CoreGraphics APIs instead.
+    
+    CGColorSpaceRef colorSpaceRef = CGColorSpaceCreateDeviceRGB();
     CGContextRef context = CGBitmapContextCreate(NULL, size.width, size.height,
-                                                 CGImageGetBitsPerComponent([image CGImage]),
-                                                 4 * size.width,
-                                                 CGImageGetColorSpace([image CGImage]),
-                                                 kCGImageAlphaPremultipliedFirst);
+                                                 BITS_PER_COMPONENT,
+                                                 NUM_OF_COMPONENTS * size.width, // We need to have RGBA with alpha for shadow effects 
+                                                 colorSpaceRef,
+                                                 kCGImageAlphaPremultipliedLast);
+    CGColorSpaceRelease(colorSpaceRef);
     CGContextClearRect(context, CGRectMake(0.0, 0.0, size.width, size.height));
     
     CGSize borderSize = style.imageSize;
@@ -83,10 +89,7 @@
     //CGPoint offset = CGPointMake(style.borderStyle.dimensions.left, style.borderStyle.dimensions.top);
 
     CGContextTranslateCTM(context, offset.x, offset.y);
-    
-//    CGContextTranslateCTM(context, offset.x, style.imageSize.height + offset.y);
-//    CGContextScaleCTM(context, 1.0, -1.0);
-    
+        
     // Clip the image with rounded rect
     if (style.borderStyle.cornerOvalWidth > 0 && style.borderStyle.cornerOvalHeight > 0) {
         rect = CGRectMake(0.0, 0.0, style.imageSize.width, style.imageSize.height);
@@ -104,10 +107,7 @@
     CGImageRef cgImage = CGBitmapContextCreateImage(context);
     UIImage *processedImage = [UIImage imageWithCGImage:cgImage];
     CGImageRelease(cgImage);
-    
-//    UIImage *processedImage = UIGraphicsGetImageFromCurrentImageContext();
-//    UIGraphicsEndImageContext();
-    
+        
     return processedImage;
 }
 
