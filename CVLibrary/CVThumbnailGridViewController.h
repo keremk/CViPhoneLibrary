@@ -12,9 +12,10 @@
 
 @interface CVThumbnailGridViewController : UIViewController<CVThumbnailGridViewDataSource, CVThumbnailGridViewDelegate> {
 	BOOL firstTimeDisplay_;
+    CVThumbnailGridView *thumbnailView_;
 }
 
 @property (nonatomic, readonly) CVThumbnailGridView *thumbnailView;
-@property (nonatomic) NSUInteger numOfColumns;
+//@property (nonatomic) NSUInteger numOfColumns;
 
 @end

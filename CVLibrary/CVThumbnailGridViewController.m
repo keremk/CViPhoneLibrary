@@ -13,8 +13,10 @@
 @end
 
 @implementation CVThumbnailGridViewController
+@synthesize thumbnailView = thumbnailView_;
 
 - (void) dealloc {
+    [thumbnailView_ release];
     [super dealloc];
 }
 
@@ -37,27 +39,28 @@
 }
 
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView {    
-	CVThumbnailGridView *gridView = [[CVThumbnailGridView alloc] initWithFrame:CGRectZero];
-	[gridView setDataSource:self];	
-	[gridView setThumbnailViewDelegate:self];
-	[gridView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
-	self.view = gridView;
-    [gridView reloadData];
-	[gridView release];
+- (void)loadView {
+    [super loadView];
+    
+	thumbnailView_ = [[CVThumbnailGridView alloc] initWithFrame:[[self view] bounds]];
+	[thumbnailView_ setDataSource:self];	
+	[thumbnailView_ setThumbnailViewDelegate:self];
+	[thumbnailView_ setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
+	[[self view] addSubview:thumbnailView_];
+    [thumbnailView_ reloadData];
 }
 
-- (CVThumbnailGridView *) thumbnailView {
-	return (CVThumbnailGridView *) self.view;
-}
+//- (CVThumbnailGridView *) thumbnailView {
+//	return (CVThumbnailGridView *) self.view;
+//}
 
-- (NSUInteger) numOfColumns {
-    return [self.thumbnailView numOfColumns];
-}
-
-- (void) setNumOfColumns:(NSUInteger) numOfColumns {
-    [self.thumbnailView setNumOfColumns:numOfColumns];
-}
+//- (NSUInteger) numOfColumns {
+//    return [self.thumbnailView numOfColumns];
+//}
+//
+//- (void) setNumOfColumns:(NSUInteger) numOfColumns {
+//    [self.thumbnailView setNumOfColumns:numOfColumns];
+//}
 
 - (void)viewWillAppear:(BOOL)animated {
 	if (firstTimeDisplay_) {

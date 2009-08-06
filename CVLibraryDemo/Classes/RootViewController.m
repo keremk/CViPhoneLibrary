@@ -144,14 +144,14 @@
     }    
     [demoGridViewController setDataService:dataService];
 
+    [self.navigationController pushViewController:demoGridViewController animated:YES];
+    
     CVThumbnailGridView *gridView = [demoGridViewController thumbnailView];
 //    [gridView setThumbnailImageSize:CGSizeMake(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)];
     [gridView setCellStyle:cellStyle];
     [gridView setNumOfColumns:0];
     [gridView setFitNumberOfColumnsToFullWidth:YES];
-    
-    [self.navigationController pushViewController:demoGridViewController animated:YES];
-    
+
     [borderStyle release];
     [shadowStyle release];
     [cellStyle release];

@@ -11,8 +11,9 @@
 #import "CVStyle.h"
 
 @protocol CVThumbnailGridViewDataSource, CVThumbnailGridViewDelegate;
+//@class TestView;
 
-@interface CVThumbnailGridView : UIScrollView {
+@interface CVThumbnailGridView : UIScrollView<CVThumbnailGridViewCellDelegate> {
 @private
 	id<CVThumbnailGridViewDataSource> dataSource_;
 	id<CVThumbnailGridViewDelegate> delegate_;
@@ -22,7 +23,7 @@
 	BOOL isAnimated_;
     CVStyle *cellStyle_;
     
-    UIView *thumbnailContainerView_;
+//    TestView *thumbnailContainerView_;
     NSMutableSet *reusableThumbnails_;
     NSMutableDictionary *thumbnailsInUse_;
     NSInteger firstVisibleRow_, lastVisibleRow_;
