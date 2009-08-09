@@ -7,6 +7,7 @@
 //
 
 #import "CVThumbnailGridViewCell.h"
+#import "CVThumbnailGridView.h"
 
 #define DRAG_THRESHOLD 10
 
@@ -18,8 +19,7 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
 
 @interface CVThumbnailGridViewCell()
 @property (nonatomic, retain) UIImageView *thumbnailImageView;
-- (void)goHome;
-- (void)moveByOffset:(CGPoint)offset;
+
 @end
 
 @implementation CVThumbnailGridViewCell
@@ -53,6 +53,13 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
 	[thumbnailImageView_ setImage:image];
 }
 
+//- (void) setIndexPath:(NSIndexPath *) indexPath {
+//    if (indexPath_ != indexPath) {
+//        [indexPath_ release];
+//        indexPath_ = [indexPath retain];
+//        NSLog(@"IndexPath %d, %d set", indexPath.row, indexPath.column);
+//    }
+//}
 
 - (void) setFrame:(CGRect) frame {
 	[super setFrame:frame];
@@ -60,15 +67,9 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
     [thumbnailImageView_ setFrame:self.bounds];
 }
 
-//- (void) touchesEnded:(NSSet *) touches withEvent:(UIEvent *) event {	
-//	if ([delegate_ respondsToSelector:@selector(thumbnailSelected:)]) {
-//		[delegate_ performSelector:@selector(thumbnailSelected:) withObject:self];
-//	}	
-//}
-
 #pragma mark Touch events
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+- (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     // store the location of the starting touch so we can decide when we've moved far enough to drag
     touchLocation_ = [[touches anyObject] locationInView:self];
     NSLog(@"Cell %f, %f", touchLocation_.x, touchLocation_.y);
@@ -76,7 +77,7 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
         [delegate_ thumbnailGridViewCellStartedTracking:self];
 }
 
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+- (void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     // we want to establish a minimum distance that the touch has to move before it counts as dragging,
     // so that the slight movement involved in a tap doesn't cause the frame to move.
     
@@ -93,7 +94,7 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
     }
 }
 
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+- (void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     if (dragging_) {
         [self goHome];
         dragging_ = NO;
@@ -106,14 +107,14 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
         [delegate_ thumbnailGridViewCellStoppedTracking:self];
 }
 
-- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+- (void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
     [self goHome];
     dragging_ = NO;
     if ([delegate_ respondsToSelector:@selector(thumbnailGridViewCellStoppedTracking:)]) 
         [delegate_ thumbnailGridViewCellStoppedTracking:self];
 }
 
-- (void)goHome {
+- (void) goHome {
     CGFloat distanceFromHome = distanceBetweenPoints([self frame].origin, [self home].origin); // distance is in pixels
     CGFloat animationDuration = 0.1 + distanceFromHome * 0.001;
     [UIView beginAnimations:nil context:NULL];
@@ -122,7 +123,7 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
     [UIView commitAnimations];
 }
     
-- (void)moveByOffset:(CGPoint)offset {
+- (void) moveByOffset:(CGPoint)offset {
     CGRect frame = [self frame];
     frame.origin.x += offset.x;
     frame.origin.y += offset.y;

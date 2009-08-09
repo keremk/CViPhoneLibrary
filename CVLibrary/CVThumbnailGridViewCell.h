@@ -28,7 +28,8 @@
 
 - (id) initWithFrame:(CGRect)frame reuseIdentifier:(NSString *) identifier;
 - (void) setImage:(UIImage *) image;
-
+- (void) goHome;
+- (void) moveByOffset:(CGPoint)offset;
 @end
 
 @protocol CVThumbnailGridViewCellDelegate <NSObject>

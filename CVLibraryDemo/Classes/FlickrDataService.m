@@ -30,7 +30,7 @@
         operationQueue_ = [[NSOperationQueue alloc] init];
         [operationQueue_ setMaxConcurrentOperationCount:1];
         context_ = [[OFFlickrAPIContext alloc] initWithAPIKey:OBJECTIVE_FLICKR_SAMPLE_API_KEY 
-                                                                sharedSecret:OBJECTIVE_FLICKR_SAMPLE_API_SHARED_SECRET];
+                                                sharedSecret:OBJECTIVE_FLICKR_SAMPLE_API_SHARED_SECRET];
     }
     return self;
 }

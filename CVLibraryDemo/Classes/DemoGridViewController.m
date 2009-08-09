@@ -136,7 +136,8 @@
         cell = [[[CVThumbnailGridViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"Thumbnails"] autorelease];
     }
     
-    NSUInteger index = indexPath.row * [self.thumbnailView numOfColumns] + indexPath.column;
+//    NSUInteger index = indexPath.row * [self.thumbnailView numOfColumns] + indexPath.column;
+    NSUInteger index = [indexPath indexForNumOfColumns:[self.thumbnailView numOfColumns]];
     DemoItem *demoItem = (DemoItem *) [demoItems_ objectAtIndex:index];
     CVImage *demoImage = [[[CVImageCache sharedCVImageCache] imageForKey:demoItem.imageUrl] retain];
     UIImage *adornedImage = nil;
@@ -162,8 +163,19 @@
     return cell;
 }
 
+- (void)thumbnailView:(CVThumbnailGridView *)thumbnailView moveCellAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+    NSUInteger startingIndex = [fromIndexPath indexForNumOfColumns:[self.thumbnailView numOfColumns]];
+    NSUInteger endingIndex = [toIndexPath indexForNumOfColumns:[self.thumbnailView numOfColumns]];
+    
+    DemoItem *demoItem = [[demoItems_ objectAtIndex:startingIndex] retain];
+    [demoItems_ removeObjectAtIndex:startingIndex];
+    [demoItems_ insertObject:demoItem atIndex:endingIndex];
+    [demoItem release];
+}
+
 - (void) thumbnailView:(CVThumbnailGridView *) thumbnailView didSelectCellAtIndexPath:(NSIndexPath *) indexPath {
-//    NSUInteger page = indexPath.row * COLUMN_COUNT + indexPath.column;
+    NSUInteger index = indexPath.row * [thumbnailView numOfColumns] + indexPath.column;
+    
     
 }
 

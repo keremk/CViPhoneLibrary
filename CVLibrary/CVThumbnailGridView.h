@@ -20,14 +20,18 @@
 	NSUInteger numOfRows_, numOfColumns_, thumbnailCount_;
 	CGFloat leftMargin_, rightMargin_, topMargin_, bottomMargin_, rowSpacing_;
 	CGSize	thumbnailCellSize_;
-	BOOL isAnimated_;
+	BOOL isAnimated_, animateSelection_;
     CVStyle *cellStyle_;
+    CGRect moveToFrame_;
     
-//    TestView *thumbnailContainerView_;
     NSMutableSet *reusableThumbnails_;
     NSMutableDictionary *thumbnailsInUse_;
     NSInteger firstVisibleRow_, lastVisibleRow_;
     BOOL fitNumberOfColumnsToFullWidth_;
+    
+    NSTimer *autoscrollTimer_;  // Timer used for auto-scrolling.
+    CGFloat autoscrollDistance_;  // Distance to scroll the thumb view when auto-scroll timer fires.
+
 }
 
 @property (nonatomic, assign) id <CVThumbnailGridViewDataSource> dataSource;
@@ -42,6 +46,7 @@
 @property (nonatomic) CGFloat rowSpacing;
 @property (nonatomic, retain) CVStyle *cellStyle;
 @property (nonatomic) BOOL fitNumberOfColumnsToFullWidth;
+@property (nonatomic) BOOL animateSelection;
 
 - (id) initWithFrame:(CGRect)frame;
 - (void) reloadData;
@@ -50,13 +55,15 @@
 @end
 
 
-@protocol CVThumbnailGridViewDataSource
-@optional
+@protocol CVThumbnailGridViewDataSource<NSObject>
+@required
 - (NSInteger) numberOfCellsForThumbnailView:(CVThumbnailGridView *)thumbnailView;
 - (CVThumbnailGridViewCell *)thumbnailView:(CVThumbnailGridView *)thumbnailView cellAtIndexPath:(NSIndexPath *)indexPath;
+@optional
+- (void)thumbnailView:(CVThumbnailGridView *)thumbnailView moveCellAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath;
 @end
 
-@protocol CVThumbnailGridViewDelegate
+@protocol CVThumbnailGridViewDelegate<NSObject>
 @optional
 - (void) thumbnailView:(CVThumbnailGridView *) thumbnailView didSelectCellAtIndexPath:(NSIndexPath *) indexPath;
 @end
@@ -65,4 +72,5 @@
 @interface NSIndexPath (ThumbnailView)
 + (NSIndexPath *)indexPathForRow:(NSUInteger)row column:(NSUInteger)column;
 @property (nonatomic, readonly) NSUInteger column;
+- (NSUInteger) indexForNumOfColumns:(NSUInteger) numOfColumns;
 @end

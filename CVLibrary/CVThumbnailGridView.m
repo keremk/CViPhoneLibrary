@@ -11,35 +11,20 @@
 #import "CVThumbnailGridView.h"
 #import "UIImage+Adornments.h"
 
-//@interface TestView: UIView {
-//    CGPoint touchLocation_;
-//}
-//
-//@end
-//
-//@implementation TestView
-//
-//- (id) initWithFrame:(CGRect) frame {
-//    self = [super initWithFrame:frame];
-//    if (self != nil) {
-//        NSLog(@"TestView init");
-//    }
-//    return self;
-//}
-//
-//- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-//    // store the location of the starting touch so we can decide when we've moved far enough to drag
-//    touchLocation_ = [[touches anyObject] locationInView:self];
-//    NSLog(@"TestView %f, %f", touchLocation_.x, touchLocation_.y);
-//}
-//
-//@end
-
 @interface CVThumbnailGridView()
 - (void) commonInit;
 - (void) animateThumbnailViewCell:(CVThumbnailGridViewCell *) cell;
 - (CGSize) recalculateThumbnailCellSize;
 - (NSUInteger) calculateNumOfColumns;
+- (CGRect) rectForColumn:(NSUInteger) column row:(NSUInteger) row;
+- (CGFloat) columnSpacing;
+- (CVThumbnailGridViewCell *) createCellFromDataSourceForIndexPath:(NSIndexPath *) indexPath;
+- (NSString *) keyFromIndexPath:(NSIndexPath *) indexPath;
+- (void) cleanupNonVisibleCells;
+- (void) maybeAutoscrollForThumb:(CVThumbnailGridViewCell *) cell;
+- (CGFloat) autoscrollDistanceForProximityToEdge:(CGFloat)proximity;
+- (void) legalizeAutoscrollDistance;
+- (void) autoscrollTimerFired:(NSTimer*)timer;
 @end 
 
 @implementation CVThumbnailGridView
@@ -55,11 +40,11 @@
 @synthesize thumbnailCount = thumbnailCount_;
 @synthesize cellStyle = cellStyle_;
 @synthesize fitNumberOfColumnsToFullWidth = fitNumberOfColumnsToFullWidth_;
+@synthesize animateSelection = animateSelection_;
 
 - (void)dealloc {
     [cellStyle_ release];
     [reusableThumbnails_ release];
-//    [thumbnailContainerView_ release];
     [thumbnailsInUse_ release];
     [super dealloc];
 }
@@ -92,6 +77,7 @@
     rowSpacing_ = ROW_SPACING_DEFAULT;
     numOfColumns_ = COLUMN_COUNT_DEFAULT;
     isAnimated_ = NO;
+    animateSelection_ = YES;
     fitNumberOfColumnsToFullWidth_ = NO;
     
     cellStyle_ = [[CVStyle alloc] init];     
@@ -99,12 +85,7 @@
     reusableThumbnails_ = [[NSMutableSet alloc] init];
     firstVisibleRow_ = NSIntegerMax;
     lastVisibleRow_ = NSIntegerMin;
-//    thumbnailContainerView_ = [[TestView alloc] initWithFrame:CGRectZero];
     self.backgroundColor = [UIColor clearColor];
-//    thumbnailContainerView_.backgroundColor = [UIColor clearColor];
-//    [self addSubview:thumbnailContainerView_];
-    
-//    [self setUserInteractionEnabled:YES];
     [self setDelaysContentTouches:YES];
     [self setCanCancelContentTouches:NO];
 }
@@ -200,31 +181,12 @@
     [self setContentSize:scrollViewSize];
 
     // Below algorithm is inspired/taken from Tiling Sample code in Apple iPhone SDK
-    
-    for (CVThumbnailGridViewCell *thumbnail in [self subviews]) {
-        if ([thumbnail isKindOfClass:[CVThumbnailGridViewCell class]]) { 
-            CGRect thumbnailFrame = [self convertRect:[thumbnail frame] toView:self];
 
-            // Take into account the rowSpacing_
-            thumbnailFrame = CGRectMake(thumbnailFrame.origin.x, thumbnailFrame.origin.y, 
-                                        thumbnailFrame.size.width, thumbnailFrame.size.height + rowSpacing_);
-            
-            if (!CGRectIntersectsRect(thumbnailFrame, visibleBounds)) {
-                [reusableThumbnails_ addObject:thumbnail];
-                [thumbnail removeFromSuperview];
-                [thumbnailsInUse_ removeObjectForKey:[thumbnail indexPath]];
-    //            NSLog(@"Thumbnail %d, %d removed", thumbnail.indexPath.row, thumbnail.indexPath.column);
-            }
-        }
-    }
+    [self cleanupNonVisibleCells];
     
     CGFloat rowHeight = rowSpacing_ + thumbnailCellSize_.height;
     NSInteger startingRowOnPage = MAX(0, floorf(self.contentOffset.y / rowHeight));
     NSInteger endingRowOnPage = MIN(numOfRows_ - 1, floorf(CGRectGetMaxY(visibleBounds) / rowHeight));
-    CGFloat columnSpacing = 0;
-    if (numOfColumns_ > 1) {
-        columnSpacing = MAX(0, (visibleBounds.size.width - (thumbnailCellSize_.width * numOfColumns_) - leftMargin_ - rightMargin_) / (numOfColumns_ - 1));
-    }
     
     for (NSInteger row = startingRowOnPage; row <= endingRowOnPage; row++) {
         for (NSInteger column = 0; column < numOfColumns_; column++) {
@@ -234,23 +196,7 @@
                 NSInteger currentCellNo = row * numOfColumns_ + column;
                 if (currentCellNo >= thumbnailCount_)
                     break;
-                CVThumbnailGridViewCell *thumbnailViewCell = [dataSource_ thumbnailView:self cellAtIndexPath:indexPath];
-                if (nil != thumbnailViewCell) {
-                    CGFloat xPos = leftMargin_ + (thumbnailCellSize_.width + columnSpacing) * column;
-                    CGFloat yPos = (thumbnailCellSize_.height + rowSpacing_) * row;
-                    
-                    [thumbnailViewCell setFrame:CGRectMake(xPos, yPos, thumbnailCellSize_.width, thumbnailCellSize_.height)];                
-                    [thumbnailViewCell setUserInteractionEnabled:YES];
-                    [thumbnailViewCell setDelegate:self];
-                    [thumbnailViewCell setIndexPath:indexPath];
-                    
-//                    NSLog(@"Thumbnail %d, %d added", thumbnailViewCell.indexPath.row, thumbnailViewCell.indexPath.column);
-                    [self addSubview:thumbnailViewCell];
-                    [thumbnailsInUse_ setObject:thumbnailViewCell forKey:indexPath];
-                } else {
-                    NSLog(@"Thumbnail nil");
-                }
-
+                [self createCellFromDataSourceForIndexPath:indexPath];
             }
         }
     }
@@ -259,49 +205,218 @@
     lastVisibleRow_ = endingRowOnPage;
 }
 
+- (CGRect) rectForColumn:(NSUInteger) column row:(NSUInteger) row {
+    CGFloat xPos = leftMargin_ + (thumbnailCellSize_.width + [self columnSpacing]) * column;
+    CGFloat yPos = (thumbnailCellSize_.height + rowSpacing_) * row;
+    CGRect rect = CGRectMake(xPos, yPos, thumbnailCellSize_.width, thumbnailCellSize_.height);
+
+    return rect;
+}
+
 - (CVThumbnailGridViewCell *) cellForIndexPath:(NSIndexPath *) indexPath {
-    CVThumbnailGridViewCell *cell = [thumbnailsInUse_ objectForKey:indexPath];
+    CVThumbnailGridViewCell *cell = [thumbnailsInUse_ objectForKey:[self keyFromIndexPath:indexPath]];
+    if (nil == cell) {
+        [self cleanupNonVisibleCells];
+        cell = [self createCellFromDataSourceForIndexPath:indexPath];
+    }
+    return cell;
+}
+
+- (CVThumbnailGridViewCell *) createCellFromDataSourceForIndexPath:(NSIndexPath *) indexPath {
+    CVThumbnailGridViewCell *cell = [dataSource_ thumbnailView:self cellAtIndexPath:indexPath];
+    if (nil != cell) {
+        CGRect frame = [self rectForColumn:[indexPath column] row:[indexPath row]];       
+        [cell setFrame:frame];
+        [cell setHome:frame];
+        [cell setUserInteractionEnabled:YES];
+        [cell setDelegate:self];
+        [cell setIndexPath:indexPath];
+        [self addSubview:cell];
+        [thumbnailsInUse_ setObject:cell forKey:[self keyFromIndexPath:indexPath]];
+    } else {
+        NSLog(@"Datasource returned nil thumbnail cell");
+    }        
     
     return cell;
 }
 
-//- (BOOL)touchesShouldBegin:(NSSet *)touches withEvent:(UIEvent *)event inContentView:(UIView *)view {
-//    CGPoint touchLocation = [[touches anyObject] locationInView:self];
-//    NSLog(@"ScrollView : %f, %f", touchLocation.x, touchLocation.y);
-//    
-//    return YES;
-//}
-//
-//- (BOOL)touchesShouldCancelInContentView:(UIView*)view {
-//  
-//    return NO;
-//}
+- (void) cleanupNonVisibleCells {
+    for (CVThumbnailGridViewCell *thumbnail in [self subviews]) {
+        if ([thumbnail isKindOfClass:[CVThumbnailGridViewCell class]]) { 
+            CGRect thumbnailFrame = [self convertRect:[thumbnail frame] toView:self];
 
-//- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-//    // store the location of the starting touch so we can decide when we've moved far enough to drag
-//    CGPoint touchLocation = [[touches anyObject] locationInView:self];
-//    NSLog(@"TouchesBegan %f, %f", touchLocation.x, touchLocation.y);
-//    UIResponder *responder = self.nextResponder;
-//    [responder touchesBegan:touches withEvent:event];
-//}
+            // Take into account the rowSpacing_
+            thumbnailFrame = CGRectMake(thumbnailFrame.origin.x, thumbnailFrame.origin.y, 
+                                        thumbnailFrame.size.width, thumbnailFrame.size.height + rowSpacing_);
+            
+            if (!CGRectIntersectsRect(thumbnailFrame, [self bounds])) {
+                [reusableThumbnails_ addObject:thumbnail];
+                [thumbnail removeFromSuperview];
+                [thumbnailsInUse_ removeObjectForKey:[self keyFromIndexPath:[thumbnail indexPath]]];
+    //            NSLog(@"Thumbnail %d, %d removed", thumbnail.indexPath.row, thumbnail.indexPath.column);
+            }
+        }
+    }
+}
+
+- (CGFloat) columnSpacing {
+    CGFloat columnSpacing = 0;
+    if (numOfColumns_ > 1) {
+        columnSpacing = MAX(0, (self.bounds.size.width - (thumbnailCellSize_.width * numOfColumns_) - leftMargin_ - rightMargin_) / (numOfColumns_ - 1));
+    }
+    
+    return columnSpacing;
+}
+
+- (NSString *) keyFromIndexPath:(NSIndexPath *) indexPath {
+    NSString *key = [NSString stringWithFormat:@"%d, %d", indexPath.row, indexPath.column];
+    return key;
+}
 
 #pragma mark CVThumbnailGridViewCellDelegate methods 
 
 - (void)thumbnailGridViewCellWasTapped:(CVThumbnailGridViewCell *) cell {
-    [self animateThumbnailViewCell:cell];
+    if (animateSelection_) {
+        [self animateThumbnailViewCell:cell];
+    }
+    if ([delegate_ respondsToSelector:@selector(thumbnailView:didSelectCellAtIndexPath:)]) {
+        [delegate_ thumbnailView:self didSelectCellAtIndexPath:[cell indexPath]];
+    }
 }
 
 - (void)thumbnailGridViewCellStartedTracking:(CVThumbnailGridViewCell *) cell {
-    
+    [self bringSubviewToFront:cell];
 }
 
-- (void)thumbnailGridViewCellMoved:(CVThumbnailGridViewCell *) cell {
+- (void)thumbnailGridViewCellMoved:(CVThumbnailGridViewCell *) draggingThumb {
+    [self maybeAutoscrollForThumb:draggingThumb];
     
+    // Estimate cell number we are moving to based on location
+    NSInteger draggingThumbMoveToColumn = floor((CGRectGetMidX([draggingThumb frame]) - leftMargin_) / (thumbnailCellSize_.width + [self columnSpacing]));
+    NSInteger draggingThumbMoveToRow = floor(CGRectGetMidY([draggingThumb frame]) / (thumbnailCellSize_.height + rowSpacing_));
+    NSInteger moveToIndex = draggingThumbMoveToRow * numOfColumns_ + draggingThumbMoveToColumn;
+    
+    if (draggingThumbMoveToColumn < 0 || draggingThumbMoveToColumn >= numOfColumns_) return;
+    if (moveToIndex < 0 || moveToIndex >= thumbnailCount_) return;
+    
+    // Calculate starting cell number
+    NSUInteger startingColumn = floor(([draggingThumb home].origin.x - leftMargin_) / (thumbnailCellSize_.width + [self columnSpacing]));
+    NSUInteger startingRow = floor([draggingThumb home].origin.y / (thumbnailCellSize_.height + rowSpacing_));
+    NSUInteger startingIndex = startingRow * numOfColumns_ + startingColumn;
+
+    NSLog(@"Start %d, %d - %d  -- Move to: %d, %d - %d", startingRow, startingColumn, startingIndex, draggingThumbMoveToRow, draggingThumbMoveToColumn, moveToIndex);
+
+    if (moveToIndex == startingIndex) return;
+    
+    BOOL moveToHigherIndex = moveToIndex > startingIndex;
+    
+    NSInteger i = startingIndex;
+    NSInteger endIndex = moveToIndex;
+    NSInteger increment = moveToHigherIndex ? 1 : -1;
+
+    NSLog(@"StartIndex = %d, EndIndex = %d, increment = %d", i, endIndex, increment);
+    while (i != endIndex + increment) {
+        NSInteger row = floor(i / numOfColumns_);
+        NSInteger column = i - row * numOfColumns_;
+        NSLog(@"NewRow - %d, NewColumn - %d For index = %d", row, column, i);
+        CVThumbnailGridViewCell *cell = [self cellForIndexPath:[NSIndexPath indexPathForRow:row column:column]];
+        if (nil == cell) {
+            NSLog(@"Cell is nil");
+        }
+        if (nil != cell && cell != draggingThumb) {
+            // Go opposite direction
+            NSInteger moveToColumn = column - increment;
+            NSInteger moveToRow = row;
+            if (moveToColumn < 0) {
+                moveToColumn = numOfColumns_ - 1;
+                moveToRow = row - increment;
+            } else if (moveToColumn == numOfColumns_) {
+                moveToColumn = 0;
+                moveToRow = row - increment;
+            }
+            NSLog(@"Calculated -> Start (%d, %d) MoveTo (%d, %d)", row, column, moveToRow, moveToColumn);
+            CGRect frame = [self rectForColumn:moveToColumn row:moveToRow];
+            
+            [cell setIndexPath:[NSIndexPath indexPathForRow:moveToRow column:moveToColumn]];
+            [thumbnailsInUse_ setObject:cell forKey:[self keyFromIndexPath:[NSIndexPath indexPathForRow:moveToRow column:moveToColumn]]];
+            
+            [cell setHome:frame];
+            [cell goHome];
+        }
+        i += increment;
+    }
+    [draggingThumb setIndexPath:[NSIndexPath indexPathForRow:draggingThumbMoveToRow column:draggingThumbMoveToColumn]];
+    [thumbnailsInUse_ setObject:draggingThumb forKey:[self keyFromIndexPath:[NSIndexPath indexPathForRow:draggingThumbMoveToRow column:draggingThumbMoveToColumn]]];
+    CGRect moveToFrame = [self rectForColumn:draggingThumbMoveToColumn row:draggingThumbMoveToRow];
+    [draggingThumb setHome:moveToFrame];
+    if ([dataSource_ respondsToSelector:@selector(thumbnailView:moveCellAtIndexPath:toIndexPath:)]) {
+        [dataSource_ thumbnailView:self 
+               moveCellAtIndexPath:[NSIndexPath indexPathForRow:startingRow column:startingColumn] 
+                       toIndexPath:[NSIndexPath indexPathForRow:draggingThumbMoveToRow column:draggingThumbMoveToColumn]];
+    }
 }
 
 - (void)thumbnailGridViewCellStoppedTracking:(CVThumbnailGridViewCell *) cell {
-    
+    autoscrollDistance_ = 0;
+    [autoscrollTimer_ invalidate];
+    autoscrollTimer_ = nil;
 }
+
+#pragma mark AutoScroll 
+// Autoscroll implementation below is taken from the Apple iPhone SDK sample code "ScrollViewSuite"
+
+#define AUTOSCROLL_THRESHOLD 30
+- (void) maybeAutoscrollForThumb:(CVThumbnailGridViewCell *) cell {
+    autoscrollDistance_ = 0;
+    
+    if (CGRectIntersectsRect([cell frame], [self bounds])) {
+        CGPoint touchLocation = [cell convertPoint:[cell touchLocation] toView:self];
+        CGFloat distanceFromTopEdge  = touchLocation.y - CGRectGetMinY([self bounds]);
+        CGFloat distanceFromBottomEdge = CGRectGetMaxY([self bounds]) - touchLocation.y;
+        
+        if (distanceFromTopEdge < AUTOSCROLL_THRESHOLD) {
+            autoscrollDistance_ = [self autoscrollDistanceForProximityToEdge:distanceFromTopEdge] * -1;
+        } else if (distanceFromBottomEdge < AUTOSCROLL_THRESHOLD) {
+            autoscrollDistance_ = [self autoscrollDistanceForProximityToEdge:distanceFromBottomEdge];
+        }        
+    }
+    
+    if (autoscrollDistance_ == 0) {
+        [autoscrollTimer_ invalidate];
+        autoscrollTimer_ = nil;
+    } 
+    else if (autoscrollTimer_ == nil) {
+        autoscrollTimer_ = [NSTimer scheduledTimerWithTimeInterval:(1.0 / 60.0)
+                                                           target:self 
+                                                         selector:@selector(autoscrollTimerFired:) 
+                                                         userInfo:cell 
+                                                          repeats:YES];
+    } 
+}
+
+- (CGFloat) autoscrollDistanceForProximityToEdge:(CGFloat)proximity {
+    return ceilf((AUTOSCROLL_THRESHOLD - proximity) / 5.0);
+}
+
+- (void) legalizeAutoscrollDistance {
+    CGFloat minimumLegalDistance = [self contentOffset].y * -1;
+    CGFloat maximumLegalDistance = [self contentSize].height - ([self frame].size.height + [self contentOffset].y);
+    autoscrollDistance_ = MAX(autoscrollDistance_, minimumLegalDistance);
+    autoscrollDistance_ = MIN(autoscrollDistance_, maximumLegalDistance);
+}
+
+- (void) autoscrollTimerFired:(NSTimer*)timer {
+    [self legalizeAutoscrollDistance];
+    
+    CGPoint contentOffset = [self contentOffset];
+    contentOffset.y += autoscrollDistance_;
+    [self setContentOffset:contentOffset];
+    
+    CVThumbnailGridViewCell *cell = (CVThumbnailGridViewCell *)[timer userInfo];
+    [cell moveByOffset:CGPointMake(0, autoscrollDistance_)];
+}
+
+#pragma mark Cell Selection Animation
 
 #define SELECT_ANIMATION_DURATION 0.15
 - (void) animateThumbnailViewCell:(CVThumbnailGridViewCell *) cell {
@@ -344,4 +459,9 @@
 - (NSUInteger) column {
 	return self.section;
 }
+
+- (NSUInteger) indexForNumOfColumns:(NSUInteger) numOfColumns {
+    return self.row * numOfColumns + self.column;
+}
+
 @end

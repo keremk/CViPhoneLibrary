@@ -50,18 +50,6 @@
     [thumbnailView_ reloadData];
 }
 
-//- (CVThumbnailGridView *) thumbnailView {
-//	return (CVThumbnailGridView *) self.view;
-//}
-
-//- (NSUInteger) numOfColumns {
-//    return [self.thumbnailView numOfColumns];
-//}
-//
-//- (void) setNumOfColumns:(NSUInteger) numOfColumns {
-//    [self.thumbnailView setNumOfColumns:numOfColumns];
-//}
-
 - (void)viewWillAppear:(BOOL)animated {
 	if (firstTimeDisplay_) {
 		[self.view setAlpha:0];
@@ -79,18 +67,21 @@
     [super viewDidAppear:animated];
     [self.thumbnailView flashScrollIndicators];    
 }
-/*
-// Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-*/
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning]; // Releases the view if it doesn't have a superview
     // Release anything that's not essential, such as cached data
 	
+}
+
+#pragma mark CVThumbnailGridViewDelegate methods
+
+- (CVThumbnailGridViewCell *)thumbnailView:(CVThumbnailGridView *)thumbnailView cellAtIndexPath:(NSIndexPath *)indexPath {
+    return nil;
+}
+
+- (NSInteger) numberOfCellsForThumbnailView:(CVThumbnailGridView *)thumbnailView {
+    return 0;
 }
 
 @end
