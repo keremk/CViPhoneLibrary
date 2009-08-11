@@ -15,102 +15,103 @@
 
 @implementation UIImage (CVAdornments)
 
-+ (CGSize) adornedImageSizeForImageSize:(CGSize) size usingStyle:(CVStyle *) style {
-    // Calculate the cell size by taking into account the frame and shadow
-    
-    CGSize adornedImageSize = CGSizeZero;
-    adornedImageSize = size;
-    
-    // Add border 
-    adornedImageSize.width += style.borderStyle.dimensions.left + style.borderStyle.dimensions.right;
-    adornedImageSize.height += style.borderStyle.dimensions.top + style.borderStyle.dimensions.bottom;
-    
-    // Add Shadow
-    adornedImageSize.width += abs(style.shadowStyle.offset.width) + SHADOW_BLUR_PIXELS;
-    adornedImageSize.height += abs(style.shadowStyle.offset.height) + SHADOW_BLUR_PIXELS;
-    
-    return adornedImageSize;
-}
-
-+ (UIImage *) adornedImageFromImage:(UIImage *) image usingStyle:(CVStyle *) style  { 
-    CGSize size = [UIImage adornedImageSizeForImageSize:style.imageSize usingStyle:style];
-
-    // IMPORTANT NOTE:
-    // DONOT use UIGraphicsBeginImageContext here
-    // This is done in the background thread and the UI* calls are not threadsafe with the 
-    // main UI thread. So use the pure CoreGraphics APIs instead.
-    
-    CGColorSpaceRef colorSpaceRef = CGColorSpaceCreateDeviceRGB();
-    CGContextRef context = CGBitmapContextCreate(NULL, size.width, size.height,
-                                                 BITS_PER_COMPONENT,
-                                                 NUM_OF_COMPONENTS * size.width, // We need to have RGBA with alpha for shadow effects 
-                                                 colorSpaceRef,
-                                                 kCGImageAlphaPremultipliedLast);
-    CGColorSpaceRelease(colorSpaceRef);
-    CGContextClearRect(context, CGRectMake(0.0, 0.0, size.width, size.height));
-    
-    CGSize borderSize = style.imageSize;
-    borderSize.width += style.borderStyle.dimensions.left + style.borderStyle.dimensions.right;
-    borderSize.height += style.borderStyle.dimensions.top + style.borderStyle.dimensions.bottom;
-    
-    CGRect rect;
-    
-    CGContextSetShadow(context, style.shadowStyle.offset, style.shadowStyle.blur);
-    
-    CGContextBeginTransparencyLayer(context, NULL);
-    CGPoint offset = CGPointZero;
-    
-    // Take into account the shadow based on its direction
-    if (style.shadowStyle.offset.width < 0) {
-        offset.x += abs(style.shadowStyle.offset.width) + SHADOW_BLUR_PIXELS;
-    }
-    if (style.shadowStyle.offset.height < 0) {
-        offset.y += abs(style.shadowStyle.offset.height) + SHADOW_BLUR_PIXELS;
-    }
-    CGContextTranslateCTM(context, offset.x, offset.y);
-    
-    // Stroke the border
-    if (style.borderStyle.width > 0 ) {
-        
-        // Prepare the rounded rect path (or simple rect if radius = 0)
-        rect = CGRectMake(0.0, 0.0, borderSize.width, borderSize.height);
-        CGContextBeginPath(context);
-        CVAddRoundedRectToPath(context, rect, style.borderStyle.cornerOvalWidth, style.borderStyle.cornerOvalHeight); 
-        CGContextClosePath(context);
-        CGColorRef color = [style.borderStyle.color CGColor];
-        CGContextSetFillColorWithColor(context, color);
-        CGContextDrawPath(context, kCGPathFill);
-    }
-
-    // Calculate the offset based on the border:
-    offset.x = style.borderStyle.dimensions.left;
-    offset.y = style.borderStyle.dimensions.top;
-    
-    //CGPoint offset = CGPointMake(style.borderStyle.dimensions.left, style.borderStyle.dimensions.top);
-
-    CGContextTranslateCTM(context, offset.x, offset.y);
-        
-    // Clip the image with rounded rect
-    if (style.borderStyle.cornerOvalWidth > 0 && style.borderStyle.cornerOvalHeight > 0) {
-        rect = CGRectMake(0.0, 0.0, style.imageSize.width, style.imageSize.height);
-        CGContextBeginPath(context);
-        CVAddRoundedRectToPath(context, rect, style.borderStyle.cornerOvalWidth, style.borderStyle.cornerOvalHeight); 
-        CGContextClosePath(context);
-        CGContextClip(context);
-    }
-        
-    // Draw the new image in
-    CGContextDrawImage(context, CGRectMake(0.0, 0.0, style.imageSize.width, style.imageSize.height), [image CGImage]);
-    
-    CGContextEndTransparencyLayer(context);
-
-    CGImageRef cgImage = CGBitmapContextCreateImage(context);
-    UIImage *processedImage = [UIImage imageWithCGImage:cgImage];
-    CGImageRelease(cgImage);
-    CGContextRelease(context);
-        
-    return processedImage;
-}
+//+ (CGSize) adornedImageSizeForImageSize:(CGSize) size usingStyle:(CVStyle *) style {
+//    // Calculate the cell size by taking into account the frame and shadow
+//    
+//    CGSize adornedImageSize = CGSizeZero;
+//    adornedImageSize = size;
+//    
+//    // Add border 
+//    adornedImageSize.width += style.borderStyle.dimensions.left + style.borderStyle.dimensions.right;
+//    adornedImageSize.height += style.borderStyle.dimensions.top + style.borderStyle.dimensions.bottom;
+//    
+//    // Add Shadow
+//    adornedImageSize.width += abs(style.shadowStyle.offset.width) + SHADOW_BLUR_PIXELS;
+//    adornedImageSize.height += abs(style.shadowStyle.offset.height) + SHADOW_BLUR_PIXELS;
+//    
+//    return adornedImageSize;
+//}
+//
+//+ (UIImage *) adornedImageFromImage:(UIImage *) image usingStyle:(CVStyle *) style  { 
+//    CGSize size = [UIImage adornedImageSizeForImageSize:style.imageSize usingStyle:style];
+//
+//    // IMPORTANT NOTE:
+//    // DONOT use UIGraphicsBeginImageContext here
+//    // This is done in the background thread and the UI* calls are not threadsafe with the 
+//    // main UI thread. So use the pure CoreGraphics APIs instead.
+//    
+//    CGColorSpaceRef colorSpaceRef = CGColorSpaceCreateDeviceRGB();
+//    CGContextRef context = CGBitmapContextCreate(NULL, size.width, size.height,
+//                                                 BITS_PER_COMPONENT,
+//                                                 NUM_OF_COMPONENTS * size.width, // We need to have RGBA with alpha for shadow effects 
+//                                                 colorSpaceRef,
+//                                                 kCGImageAlphaPremultipliedLast);
+//    CGColorSpaceRelease(colorSpaceRef);
+//    CGContextClearRect(context, CGRectMake(0.0, 0.0, size.width, size.height));
+//
+//    CGContextBeginTransparencyLayer(context, NULL);
+//
+//    CGContextSetShadow(context, style.shadowStyle.offset, style.shadowStyle.blur);
+//
+//    CGPoint offset = CGPointZero;
+//    
+//    // Take into account the shadow based on its direction
+//    if (style.shadowStyle.offset.width < 0) {
+//        offset.x += abs(style.shadowStyle.offset.width) + SHADOW_BLUR_PIXELS;
+//    }
+//    if (style.shadowStyle.offset.height < 0) {
+//        offset.y += abs(style.shadowStyle.offset.height) + SHADOW_BLUR_PIXELS;
+//    }
+//    CGContextTranslateCTM(context, offset.x, offset.y);
+//
+//    
+//    // Stroke the border
+//    CGSize borderSize = style.imageSize;
+//    borderSize.width += style.borderStyle.dimensions.left + style.borderStyle.dimensions.right;
+//    borderSize.height += style.borderStyle.dimensions.top + style.borderStyle.dimensions.bottom;
+//
+//    CGRect rect;
+//    if (style.borderStyle.width > 0 ) {
+//        
+//        // Prepare the rounded rect path (or simple rect if radius = 0)
+//        rect = CGRectMake(0.0, 0.0, borderSize.width, borderSize.height);
+//        CGContextBeginPath(context);
+//        CVAddRoundedRectToPath(context, rect, style.borderStyle.cornerOvalWidth, style.borderStyle.cornerOvalHeight); 
+//        CGContextClosePath(context);
+//        CGColorRef color = [style.borderStyle.color CGColor];
+//        CGContextSetFillColorWithColor(context, color);
+//        CGContextDrawPath(context, kCGPathFill);
+//    }
+//
+//    // Calculate the offset based on the border:
+//    offset.x = style.borderStyle.dimensions.left;
+//    offset.y = style.borderStyle.dimensions.top;
+//    
+//    //CGPoint offset = CGPointMake(style.borderStyle.dimensions.left, style.borderStyle.dimensions.top);
+//
+//    CGContextTranslateCTM(context, offset.x, offset.y);
+//        
+//    // Clip the image with rounded rect
+//    if (style.borderStyle.cornerOvalWidth > 0 && style.borderStyle.cornerOvalHeight > 0) {
+//        rect = CGRectMake(0.0, 0.0, style.imageSize.width, style.imageSize.height);
+//        CGContextBeginPath(context);
+//        CVAddRoundedRectToPath(context, rect, style.borderStyle.cornerOvalWidth, style.borderStyle.cornerOvalHeight); 
+//        CGContextClosePath(context);
+//        CGContextClip(context);
+//    }
+//        
+//    // Draw the new image in
+//    CGContextDrawImage(context, CGRectMake(0.0, 0.0, style.imageSize.width, style.imageSize.height), [image CGImage]);
+//    
+//    CGContextEndTransparencyLayer(context);
+//
+//    CGImageRef cgImage = CGBitmapContextCreateImage(context);
+//    UIImage *processedImage = [UIImage imageWithCGImage:cgImage];
+//    CGImageRelease(cgImage);
+//    CGContextRelease(context);
+//        
+//    return processedImage;
+//}
 
 - (NSUInteger) imageMemorySize {
     if (nil == self) {

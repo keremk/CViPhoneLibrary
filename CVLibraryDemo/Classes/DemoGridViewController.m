@@ -63,7 +63,8 @@
 - (UIImage *) adornedImageLoadingIcon {
     if (nil == adornedImageLoadingIcon_) {
         if (nil != self.thumbnailView.cellStyle) {
-            self.adornedImageLoadingIcon = [UIImage adornedImageFromImage:self.imageLoadingIcon usingStyle:self.thumbnailView.cellStyle];
+//            self.adornedImageLoadingIcon = [UIImage adornedImageFromImage:self.imageLoadingIcon usingStyle:self.thumbnailView.cellStyle];
+            self.adornedImageLoadingIcon = [self.thumbnailView.cellStyle imageByApplyingStyleToImage:self.imageLoadingIcon];
         }
     }
     return adornedImageLoadingIcon_;

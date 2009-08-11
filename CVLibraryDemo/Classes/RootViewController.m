@@ -147,9 +147,11 @@
     [self.navigationController pushViewController:demoGridViewController animated:YES];
     
     CVThumbnailGridView *gridView = [demoGridViewController thumbnailView];
-//    [gridView setThumbnailImageSize:CGSizeMake(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)];
     [gridView setCellStyle:cellStyle];
     [gridView setNumOfColumns:0];
+    if (GENERATED_IMAGE_LIST_DEMO == indexPath.row) {
+        [gridView setEditing:YES];
+    }
     [gridView setFitNumberOfColumnsToFullWidth:YES];
 
     [borderStyle release];

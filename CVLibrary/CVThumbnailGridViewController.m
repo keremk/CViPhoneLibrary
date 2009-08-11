@@ -44,7 +44,7 @@
     
 	thumbnailView_ = [[CVThumbnailGridView alloc] initWithFrame:[[self view] bounds]];
 	[thumbnailView_ setDataSource:self];	
-	[thumbnailView_ setThumbnailViewDelegate:self];
+	[thumbnailView_ setDelegate:self];
 	[thumbnailView_ setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
 	[[self view] addSubview:thumbnailView_];
     [thumbnailView_ reloadData];

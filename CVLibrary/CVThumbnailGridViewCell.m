@@ -44,6 +44,7 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
 		}
         [self setUserInteractionEnabled:YES];
         [self setOpaque:YES];
+        isInEditMode_ = NO;
 //        [self setExclusiveTouch:YES];
     }
     return self;
@@ -67,17 +68,25 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
     [thumbnailImageView_ setFrame:self.bounds];
 }
 
+
+
 #pragma mark Touch events
 
 - (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    // store the location of the starting touch so we can decide when we've moved far enough to drag
-    touchLocation_ = [[touches anyObject] locationInView:self];
-    NSLog(@"Cell %f, %f", touchLocation_.x, touchLocation_.y);
-    if ([delegate_ respondsToSelector:@selector(thumbnailGridViewCellStartedTracking:)])
-        [delegate_ thumbnailGridViewCellStartedTracking:self];
+    isInEditMode_ = [delegate_ isInEditMode];
+    
+    if (isInEditMode_) {
+        // store the location of the starting touch so we can decide when we've moved far enough to drag
+        touchLocation_ = [[touches anyObject] locationInView:self];
+//        NSLog(@"Cell %f, %f", touchLocation_.x, touchLocation_.y);
+        if ([delegate_ respondsToSelector:@selector(thumbnailGridViewCellStartedTracking:)])
+            [delegate_ thumbnailGridViewCellStartedTracking:self];
+    }
 }
 
 - (void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    if (!isInEditMode_) return;
+    
     // we want to establish a minimum distance that the touch has to move before it counts as dragging,
     // so that the slight movement involved in a tap doesn't cause the frame to move.
     
@@ -94,7 +103,7 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
     }
 }
 
-- (void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+- (void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {    
     if (dragging_) {
         [self goHome];
         dragging_ = NO;
@@ -103,11 +112,13 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
             [delegate_ thumbnailGridViewCellWasTapped:self];
     }
     
-    if ([delegate_ respondsToSelector:@selector(thumbnailGridViewCellStoppedTracking:)]) 
+    if (isInEditMode_ && [delegate_ respondsToSelector:@selector(thumbnailGridViewCellStoppedTracking:)]) 
         [delegate_ thumbnailGridViewCellStoppedTracking:self];
 }
 
 - (void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+    if (!isInEditMode_) return;
+    
     [self goHome];
     dragging_ = NO;
     if ([delegate_ respondsToSelector:@selector(thumbnailGridViewCellStoppedTracking:)]) 

@@ -10,8 +10,8 @@
 #import "CVStyle.h"
 
 @interface UIImage (CVAdornments)
-+ (CGSize) adornedImageSizeForImageSize:(CGSize) size usingStyle:(CVStyle *) style;
-+ (UIImage *) adornedImageFromImage:(UIImage *) image usingStyle:(CVStyle *) style; 
+//+ (CGSize) adornedImageSizeForImageSize:(CGSize) size usingStyle:(CVStyle *) style;
+//+ (UIImage *) adornedImageFromImage:(UIImage *) image usingStyle:(CVStyle *) style; 
 
 - (NSUInteger) imageMemorySize;
 @end

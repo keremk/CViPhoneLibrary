@@ -28,6 +28,8 @@
     NSMutableDictionary *thumbnailsInUse_;
     NSInteger firstVisibleRow_, lastVisibleRow_;
     BOOL fitNumberOfColumnsToFullWidth_;
+
+    BOOL editing_;
     
     NSTimer *autoscrollTimer_;  // Timer used for auto-scrolling.
     CGFloat autoscrollDistance_;  // Distance to scroll the thumb view when auto-scroll timer fires.
@@ -35,7 +37,7 @@
 }
 
 @property (nonatomic, assign) id <CVThumbnailGridViewDataSource> dataSource;
-@property (nonatomic, assign) id <CVThumbnailGridViewDelegate> thumbnailViewDelegate;
+@property (nonatomic, assign) id <CVThumbnailGridViewDelegate> delegate;
 @property (nonatomic) NSUInteger thumbnailCount;
 @property (nonatomic) NSUInteger numOfRows;
 @property (nonatomic) NSUInteger numOfColumns;
@@ -47,6 +49,7 @@
 @property (nonatomic, retain) CVStyle *cellStyle;
 @property (nonatomic) BOOL fitNumberOfColumnsToFullWidth;
 @property (nonatomic) BOOL animateSelection;
+@property (nonatomic) BOOL editing;
 
 - (id) initWithFrame:(CGRect)frame;
 - (void) reloadData;

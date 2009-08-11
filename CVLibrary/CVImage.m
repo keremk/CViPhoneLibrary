@@ -55,7 +55,6 @@
     return self;    
 }
 
-
 - (void) beginLoadingImage {
     if (!isLoading_) {
         isLoading_ = YES;
@@ -71,7 +70,8 @@
         [image_ release];
         image_ = [image retain];
         if (nil != style) {
-            adornedImage_ = [[UIImage adornedImageFromImage:image usingStyle:style] retain];
+//            adornedImage_ = [[UIImage adornedImageFromImage:image usingStyle:style] retain];
+            adornedImage_ = [[style imageByApplyingStyleToImage:image_] retain];
         }
         isLoaded_ = YES;
         isLoading_ = NO;

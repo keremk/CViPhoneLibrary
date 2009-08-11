@@ -29,7 +29,7 @@
 
 @implementation CVThumbnailGridView
 @synthesize dataSource = dataSource_;
-@synthesize thumbnailViewDelegate = delegate_;
+@synthesize delegate = delegate_;
 @synthesize numOfRows = numOfRows_;
 @synthesize numOfColumns = numOfColumns_;
 @synthesize leftMargin = leftMargin_;
@@ -41,6 +41,7 @@
 @synthesize cellStyle = cellStyle_;
 @synthesize fitNumberOfColumnsToFullWidth = fitNumberOfColumnsToFullWidth_;
 @synthesize animateSelection = animateSelection_;
+@synthesize editing = editing_;
 
 - (void)dealloc {
     [cellStyle_ release];
@@ -79,6 +80,7 @@
     isAnimated_ = NO;
     animateSelection_ = YES;
     fitNumberOfColumnsToFullWidth_ = NO;
+    editing_ = NO;
     
     cellStyle_ = [[CVStyle alloc] init];     
     thumbnailsInUse_ = [[NSMutableDictionary alloc] init];
@@ -128,7 +130,8 @@
 }
 
 - (CGSize) recalculateThumbnailCellSize {
-    CGSize cellSize = [UIImage adornedImageSizeForImageSize:cellStyle_.imageSize usingStyle:cellStyle_];
+//    CGSize cellSize = [UIImage adornedImageSizeForImageSize:cellStyle_.imageSize usingStyle:cellStyle_];
+    CGSize cellSize = [cellStyle_ sizeAfterStylingImage];
     
     return cellSize;
 }
@@ -253,7 +256,6 @@
                 [reusableThumbnails_ addObject:thumbnail];
                 [thumbnail removeFromSuperview];
                 [thumbnailsInUse_ removeObjectForKey:[self keyFromIndexPath:[thumbnail indexPath]]];
-    //            NSLog(@"Thumbnail %d, %d removed", thumbnail.indexPath.row, thumbnail.indexPath.column);
             }
         }
     }
@@ -275,12 +277,17 @@
 
 #pragma mark CVThumbnailGridViewCellDelegate methods 
 
+- (BOOL) isInEditMode {
+    return editing_;
+}
+
 - (void)thumbnailGridViewCellWasTapped:(CVThumbnailGridViewCell *) cell {
     if (animateSelection_) {
         [self animateThumbnailViewCell:cell];
-    }
-    if ([delegate_ respondsToSelector:@selector(thumbnailView:didSelectCellAtIndexPath:)]) {
-        [delegate_ thumbnailView:self didSelectCellAtIndexPath:[cell indexPath]];
+    } else {
+        if ([delegate_ respondsToSelector:@selector(thumbnailView:didSelectCellAtIndexPath:)]) {
+            [delegate_ thumbnailView:self didSelectCellAtIndexPath:[cell indexPath]];
+        }
     }
 }
 
@@ -304,7 +311,7 @@
     NSUInteger startingRow = floor([draggingThumb home].origin.y / (thumbnailCellSize_.height + rowSpacing_));
     NSUInteger startingIndex = startingRow * numOfColumns_ + startingColumn;
 
-    NSLog(@"Start %d, %d - %d  -- Move to: %d, %d - %d", startingRow, startingColumn, startingIndex, draggingThumbMoveToRow, draggingThumbMoveToColumn, moveToIndex);
+//    NSLog(@"Start %d, %d - %d  -- Move to: %d, %d - %d", startingRow, startingColumn, startingIndex, draggingThumbMoveToRow, draggingThumbMoveToColumn, moveToIndex);
 
     if (moveToIndex == startingIndex) return;
     
@@ -314,11 +321,11 @@
     NSInteger endIndex = moveToIndex;
     NSInteger increment = moveToHigherIndex ? 1 : -1;
 
-    NSLog(@"StartIndex = %d, EndIndex = %d, increment = %d", i, endIndex, increment);
+//    NSLog(@"StartIndex = %d, EndIndex = %d, increment = %d", i, endIndex, increment);
     while (i != endIndex + increment) {
         NSInteger row = floor(i / numOfColumns_);
         NSInteger column = i - row * numOfColumns_;
-        NSLog(@"NewRow - %d, NewColumn - %d For index = %d", row, column, i);
+//        NSLog(@"NewRow - %d, NewColumn - %d For index = %d", row, column, i);
         CVThumbnailGridViewCell *cell = [self cellForIndexPath:[NSIndexPath indexPathForRow:row column:column]];
         if (nil == cell) {
             NSLog(@"Cell is nil");
@@ -334,7 +341,7 @@
                 moveToColumn = 0;
                 moveToRow = row - increment;
             }
-            NSLog(@"Calculated -> Start (%d, %d) MoveTo (%d, %d)", row, column, moveToRow, moveToColumn);
+//            NSLog(@"Calculated -> Start (%d, %d) MoveTo (%d, %d)", row, column, moveToRow, moveToColumn);
             CGRect frame = [self rectForColumn:moveToColumn row:moveToRow];
             
             [cell setIndexPath:[NSIndexPath indexPathForRow:moveToRow column:moveToColumn]];
@@ -444,7 +451,10 @@
 		[UIView commitAnimations];			
 	} else {
 		//NSLog(@"***Animation 3 - x=%f, y=%f, width=%f, height=%f ", cell.frame.origin.x, cell.frame.origin.y, cell.frame.size.width, cell.frame.size.height);
-		[delegate_ thumbnailView:self didSelectCellAtIndexPath:cell.indexPath];		 
+        if ([delegate_ respondsToSelector:@selector(thumbnailView:didSelectCellAtIndexPath:)]) {
+            [delegate_ thumbnailView:self didSelectCellAtIndexPath:[cell indexPath]];
+        }
+
 		isAnimated_ = NO;
 	}	
 }

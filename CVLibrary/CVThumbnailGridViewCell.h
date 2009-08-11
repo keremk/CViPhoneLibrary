@@ -17,7 +17,7 @@
 	NSIndexPath *indexPath_;
 	UIImageView *thumbnailImageView_;
     CGPoint touchLocation_; // Location of touch in own coordinates (stays constant during dragging).
-    BOOL dragging_;
+    BOOL dragging_, isInEditMode_;
     CGRect home_;
 }
 
@@ -33,6 +33,8 @@
 @end
 
 @protocol CVThumbnailGridViewCellDelegate <NSObject>
+@required
+- (BOOL) isInEditMode;
 
 @optional
 - (void)thumbnailGridViewCellWasTapped:(CVThumbnailGridViewCell *) cell;
