@@ -19,12 +19,15 @@
     CGPoint touchLocation_; // Location of touch in own coordinates (stays constant during dragging).
     BOOL dragging_, isInEditMode_;
     CGRect home_;
+    
+    CVImage *cachedImage_;
 }
 
 @property (nonatomic, assign) id<CVThumbnailGridViewCellDelegate> delegate;
 @property (nonatomic, retain) NSIndexPath *indexPath;
 @property (nonatomic, assign) CGRect home;
 @property (nonatomic, assign) CGPoint touchLocation;
+@property (nonatomic, assign) CVImage *cachedImage;
 
 - (id) initWithFrame:(CGRect)frame reuseIdentifier:(NSString *) identifier;
 - (void) setImage:(UIImage *) image;

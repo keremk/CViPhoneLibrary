@@ -28,6 +28,7 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
 @synthesize indexPath = indexPath_;
 @synthesize home = home_;
 @synthesize touchLocation = touchLocation_;
+@synthesize cachedImage = cachedImage_;
 
 - (void)dealloc {
 	[indexPath_ release];
@@ -54,6 +55,26 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
 	[thumbnailImageView_ setImage:image];
 }
 
+static char imageObservingContext;
+
+- (void) setCachedImage:(CVImage *) image {
+    if (cachedImage_ != image) {
+        [cachedImage_ removeObserver:self forKeyPath:@"image"];
+        [cachedImage_ release];
+        cachedImage_ = [image retain];
+        [cachedImage_ addObserver:self forKeyPath:@"image" options:NSKeyValueChangeSetting context:&imageObservingContext];
+    }
+}
+
+- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if (context == &imageObservingContext) {
+        CVImage *cachedImage = (CVImage *) object;
+        [thumbnailImageView_ setImage:[cachedImage adornedImage]];
+    } else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
+}
+
 //- (void) setIndexPath:(NSIndexPath *) indexPath {
 //    if (indexPath_ != indexPath) {
 //        [indexPath_ release];
@@ -67,8 +88,6 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
 	
     [thumbnailImageView_ setFrame:self.bounds];
 }
-
-
 
 #pragma mark Touch events
 
