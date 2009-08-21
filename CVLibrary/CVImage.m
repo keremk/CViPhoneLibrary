@@ -11,21 +11,20 @@
 #import "UIImage+Adornments.h"
 #include "CGUtils.h"
 
-
 @implementation CVImage
 @synthesize imageUrl = imageUrl_;
 @synthesize isLoaded = isLoaded_;
 @synthesize isLoading = isLoading_;
 @synthesize image = image_;
 @synthesize delegate = delegate_;
-@synthesize adornedImage = adornedImage_;
+//@synthesize adornedImage = adornedImage_;
 @synthesize indexPath = indexPath_;
 @synthesize previousMemorySize = previousMemorySize_;
 
 - (void) dealloc {
     [image_ release];
     [imageUrl_ release];
-    [adornedImage_ release];
+//    [adornedImage_ release];
     [indexPath_ release];
     [super dealloc];
 }
@@ -49,7 +48,7 @@
         isLoaded_ = NO;
         isLoading_ = NO;
         image_ = nil;
-        adornedImage_ = nil;
+//        adornedImage_ = nil;
         previousMemorySize_ = 0;
     }
     return self;    
@@ -63,16 +62,16 @@
     }
 }
 
-- (void) setImage:(UIImage *) image usingStyle:(CVStyle *) style {
+- (void) setImage:(UIImage *) image {
     if (image_ != image) {
         [self willChangeValueForKey:@"image"];
         previousMemorySize_ = [self memorySize];
         [image_ release];
         image_ = [image retain];
-        if (nil != style) {
-//            adornedImage_ = [[UIImage adornedImageFromImage:image usingStyle:style] retain];
-            adornedImage_ = [[style imageByApplyingStyleToImage:image_] retain];
-        }
+//        if (nil != style) {
+////            adornedImage_ = [[UIImage adornedImageFromImage:image usingStyle:style] retain];
+//            adornedImage_ = [[style imageByApplyingStyleToImage:image_] retain];
+//        }
         isLoaded_ = YES;
         isLoading_ = NO;
         [self didChangeValueForKey:@"image"];
@@ -81,9 +80,10 @@
 
 - (NSUInteger) memorySize {
     NSUInteger imageSize = (nil != image_) ? [image_ imageMemorySize] : 0;
-    NSUInteger adornedImageSize = (nil != adornedImage_) ? [adornedImage_ imageMemorySize] : 0;
-        
-    return imageSize + adornedImageSize;
+    return imageSize;
+//    NSUInteger adornedImageSize = (nil != adornedImage_) ? [adornedImage_ imageMemorySize] : 0;
+//        
+//    return imageSize + adornedImageSize;
 }
 
 @end

@@ -10,8 +10,13 @@
 #import "CVThumbnailGridViewCell.h"
 #import "CVStyle.h"
 
+typedef enum {
+   CVThumbnailGridViewCellEditingStyleNone,
+   CVThumbnailGridViewCellEditingStyleDelete,
+   CVThumbnailGridViewCellEditingStyleInsert
+} CVThumbnailGridViewCellEditingStyle;
+
 @protocol CVThumbnailGridViewDataSource, CVThumbnailGridViewDelegate;
-//@class TestView;
 
 @interface CVThumbnailGridView : UIScrollView<CVThumbnailGridViewCellDelegate> {
 @private
@@ -30,10 +35,14 @@
     BOOL fitNumberOfColumnsToFullWidth_;
 
     BOOL editing_;
+    UIImage *imageLoadingIcon_, *adornedImageLoadingIcon_;
     
     NSTimer *autoscrollTimer_;  // Timer used for auto-scrolling.
     CGFloat autoscrollDistance_;  // Distance to scroll the thumb view when auto-scroll timer fires.
 
+    UIImage *deleteSignIcon_;
+    UIColor *deleteSignForegroundColor_;
+    UIColor *deleteSignBackgroundColor_;
 }
 
 @property (nonatomic, assign) id <CVThumbnailGridViewDataSource> dataSource;
@@ -50,11 +59,17 @@
 @property (nonatomic) BOOL fitNumberOfColumnsToFullWidth;
 @property (nonatomic) BOOL animateSelection;
 @property (nonatomic) BOOL editing;
+@property (nonatomic, retain) UIImage *imageLoadingIcon;
+@property (nonatomic, retain) UIImage *deleteSignIcon;
+@property (nonatomic, retain) UIColor *deleteSignForegroundColor;
+@property (nonatomic, retain) UIColor *deleteSignBackgroundColor;
 
 - (id) initWithFrame:(CGRect)frame;
 - (void) reloadData;
 - (CVThumbnailGridViewCell *) dequeueReusableCellWithIdentifier:(NSString *) identifier;
 - (CVThumbnailGridViewCell *) cellForIndexPath:(NSIndexPath *) indexPath;
+- (void)deleteCellsAtIndexPaths:(NSArray *)indexPaths;
+- (void) insertCellsAtIndexPaths:(NSArray *) indexPaths;
 @end
 
 
@@ -63,7 +78,10 @@
 - (NSInteger) numberOfCellsForThumbnailView:(CVThumbnailGridView *)thumbnailView;
 - (CVThumbnailGridViewCell *)thumbnailView:(CVThumbnailGridView *)thumbnailView cellAtIndexPath:(NSIndexPath *)indexPath;
 @optional
-- (void)thumbnailView:(CVThumbnailGridView *)thumbnailView moveCellAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath;
+- (BOOL) thumbnailView:(CVThumbnailGridView *)thumbnailView canMoveCellAtIndexPath:(NSIndexPath *)indexPath;
+- (void) thumbnailView:(CVThumbnailGridView *)thumbnailView moveCellAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath;
+- (BOOL) thumbnailView:(CVThumbnailGridView *)thumbnailView canEditCellAtIndexPath:(NSIndexPath *)indexPath;
+- (void) thumbnailView:(CVThumbnailGridView *)thumbnailView commitEditingStyle:(CVThumbnailGridViewCellEditingStyle) editingStyle forCellAtIndexPath:(NSIndexPath *) indexPath;
 @end
 
 @protocol CVThumbnailGridViewDelegate<NSObject>
@@ -73,7 +91,8 @@
 
 
 @interface NSIndexPath (ThumbnailView)
-+ (NSIndexPath *)indexPathForRow:(NSUInteger)row column:(NSUInteger)column;
++ (NSIndexPath *) indexPathForRow:(NSUInteger)row column:(NSUInteger)column;
++ (NSIndexPath *) indexPathForIndex:(NSUInteger) index forNumOfColumns:(NSUInteger) numOfColumns;
 @property (nonatomic, readonly) NSUInteger column;
 - (NSUInteger) indexForNumOfColumns:(NSUInteger) numOfColumns;
 @end

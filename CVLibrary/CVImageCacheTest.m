@@ -71,7 +71,7 @@
     NSUInteger imageSize = [image imageMemorySize];
     
     CVImage *cvImage = [[CVImage alloc] initWithUrl:@"1" indexPath:nil];
-    [cvImage setImage:image usingStyle:nil];
+    [cvImage setImage:image];
     [imageCache setImage:cvImage];
     [cvImage release];
     
@@ -93,14 +93,14 @@
     STAssertTrue(memoryCacheSize == 0, @"When there is no image contents, cache size should stay the same");
     
     // Step 2
-    [cvImage setImage:image usingStyle:nil];    
+    [cvImage setImage:image];    
     memoryCacheSize = [imageCache currentMemoryCacheSize];    
     STAssertTrue(memoryCacheSize == imageSize, @"When the image contents change, cache should update");
     
     // Step 3
     image = [self fakeImageForText:@"1" size:CGSizeMake(150.0, 150.0)];
     imageSize = [image imageMemorySize];    
-    [cvImage setImage:image usingStyle:nil];
+    [cvImage setImage:image];
     memoryCacheSize = [imageCache currentMemoryCacheSize];
     STAssertTrue(memoryCacheSize == imageSize, @"When the image contents change again, cache should update");
     
@@ -129,7 +129,7 @@
         totalSize += imageSize;
         
         CVImage *cvImage = [imageCache imageForKey:imageName];
-        [cvImage setImage:image usingStyle:nil];        
+        [cvImage setImage:image];        
     }
     memoryCacheSize = [imageCache currentMemoryCacheSize];
     if (totalSize > TEST_CACHE_SIZE) {

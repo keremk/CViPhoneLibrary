@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "DataServices.h"
+#import "DemoItem.h"
 
 @interface FakeDataService : NSObject <DemoDataService>{
     NSObject <DemoDataServiceDelegate> *delegate_;
@@ -15,5 +16,6 @@
 }
 
 - (id) init;
-
+- (UIImage *) createFakeImageForUrl:(NSDictionary *) args;
+- (DemoItem *) createDummyDemoItemForId:(NSNumber *) demoItemId title:(NSString *) title url:(NSString *) url;
 @end

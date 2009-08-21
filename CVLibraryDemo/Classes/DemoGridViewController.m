@@ -9,23 +9,25 @@
 #import "DemoGridViewController.h"
 #import "DemoItem.h"
 #import "ConfigOptions.h"
+#import "FakeDataService.h"
 
 @interface DemoGridViewController()
 - (void) configureGridViewSelected;
 - (void) loadDemoItems;
+- (void) addNewItem:(id) sender;
+- (void) insertNewItem:(id) sender;
 @end
 
 @implementation DemoGridViewController
 @synthesize dataService = dataService_;
-@synthesize imageLoadingIcon = imageLoadingIcon_;
-@synthesize adornedImageLoadingIcon = adornedImageLoadingIcon_;
+@synthesize configEnabled = configEnabled_;
+@synthesize insertItemsDemo = insertItemsDemo_;
 
 - (void)dealloc {
     [demoItems_ release];
-    [imageLoadingIcon_ release];
-    [adornedImageLoadingIcon_ release];  
     [dataService_ setDelegate:nil];
     [dataService_ release];
+    [addItemViewController_ release];
     [super dealloc];
 }
 
@@ -43,31 +45,86 @@
     if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
         // Custom initialization
         demoItems_ = nil;
+        configEnabled_ = YES;
+        insertItemsDemo_ = NO;
+        addItemViewController_ = nil;
     }
     return self;
+}
+
+- (void) setEditing:(BOOL) editing animated:(BOOL) animated {
+    [super setEditing:editing animated:animated];
+    [self.thumbnailView setEditing:editing];
 }
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.imageLoadingIcon = [UIImage imageNamed:@"LoadingIcon.png"];
-    UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithTitle:@"Config" 
-                                                                  style:UIBarButtonItemStyleBordered 
-                                                                 target:self 
-                                                                 action:@selector(configureGridViewSelected)]; 
-    self.navigationItem.rightBarButtonItem = barButton;
-    [barButton release];
+    self.thumbnailView.imageLoadingIcon = [UIImage imageNamed:@"LoadingIcon.png"];
+    if (configEnabled_) {
+        UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithTitle:@"Config" 
+                                                                      style:UIBarButtonItemStyleBordered 
+                                                                     target:self 
+                                                                     action:@selector(configureGridViewSelected)]; 
+        self.navigationItem.rightBarButtonItem = barButton;
+        [barButton release];
+    }
+    if (insertItemsDemo_) {
+        UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd 
+                                                                                   target:self 
+                                                                                   action:@selector(addNewItem:)];
+        self.navigationItem.rightBarButtonItem = barButton;
+        [barButton release];
+    }
 //    [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"BGTile.png"]]]; 
 }
 
-- (UIImage *) adornedImageLoadingIcon {
-    if (nil == adornedImageLoadingIcon_) {
-        if (nil != self.thumbnailView.cellStyle) {
-//            self.adornedImageLoadingIcon = [UIImage adornedImageFromImage:self.imageLoadingIcon usingStyle:self.thumbnailView.cellStyle];
-            self.adornedImageLoadingIcon = [self.thumbnailView.cellStyle imageByApplyingStyleToImage:self.imageLoadingIcon];
-        }
+- (void) addNewItem:(id) sender {
+    if (nil == addItemViewController_) { 
+        addItemViewController_ = [[AddItemViewController alloc] initWithNibName:@"AddItemViewController" 
+                                                                                           bundle:nil];
     }
-    return adornedImageLoadingIcon_;
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:addItemViewController_];
+    navController.navigationBar.barStyle = UIBarStyleBlack;
+    UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithTitle:@"Save" 
+                                                                  style:UIBarButtonItemStyleBordered 
+                                                                 target:self 
+                                                                 action:@selector(insertNewItem:)]; 
+    addItemViewController_.navigationItem.rightBarButtonItem = barButton;
+    [[self navigationController] presentModalViewController:navController animated:YES];    
+    [barButton release];
+    [navController release];
+}
+
+- (void) insertNewItem:(id) sender {
+    NSString *itemName = addItemViewController_.itemName.text;
+    NSString *itemIndex = addItemViewController_.itemIndex.text;
+    NSInteger index = [itemIndex intValue];
+    if ((index >= 0 && index < [demoItems_ count]) && ([dataService_ respondsToSelector:@selector(createFakeImageForUrl:)])) {
+        FakeDataService *fakeDataService = (FakeDataService *) dataService_;
+        
+        // Create a fake DemoItem
+        int randomId = (arc4random() % 501) + 500;
+        NSNumber *demoItemId = [NSNumber numberWithInt:randomId];
+        NSString *title = [NSString stringWithFormat:@"Title_%d", randomId];
+        DemoItem *demoItem = [fakeDataService createDummyDemoItemForId:demoItemId title:title url:itemName];
+
+        // Create a fake image for it
+        NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:itemName, @"url", [self.thumbnailView cellStyle], @"style", nil];
+        UIImage *image = [fakeDataService createFakeImageForUrl:args];
+        
+        // Add to cache if it does not exist yet
+        CVImage *cvImage = [[CVImageCache sharedCVImageCache] imageForKey:itemName];
+        if (nil != cvImage && nil != image) {
+            [cvImage setImage:image];
+        }
+        
+        [demoItems_ insertObject:demoItem atIndex:index];
+        
+        NSIndexPath *indexPath = [NSIndexPath indexPathForIndex:index forNumOfColumns:[self.thumbnailView numOfColumns]];
+        [self.thumbnailView insertCellsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil]];        
+    }
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 - (void) configureGridViewSelected {
@@ -127,6 +184,7 @@
 - (NSInteger) numberOfCellsForThumbnailView:(CVThumbnailGridView *)thumbnailView {
     if (nil == demoItems_) {
         [self loadDemoItems];
+        self.thumbnailView.imageLoadingIcon = [UIImage imageNamed:@"LoadingIcon.png"];
     }
     return [demoItems_ count];
 }
@@ -135,31 +193,19 @@
     CVThumbnailGridViewCell *cell = [thumbnailView dequeueReusableCellWithIdentifier:@"Thumbnails"];
     if (nil == cell) {
         cell = [[[CVThumbnailGridViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"Thumbnails"] autorelease];
+//        [cell setDelegate:self.thumbnailView];
     }
     
-//    NSUInteger index = indexPath.row * [self.thumbnailView numOfColumns] + indexPath.column;
-    NSUInteger index = [indexPath indexForNumOfColumns:[self.thumbnailView numOfColumns]];
-    DemoItem *demoItem = (DemoItem *) [demoItems_ objectAtIndex:index];
+    DemoItem *demoItem = (DemoItem *) [demoItems_ objectAtIndex:[indexPath indexForNumOfColumns:[self.thumbnailView numOfColumns]]];
     CVImage *demoImage = [[[CVImageCache sharedCVImageCache] imageForKey:demoItem.imageUrl] retain];
-    UIImage *adornedImage = nil;
     if (nil == demoImage) {
         demoImage = [[CVImage alloc] initWithUrl:demoItem.imageUrl indexPath:indexPath];
         [demoImage setDelegate:self];
         [demoImage beginLoadingImage];
         [[CVImageCache sharedCVImageCache] setImage:demoImage];
-        adornedImage = self.adornedImageLoadingIcon;
-    } else {
-        if (demoImage.isLoaded) {
-            adornedImage = [demoImage adornedImage];
-        } else {
-            if (!demoImage.isLoading) {
-                [demoImage beginLoadingImage];
-            }
-            adornedImage = self.adornedImageLoadingIcon;
-        }
-    } 
+    }
     
-    [cell setImage:adornedImage];
+    [cell setCachedImage:demoImage];
     [demoImage release];
     return cell;
 }
@@ -174,10 +220,23 @@
     [demoItem release];
 }
 
+- (void) thumbnailView:(CVThumbnailGridView *)thumbnailView commitEditingStyle:(CVThumbnailGridViewCellEditingStyle) editingStyle forCellAtIndexPath:(NSIndexPath *) indexPath {
+    switch (editingStyle) {
+        case CVThumbnailGridViewCellEditingStyleInsert:
+            // TODO: We don't have a built-in Insert Action like UITableView yet, so this is never called
+            break;
+        case CVThumbnailGridViewCellEditingStyleDelete:
+            [thumbnailView deleteCellsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil]];
+            [demoItems_ removeObjectAtIndex:[indexPath indexForNumOfColumns:[thumbnailView numOfColumns]]];
+            break;
+        default:
+            break;
+    }
+
+}
+
 - (void) thumbnailView:(CVThumbnailGridView *) thumbnailView didSelectCellAtIndexPath:(NSIndexPath *) indexPath {
     NSUInteger index = indexPath.row * [thumbnailView numOfColumns] + indexPath.column;
-    
-    
 }
 
 #pragma mark DemoDataServiceDelegate methods
@@ -186,11 +245,17 @@
     [self.thumbnailView reloadData];
 }
 
-- (void) updatedWithImage:(CVImage *) image {
-    CVThumbnailGridViewCell *cell = [self.thumbnailView cellForIndexPath:image.indexPath];
-    [cell setImage:image.adornedImage];
+- (void) updatedImage:(NSDictionary *) dict {
+    NSString *url = [dict objectForKey:@"url"];
+    UIImage *image = [dict objectForKey:@"image"];
+    CVImage *cvImage = [[CVImageCache sharedCVImageCache] imageForKey:url];
+    
+    if (nil != cvImage && nil != image) {
+        [cvImage setImage:image];
+    }
+//    CVThumbnailGridViewCell *cell = [self.thumbnailView cellForIndexPath:image.indexPath];
+//    [cell setImage:image.adornedImage];
 }
-
 
 #pragma mark CVImageLoadingService methods
 - (void) beginLoadImageForUrl:(NSString *) url {

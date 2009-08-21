@@ -23,7 +23,7 @@
 
 - (id) initWithCoder:(NSCoder *) coder {
     if (self = [super initWithCoder:coder]) {
-        listOfDemos_ = [[NSArray alloc] initWithObjects:@"Generated Image List", @"Flickr Image List", nil];
+        listOfDemos_ = [[NSArray alloc] initWithObjects:@"Generated Image List", @"Flickr Image List", @"Edit Image List", @"Insert Items", nil];
     }
     return self;
 }
@@ -109,8 +109,10 @@
 
 #define GENERATED_IMAGE_LIST_DEMO 0
 #define FLICKR_IMAGE_LIST_DEMO 1
-#define THUMBNAIL_WIDTH 80
-#define THUMBNAIL_HEIGHT 87
+#define EDIT_IMAGE_LIST_DEMO 2
+#define INSERT_ITEMS_DEMO 3
+#define THUMBNAIL_WIDTH 70
+#define THUMBNAIL_HEIGHT 70 
 
 // Override to support row selection in the table view.
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -139,6 +141,18 @@
             dataService = [[FlickrDataService alloc] init];
             break;
         }
+        case EDIT_IMAGE_LIST_DEMO : {
+            dataService = [[FakeDataService alloc] init];
+            [demoGridViewController setConfigEnabled:NO];
+            demoGridViewController.navigationItem.rightBarButtonItem = [demoGridViewController editButtonItem];
+            break;
+        }
+        case INSERT_ITEMS_DEMO : {
+            dataService = [[FakeDataService alloc] init];
+            [demoGridViewController setConfigEnabled:NO];
+            [demoGridViewController setInsertItemsDemo:YES];
+            break;
+        }
         default:
             break;
     }    
@@ -149,8 +163,23 @@
     CVThumbnailGridView *gridView = [demoGridViewController thumbnailView];
     [gridView setCellStyle:cellStyle];
     [gridView setNumOfColumns:0];
-    if (GENERATED_IMAGE_LIST_DEMO == indexPath.row) {
-        [gridView setEditing:YES];
+    switch (indexPath.row) {
+        case GENERATED_IMAGE_LIST_DEMO: {
+            [gridView setEditing:YES];
+            break;
+        }
+        case EDIT_IMAGE_LIST_DEMO : {
+            [demoGridViewController setConfigEnabled:NO];
+            demoGridViewController.navigationItem.rightBarButtonItem = [demoGridViewController editButtonItem];
+            break;
+        }
+        case INSERT_ITEMS_DEMO : {
+            [demoGridViewController setConfigEnabled:NO];
+            [demoGridViewController setInsertItemsDemo:YES];
+            break;
+        }
+        default:
+            break;
     }
     [gridView setFitNumberOfColumnsToFullWidth:YES];
 

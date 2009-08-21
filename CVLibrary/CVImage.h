@@ -12,7 +12,7 @@
 @interface CVImage : NSObject {
     NSString *imageUrl_;
     UIImage *image_;
-    UIImage *adornedImage_;
+//    UIImage *adornedImage_;
     BOOL isLoaded_, isLoading_;
     id delegate_;
     NSIndexPath *indexPath_;
@@ -20,8 +20,8 @@
 }
 
 @property (nonatomic, assign) id delegate;
-@property (nonatomic, readonly) UIImage *image;
-@property (nonatomic, readonly) UIImage *adornedImage;
+@property (nonatomic, assign) UIImage *image;
+//@property (nonatomic, readonly) UIImage *adornedImage;
 @property (nonatomic, copy) NSString *imageUrl;
 @property (nonatomic) BOOL isLoaded;
 @property (nonatomic) BOOL isLoading;
@@ -30,7 +30,7 @@
 
 - (id) initWithUrl:(NSString *) url indexPath:(NSIndexPath *) indexPath;
 - (void) beginLoadingImage;
-- (void) setImage:(UIImage *) image usingStyle:(CVStyle *) style;
+//- (void) setImage:(UIImage *) image usingStyle:(CVStyle *) style;
 - (NSUInteger) memorySize;
 
 @end

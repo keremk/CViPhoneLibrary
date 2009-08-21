@@ -27,13 +27,9 @@
     return self;
 }
 
-#pragma mark CVRenderStyle
-
 #define SHADOW_BLUR_PIXELS 3 // Fudge factor used to take into account the fading of blur effect
 
-- (void) drawInContext:(CGContextRef) context forImageSize:(CGSize) imageSize {
-    CGContextSetShadow(context, self.offset, self.blur);
-
+- (CGPoint) effectiveOffset {
     // Take into account the shadow based on its direction
 
     CGPoint offset = CGPointZero;
@@ -43,7 +39,28 @@
     if (self.offset.height < 0) {
         offset.y += abs(self.offset.height) + SHADOW_BLUR_PIXELS;
     }
-    CGContextTranslateCTM(context, offset.x, offset.y);
+    return offset;
+}
+
+- (CGPoint) effectiveOffsetInUIKitCoordinateSystem {
+    CGPoint offset = CGPointZero;
+    if (self.offset.width < 0) {
+        offset.x += abs(self.offset.width) + SHADOW_BLUR_PIXELS;
+    }
+    if (self.offset.height > 0) {
+        offset.y += abs(self.offset.height) + SHADOW_BLUR_PIXELS;
+    }
+    return offset;
+}
+
+#pragma mark CVRenderStyle
+
+
+- (void) drawInContext:(CGContextRef) context forImageSize:(CGSize) imageSize {
+    CGContextSetShadow(context, self.offset, self.blur);
+
+    CGPoint effectiveOffset = [self effectiveOffset];
+    CGContextTranslateCTM(context, effectiveOffset.x, effectiveOffset.y);
 }
 
 - (CGSize) sizeAfterRenderingGivenInitialSize:(CGSize) size {

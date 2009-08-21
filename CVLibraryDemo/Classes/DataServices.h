@@ -14,7 +14,7 @@
 - (void) updatedWithItems:(NSArray *) items;
 
 @optional
-- (void) updatedWithImage:(CVImage *) image;
+- (void) updatedImage:(NSDictionary *) dict;
 @end
 
 @protocol DemoDataService <NSObject>

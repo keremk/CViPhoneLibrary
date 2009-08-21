@@ -12,7 +12,7 @@
 
 @interface FakeDataService()
 - (void) createDummyData;
-- (void) createFakeImageForUrl:(NSDictionary *) args;
+- (void) asynchCreateFakeImageForUrl:(NSDictionary *) args;
 @end
 
 
@@ -41,7 +41,7 @@
 
 - (void) beginLoadImageForUrl:(NSString *) url usingStyle:(CVStyle *)style {
     NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:url, @"url", style, @"style", nil];
-    NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(createFakeImageForUrl:) object:args];
+    NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(asynchCreateFakeImageForUrl:) object:args];
     [operationQueue_ addOperation:operation];
     [operation release];
 }
@@ -53,24 +53,33 @@
         NSNumber *demoItemId = [NSNumber numberWithInt:i];
         NSString *title = [NSString stringWithFormat:@"Title_%d", i];
         NSString *url = [NSString stringWithFormat:@"%d", i];
-        NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:demoItemId, @"demo_item_id", title, @"title", url, @"image_url", nil];
-        DemoItem *demoItem = [[DemoItem alloc] initWithDictionary:dict];
+        DemoItem *demoItem = [self createDummyDemoItemForId:demoItemId title:title url:url];
         [demoItems addObject:demoItem];
-        [demoItem release];
     }
     [pool release];
     [self.delegate performSelectorOnMainThread:@selector(updatedWithItems:) withObject:demoItems waitUntilDone:YES];
 }
 
+- (DemoItem *) createDummyDemoItemForId:(NSNumber *) demoItemId title:(NSString *) title url:(NSString *) url {
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:demoItemId, @"demo_item_id", title, @"title", url, @"image_url", nil];
+    DemoItem *demoItem = [[[DemoItem alloc] initWithDictionary:dict] autorelease];
+    return demoItem;
+}
+
 #define BITS_PER_COMPONENT 8
 #define NUM_OF_COMPONENTS 4
 
-- (void) createFakeImageForUrl:(NSDictionary *) args {
+- (void) asynchCreateFakeImageForUrl:(NSDictionary *) args {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    NSString *url = [args objectForKey:@"url"]; 
+    UIImage *adornedImage = [self createFakeImageForUrl:args];
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:adornedImage, @"image", url, @"url", nil];
+    [self.delegate performSelectorOnMainThread:@selector(updatedImage:) withObject:dict waitUntilDone:YES];
+    [pool release];
+}
 
-    NSString *url = [args objectForKey:@"url"];
-    CVImage *cvImage = [[CVImageCache sharedCVImageCache] imageForKey:url];
-    
+- (UIImage *) createFakeImageForUrl:(NSDictionary *) args { 
+    NSString *url = [args objectForKey:@"url"];    
     CVStyle *style = [args objectForKey:@"style"];
     CGSize size = {80, 87};
 
@@ -105,17 +114,9 @@
     UIImage *image = [UIImage imageWithCGImage:cgImage];
     CGImageRelease(cgImage);
     CGContextRelease(context);
+
+    UIImage *adornedImage = [style imageByApplyingStyleToImage:image];
     
-    if (nil != image && nil != cvImage) {        
-        [cvImage setImage:image usingStyle:style];
-    } else {
-        [cvImage setIsLoading:NO];
-        [cvImage setIsLoaded:NO];
-        NSLog(@"Text = %@", text);
-    }
-    [self.delegate performSelectorOnMainThread:@selector(updatedWithImage:) withObject:cvImage waitUntilDone:YES];
-    [pool release];
+    return adornedImage;
 }
-
-
 @end

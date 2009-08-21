@@ -21,10 +21,15 @@
 - (CVThumbnailGridViewCell *) createCellFromDataSourceForIndexPath:(NSIndexPath *) indexPath;
 - (NSString *) keyFromIndexPath:(NSIndexPath *) indexPath;
 - (void) cleanupNonVisibleCells;
+- (void) removeCell:(CVThumbnailGridViewCell *) cell;
 - (void) maybeAutoscrollForThumb:(CVThumbnailGridViewCell *) cell;
 - (CGFloat) autoscrollDistanceForProximityToEdge:(CGFloat)proximity;
 - (void) legalizeAutoscrollDistance;
 - (void) autoscrollTimerFired:(NSTimer*)timer;
+- (void) moveCellsStartingIndex:(NSUInteger) startIndex
+                    endingIndex:(NSUInteger) endIndex
+                  withIncrement:(NSInteger) increment
+                  excludingCell:(CVThumbnailGridViewCell *) excludedCell;
 @end 
 
 @implementation CVThumbnailGridView
@@ -42,13 +47,24 @@
 @synthesize fitNumberOfColumnsToFullWidth = fitNumberOfColumnsToFullWidth_;
 @synthesize animateSelection = animateSelection_;
 @synthesize editing = editing_;
+@synthesize imageLoadingIcon = imageLoadingIcon_;
+@synthesize deleteSignIcon = deleteSignIcon_;
+@synthesize deleteSignBackgroundColor = deleteSignBackgroundColor_;
+@synthesize deleteSignForegroundColor = deleteSignForegroundColor_;
 
 - (void)dealloc {
     [cellStyle_ release];
     [reusableThumbnails_ release];
     [thumbnailsInUse_ release];
+    [adornedImageLoadingIcon_ release];
+    [imageLoadingIcon_ release];
+    [deleteSignIcon_ release];
+    [deleteSignForegroundColor_ release];
+    [deleteSignBackgroundColor_ release];
     [super dealloc];
 }
+
+#pragma mark Initializers and properties
 
 #define LEFT_MARGIN_DEFAULT 5.0
 #define RIGHT_MARGIN_DEFAULT 5.0
@@ -88,6 +104,8 @@
     firstVisibleRow_ = NSIntegerMax;
     lastVisibleRow_ = NSIntegerMin;
     self.backgroundColor = [UIColor clearColor];
+    self.deleteSignBackgroundColor = [UIColor blackColor];
+    self.deleteSignForegroundColor = [UIColor redColor];
     [self setDelaysContentTouches:YES];
     [self setCanCancelContentTouches:NO];
 }
@@ -101,8 +119,7 @@
     }
 }
 
-- (void) setNumOfColumns:(NSUInteger) numOfColumns {
-    
+- (void) setNumOfColumns:(NSUInteger) numOfColumns {    
     // If numOfColumns == 0, set it to 1, 0 is not expected.
     numOfColumns_ = (numOfColumns == 0) ? 1 : numOfColumns;
 }
@@ -121,6 +138,13 @@
     }
 }
 
+- (void) setEditing:(BOOL) editing {
+    editing_ = editing;
+    for (CVThumbnailGridViewCell *cell in [thumbnailsInUse_ allValues]) {
+        [cell setEditing:editing];
+    }
+}
+
 - (NSUInteger) calculateNumOfColumns {
     NSUInteger numOfColumns;
     CGRect visibleBounds = [self bounds];
@@ -129,12 +153,22 @@
     return numOfColumns;
 }
 
+#define LEFT_MARGIN 17.0
+#define TOP_MARGIN 17.0
+
 - (CGSize) recalculateThumbnailCellSize {
-//    CGSize cellSize = [UIImage adornedImageSizeForImageSize:cellStyle_.imageSize usingStyle:cellStyle_];
     CGSize cellSize = [cellStyle_ sizeAfterStylingImage];
+
+    // Add the margin data
+    CGFloat deltaX = (LEFT_MARGIN >= abs(cellStyle_.shadowStyle.offset.width)) ? LEFT_MARGIN - abs(cellStyle_.shadowStyle.offset.width) : 0;
+    CGFloat deltaY = (TOP_MARGIN >= abs(cellStyle_.shadowStyle.offset.height)) ? TOP_MARGIN - abs(cellStyle_.shadowStyle.offset.height) : 0;
     
+    cellSize.width += deltaX;
+    cellSize.height += deltaY;
     return cellSize;
 }
+
+#pragma mark Layout 
 
 - (void) reloadData {
     thumbnailCount_ = [dataSource_ numberOfCellsForThumbnailView:self];
@@ -166,7 +200,9 @@
 
 - (void) layoutSubviews {
     [super layoutSubviews];
-    
+    // Refresh our thumbnail count    
+    thumbnailCount_ = [dataSource_ numberOfCellsForThumbnailView:self];    
+
     thumbnailCellSize_ = [self recalculateThumbnailCellSize];
     CGRect visibleBounds = [self bounds];
 
@@ -208,6 +244,22 @@
     lastVisibleRow_ = endingRowOnPage;
 }
 
+- (void) cleanupNonVisibleCells {
+    for (CVThumbnailGridViewCell *thumbnail in [self subviews]) {
+        if ([thumbnail isKindOfClass:[CVThumbnailGridViewCell class]]) { 
+            CGRect thumbnailFrame = [self convertRect:[thumbnail frame] toView:self];
+
+            // Take into account the rowSpacing_
+            thumbnailFrame = CGRectMake(thumbnailFrame.origin.x, thumbnailFrame.origin.y, 
+                                        thumbnailFrame.size.width, thumbnailFrame.size.height + rowSpacing_);
+            
+            if (!CGRectIntersectsRect(thumbnailFrame, [self bounds])) {
+                [self removeCell:thumbnail];
+            }
+        }
+    }
+}
+
 - (CGRect) rectForColumn:(NSUInteger) column row:(NSUInteger) row {
     CGFloat xPos = leftMargin_ + (thumbnailCellSize_.width + [self columnSpacing]) * column;
     CGFloat yPos = (thumbnailCellSize_.height + rowSpacing_) * row;
@@ -221,6 +273,7 @@
     if (nil == cell) {
         [self cleanupNonVisibleCells];
         cell = [self createCellFromDataSourceForIndexPath:indexPath];
+//        NSLog(@"New Cell %@", [[cell cachedImage] imageUrl]);
     }
     return cell;
 }
@@ -234,6 +287,9 @@
         [cell setUserInteractionEnabled:YES];
         [cell setDelegate:self];
         [cell setIndexPath:indexPath];
+        [cell setEditing:editing_];
+        [cell setUpperLeftMargin:CGPointMake(LEFT_MARGIN, TOP_MARGIN)];
+        [cell setStyle:cellStyle_];
         [self addSubview:cell];
         [thumbnailsInUse_ setObject:cell forKey:[self keyFromIndexPath:indexPath]];
     } else {
@@ -243,22 +299,10 @@
     return cell;
 }
 
-- (void) cleanupNonVisibleCells {
-    for (CVThumbnailGridViewCell *thumbnail in [self subviews]) {
-        if ([thumbnail isKindOfClass:[CVThumbnailGridViewCell class]]) { 
-            CGRect thumbnailFrame = [self convertRect:[thumbnail frame] toView:self];
-
-            // Take into account the rowSpacing_
-            thumbnailFrame = CGRectMake(thumbnailFrame.origin.x, thumbnailFrame.origin.y, 
-                                        thumbnailFrame.size.width, thumbnailFrame.size.height + rowSpacing_);
-            
-            if (!CGRectIntersectsRect(thumbnailFrame, [self bounds])) {
-                [reusableThumbnails_ addObject:thumbnail];
-                [thumbnail removeFromSuperview];
-                [thumbnailsInUse_ removeObjectForKey:[self keyFromIndexPath:[thumbnail indexPath]]];
-            }
-        }
-    }
+- (void) removeCell:(CVThumbnailGridViewCell *) cell {
+    [reusableThumbnails_ addObject:cell];
+    [cell removeFromSuperview];
+    [thumbnailsInUse_ removeObjectForKey:[self keyFromIndexPath:[cell indexPath]]];
 }
 
 - (CGFloat) columnSpacing {
@@ -275,10 +319,193 @@
     return key;
 }
 
+#pragma mark Editing 
+
+- (void) insertCellsAtIndexPaths:(NSArray *) indexPaths {
+    for (NSIndexPath *indexPath in indexPaths) {
+
+        // Check if it is a visible area
+        CGRect cellRect = [self rectForColumn:indexPath.column row:indexPath.row];
+        if (CGRectIntersectsRect(cellRect, [self bounds])) {
+            // Move the cells
+            CGFloat rowHeight = rowSpacing_ + thumbnailCellSize_.height;
+            NSInteger endingRowOnPage = MIN(numOfRows_ - 1, floorf(CGRectGetMaxY([self bounds]) / rowHeight));
+
+            NSUInteger startIndex = endingRowOnPage * numOfColumns_ + numOfColumns_;
+            NSUInteger endIndex = [indexPath indexForNumOfColumns:numOfColumns_];
+            if (startIndex >= thumbnailCount_) {
+                startIndex = thumbnailCount_ - 1;
+            }
+            if (startIndex >= endIndex) {
+                NSInteger increment = -1;
+                [self moveCellsStartingIndex:startIndex
+                                 endingIndex:endIndex withIncrement:increment excludingCell:nil];
+            }
+            
+            // Insert the new cell
+            
+            [self createCellFromDataSourceForIndexPath:indexPath];
+        }
+        
+    }
+}
+
+- (void) deleteCellsAtIndexPaths:(NSArray *)indexPaths {
+    for (NSIndexPath *indexPath in indexPaths) {
+//        if ([dataSource_ respondsToSelector:@selector(thumbnailView:canEditCellAtIndexPath:)]) {
+//            if (![dataSource_ thumbnailView:self canEditCellAtIndexPath:indexPath]) 
+//                continue;
+//        }
+//
+//        if ([dataSource_ respondsToSelector:@selector(thumbnailView:commitEditingStyle:forCellAtIndexPath:)]) {
+//            [dataSource_ thumbnailView:self commitEditingStyle:CVThumbnailGridViewCellEditingStyleDelete forCellAtIndexPath:indexPath];
+//        }
+
+        [self removeCell:[self cellForIndexPath:indexPath]];
+
+        // Move other cells up
+        CGFloat rowHeight = rowSpacing_ + thumbnailCellSize_.height;
+        NSInteger endingRowOnPage = MIN(numOfRows_ - 1, floorf(CGRectGetMaxY([self bounds]) / rowHeight));
+
+        NSUInteger startIndex = [indexPath indexForNumOfColumns:numOfColumns_] + 1;
+        NSUInteger endIndex = endingRowOnPage * numOfColumns_ + numOfColumns_;
+        if (endIndex >= thumbnailCount_) {
+            endIndex = thumbnailCount_ - 1;
+        }
+        if (endIndex >= startIndex) {
+            NSInteger increment = 1;
+            [self moveCellsStartingIndex:startIndex
+                             endingIndex:endIndex withIncrement:increment excludingCell:nil];
+        }
+        // Refresh our thumbnail count    
+        thumbnailCount_ = [dataSource_ numberOfCellsForThumbnailView:self];
+    }
+}
+
+- (void) moveCellsStartingIndex:(NSUInteger) startIndex
+                    endingIndex:(NSUInteger) endIndex
+                  withIncrement:(NSInteger) increment
+                  excludingCell:(CVThumbnailGridViewCell *) excludedCell {
+    NSInteger i = startIndex;
+    NSInteger row, column;
+    NSInteger modifiedEndIndex = endIndex + increment;
+    if (modifiedEndIndex >= thumbnailCount_) {
+        modifiedEndIndex = thumbnailCount_;
+    }
+    while (i != modifiedEndIndex) {
+        row = floor(i / numOfColumns_);
+        column = i - row * numOfColumns_;
+        CVThumbnailGridViewCell *cell = [self cellForIndexPath:[NSIndexPath indexPathForRow:row column:column]];        
+        NSLog(@"Row - %d, Column - %d For index = %d, image = %@", row, column, i, [[cell cachedImage] imageUrl]);
+        if (nil == cell) {
+            NSLog(@"Cell is nil");
+        }
+        if (nil != cell && cell != excludedCell) {
+            // Go opposite direction
+            NSInteger moveToColumn = column - increment;
+            NSInteger moveToRow = row;
+            if (moveToColumn < 0) {
+                moveToColumn = numOfColumns_ - 1;
+                moveToRow = row - increment;
+            } else if (moveToColumn == numOfColumns_) {
+                moveToColumn = 0;
+                moveToRow = row - increment;
+            }
+//            NSLog(@"Calculated -> Start (%d, %d) MoveTo (%d, %d)", row, column, moveToRow, moveToColumn);
+            CGRect frame = [self rectForColumn:moveToColumn row:moveToRow];
+            
+            [cell setIndexPath:[NSIndexPath indexPathForRow:moveToRow column:moveToColumn]];
+            [thumbnailsInUse_ setObject:cell forKey:[self keyFromIndexPath:[NSIndexPath indexPathForRow:moveToRow column:moveToColumn]]];
+            
+            [cell setHome:frame];
+            [cell goHome];
+        }
+        i += increment;
+    }
+    if (i > 0) {
+        [thumbnailsInUse_ removeObjectForKey:[self keyFromIndexPath:[NSIndexPath indexPathForRow:row column:column]]];
+    }
+}
+
 #pragma mark CVThumbnailGridViewCellDelegate methods 
 
-- (BOOL) isInEditMode {
-    return editing_;
+- (UIImage *) adornedImageLoadingIcon {
+    if (nil == adornedImageLoadingIcon_) {
+        if (nil != self.cellStyle) {
+            adornedImageLoadingIcon_ = [[self.cellStyle imageByApplyingStyleToImage:self.imageLoadingIcon] retain];
+        }
+    }
+    return adornedImageLoadingIcon_;
+}
+
+#define DELETE_SIGN_SIDE_LENGTH 34.0
+#define DELETE_SIGN_LINE_WIDTH 4.0
+#define SCALE_FACTOR 0.75
+#define SQRT_OF_2 1.414213562
+#define BITS_PER_COMPONENT 8
+#define NUM_OF_COMPONENTS 4
+
+- (UIImage *) deleteSignIcon {
+    if (nil == deleteSignIcon_) {
+        // Assume always a square
+        CGSize size = CGSizeMake(DELETE_SIGN_SIDE_LENGTH, DELETE_SIGN_SIDE_LENGTH);
+        CGColorSpaceRef colorSpaceRef = CGColorSpaceCreateDeviceRGB();
+        CGContextRef context = CGBitmapContextCreate(NULL, size.width, size.height,
+                                                     BITS_PER_COMPONENT,
+                                                     NUM_OF_COMPONENTS * size.width, // We need to have RGBA with alpha
+                                                     colorSpaceRef,
+                                                     kCGImageAlphaPremultipliedLast);
+        CGColorSpaceRelease(colorSpaceRef);
+        CGRect rect = CGRectMake(0.0, 0.0, size.width, size.height);
+        CGContextSetFillColorWithColor(context, [[UIColor clearColor] CGColor]);
+        CGContextFillRect(context, rect);
+        CGContextBeginTransparencyLayer(context, NULL);
+        
+        // Draw the Circle
+        CGContextSetFillColorWithColor(context, [self.deleteSignBackgroundColor CGColor]);
+        CGContextSetStrokeColorWithColor(context, [self.deleteSignForegroundColor CGColor]);
+        CGContextSetLineWidth(context, DELETE_SIGN_LINE_WIDTH);
+        CGRect circleRect = CGRectMake(DELETE_SIGN_LINE_WIDTH / 2, DELETE_SIGN_LINE_WIDTH / 2, size.width - DELETE_SIGN_LINE_WIDTH , size.height - DELETE_SIGN_LINE_WIDTH);
+        CGContextAddEllipseInRect(context, circleRect);
+        CGContextDrawPath(context, kCGPathFillStroke);
+        
+        // Draw the X in the circle
+        CGContextSetLineWidth(context, DELETE_SIGN_LINE_WIDTH);
+        CGContextSetLineCap(context, kCGLineCapRound);
+        CGFloat deleteSignCrossLength = ((size.width / 2) - DELETE_SIGN_LINE_WIDTH) * SCALE_FACTOR;
+        CGFloat deleteSignCrossOffset = deleteSignCrossLength / sqrt(2);
+        CGPoint centerPoint = CGPointMake(size.width / 2, size.height / 2);
+        CGPoint startPoint = CGPointMake(centerPoint.x - deleteSignCrossOffset, centerPoint.y - deleteSignCrossOffset);
+        CGPoint endPoint = CGPointMake(centerPoint.x + deleteSignCrossOffset, centerPoint.y + deleteSignCrossOffset);        
+        CGContextMoveToPoint(context, startPoint.x, startPoint.y);
+        CGContextAddLineToPoint(context, endPoint.x, endPoint.y);
+        
+        startPoint = CGPointMake(centerPoint.x + deleteSignCrossOffset, centerPoint.y - deleteSignCrossOffset);
+        endPoint = CGPointMake(centerPoint.x - deleteSignCrossOffset, centerPoint.y + deleteSignCrossOffset);
+        CGContextMoveToPoint(context, startPoint.x, startPoint.y);
+        CGContextAddLineToPoint(context, endPoint.x, endPoint.y);
+        CGContextDrawPath(context, kCGPathFillStroke);
+        
+        CGContextEndTransparencyLayer(context);
+
+        CGImageRef cgImage = CGBitmapContextCreateImage(context);
+        self.deleteSignIcon = [UIImage imageWithCGImage:cgImage];
+        CGImageRelease(cgImage);
+        CGContextRelease(context);
+    }
+    return deleteSignIcon_;
+}
+
+- (void) deleteSignWasTapped:(CVThumbnailGridViewCell *) cell {
+    if ([dataSource_ respondsToSelector:@selector(thumbnailView:canEditCellAtIndexPath:)]) {
+        if (![dataSource_ thumbnailView:self canEditCellAtIndexPath:cell.indexPath]) 
+            return;
+    }
+
+    if ([dataSource_ respondsToSelector:@selector(thumbnailView:commitEditingStyle:forCellAtIndexPath:)]) {
+        [dataSource_ thumbnailView:self commitEditingStyle:CVThumbnailGridViewCellEditingStyleDelete forCellAtIndexPath:cell.indexPath];
+    }
+//    [self deleteCellsAtIndexPaths:[NSArray arrayWithObjects:cell.indexPath, nil]];
 }
 
 - (void)thumbnailGridViewCellWasTapped:(CVThumbnailGridViewCell *) cell {
@@ -317,41 +544,14 @@
     
     BOOL moveToHigherIndex = moveToIndex > startingIndex;
     
-    NSInteger i = startingIndex;
     NSInteger endIndex = moveToIndex;
     NSInteger increment = moveToHigherIndex ? 1 : -1;
-
-//    NSLog(@"StartIndex = %d, EndIndex = %d, increment = %d", i, endIndex, increment);
-    while (i != endIndex + increment) {
-        NSInteger row = floor(i / numOfColumns_);
-        NSInteger column = i - row * numOfColumns_;
-//        NSLog(@"NewRow - %d, NewColumn - %d For index = %d", row, column, i);
-        CVThumbnailGridViewCell *cell = [self cellForIndexPath:[NSIndexPath indexPathForRow:row column:column]];
-        if (nil == cell) {
-            NSLog(@"Cell is nil");
-        }
-        if (nil != cell && cell != draggingThumb) {
-            // Go opposite direction
-            NSInteger moveToColumn = column - increment;
-            NSInteger moveToRow = row;
-            if (moveToColumn < 0) {
-                moveToColumn = numOfColumns_ - 1;
-                moveToRow = row - increment;
-            } else if (moveToColumn == numOfColumns_) {
-                moveToColumn = 0;
-                moveToRow = row - increment;
-            }
-//            NSLog(@"Calculated -> Start (%d, %d) MoveTo (%d, %d)", row, column, moveToRow, moveToColumn);
-            CGRect frame = [self rectForColumn:moveToColumn row:moveToRow];
-            
-            [cell setIndexPath:[NSIndexPath indexPathForRow:moveToRow column:moveToColumn]];
-            [thumbnailsInUse_ setObject:cell forKey:[self keyFromIndexPath:[NSIndexPath indexPathForRow:moveToRow column:moveToColumn]]];
-            
-            [cell setHome:frame];
-            [cell goHome];
-        }
-        i += increment;
-    }
+    
+    [self moveCellsStartingIndex:startingIndex
+                     endingIndex:endIndex
+                   withIncrement:increment
+                   excludingCell:draggingThumb];
+    
     [draggingThumb setIndexPath:[NSIndexPath indexPathForRow:draggingThumbMoveToRow column:draggingThumbMoveToColumn]];
     [thumbnailsInUse_ setObject:draggingThumb forKey:[self keyFromIndexPath:[NSIndexPath indexPathForRow:draggingThumbMoveToRow column:draggingThumbMoveToColumn]]];
     CGRect moveToFrame = [self rectForColumn:draggingThumbMoveToColumn row:draggingThumbMoveToRow];
@@ -462,7 +662,14 @@
 
 @implementation NSIndexPath(ThumbnailView) 
 
-+ (NSIndexPath *)indexPathForRow:(NSUInteger)row column:(NSUInteger)column {
++ (NSIndexPath *) indexPathForIndex:(NSUInteger) index forNumOfColumns:(NSUInteger) numOfColumns {
+    NSUInteger row = floor(index / numOfColumns);
+    NSUInteger column = index - row * numOfColumns;
+    
+    return [NSIndexPath indexPathForRow:row column:column];
+}
+ 
++ (NSIndexPath *) indexPathForRow:(NSUInteger)row column:(NSUInteger)column {
 	return [NSIndexPath indexPathForRow:row inSection:column];
 }
 
@@ -473,5 +680,6 @@
 - (NSUInteger) indexForNumOfColumns:(NSUInteger) numOfColumns {
     return self.row * numOfColumns + self.column;
 }
+
 
 @end
