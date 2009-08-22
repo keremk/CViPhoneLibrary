@@ -19,7 +19,6 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
 
 @interface CVThumbnailGridViewCell()
 @property (nonatomic, retain) UIImage *thumbnailImage;
-//@property (nonatomic, retain) UIImage *deleteSignImage;
 - (void) renderAdornedImageLoadingIcon;
 - (CGPoint) deleteSignOrigin;
 - (UIImage *) deleteSignIcon;
@@ -32,7 +31,6 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
 @synthesize touchLocation = touchLocation_;
 @synthesize cachedImage = cachedImage_;
 @synthesize thumbnailImage = thumbnailImage_;
-//@synthesize deleteSignImage = deleteSignImage_;
 @synthesize style = style_;
 @synthesize editing = editing_;
 @synthesize upperLeftMargin = upperLeftMargin_;
@@ -40,23 +38,15 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
 - (void)dealloc {
 	[indexPath_ release];
     [thumbnailImage_ release];
-//    [deleteSignImage_ release];
     [style_ release];
     [super dealloc];
 }
 
 - (id)initWithFrame:(CGRect)frame reuseIdentifier:(NSString *) identifier {
     if (self = [super initWithFrame:frame]) {
-//		thumbnailImageView_ = [[UIImageView alloc] initWithFrame:CGRectZero];
-//        [thumbnailImageView_ setUserInteractionEnabled:YES];
-//		if (nil == thumbnailImageView_.superview) {
-//			[self addSubview:thumbnailImageView_];
-//		}
         [self setUserInteractionEnabled:YES];
         [self setOpaque:NO];
-//        deleteSignImage_ = [[UIImage imageNamed:@"X-Sign.png"] retain]; // 34x34
         editing_ = NO;
-//        [self setExclusiveTouch:YES];
     }
     return self;
 }
@@ -74,7 +64,6 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
         if (nil != adornedImageLoadingIcon) {
             self.thumbnailImage = adornedImageLoadingIcon;
             [self setNeedsDisplay];
-//            [thumbnailImageView_ setImage:adornedImageLoadingIcon];
         }
     }
 }
@@ -115,7 +104,6 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
     if (nil != image) {
         self.thumbnailImage = image;
         [self setNeedsDisplay];
-//        [thumbnailImageView_ setImage:image];
     } else {
         if (nil == delegate_) {
             // Wait until the CVThumbnailGridView sets the delegate
@@ -142,25 +130,10 @@ static char imageObservingContext;
     if (context == &imageObservingContext) {
         CVImage *cachedImage = (CVImage *) object;
         [self setImage:[cachedImage image]];
-//        [thumbnailImageView_ setImage:[cachedImage image]];
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
 }
-
-//- (void) setIndexPath:(NSIndexPath *) indexPath {
-//    if (indexPath_ != indexPath) {
-//        [indexPath_ release];
-//        indexPath_ = [indexPath retain];
-//        NSLog(@"IndexPath %d, %d set", indexPath.row, indexPath.column);
-//    }
-//}
-
-//- (void) setFrame:(CGRect) frame {
-//	[super setFrame:frame];
-//	
-//    [thumbnailImageView_ setFrame:self.bounds];
-//}
 
 #pragma mark Touch events
 

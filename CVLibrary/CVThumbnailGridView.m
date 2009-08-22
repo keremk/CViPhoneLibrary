@@ -51,6 +51,9 @@
 @synthesize deleteSignIcon = deleteSignIcon_;
 @synthesize deleteSignBackgroundColor = deleteSignBackgroundColor_;
 @synthesize deleteSignForegroundColor = deleteSignForegroundColor_;
+@synthesize deleteSignSideLength = deleteSignSideLength_;
+@synthesize headerView = headerView_;
+@synthesize footerView = footerView_;
 
 - (void)dealloc {
     [cellStyle_ release];
@@ -61,6 +64,8 @@
     [deleteSignIcon_ release];
     [deleteSignForegroundColor_ release];
     [deleteSignBackgroundColor_ release];
+    [headerView_ release];
+    [footerView_ release];
     [super dealloc];
 }
 
@@ -71,6 +76,7 @@
 #define TOP_MARGIN_DEFAULT 0.0 // TODO: Top margin is always half of ROW_SPACING 
 #define ROW_SPACING_DEFAULT 10.0
 #define COLUMN_COUNT_DEFAULT 1
+#define DELETE_SIGN_SIDE_LENGTH_DEFAULT 34.0
 
 - (id) initWithCoder:(NSCoder *) coder {
 	if (self = [super initWithCoder:coder]) {
@@ -104,6 +110,7 @@
     firstVisibleRow_ = NSIntegerMax;
     lastVisibleRow_ = NSIntegerMin;
     self.backgroundColor = [UIColor clearColor];
+    deleteSignSideLength_ = DELETE_SIGN_SIDE_LENGTH_DEFAULT;
     self.deleteSignBackgroundColor = [UIColor blackColor];
     self.deleteSignForegroundColor = [UIColor redColor];
     [self setDelaysContentTouches:YES];
@@ -153,15 +160,15 @@
     return numOfColumns;
 }
 
-#define LEFT_MARGIN 17.0
-#define TOP_MARGIN 17.0
+#define THUMBNAIL_LEFT_MARGIN 17.0
+#define THUMBNAIL_TOP_MARGIN 17.0
 
 - (CGSize) recalculateThumbnailCellSize {
     CGSize cellSize = [cellStyle_ sizeAfterStylingImage];
 
     // Add the margin data
-    CGFloat deltaX = (LEFT_MARGIN >= abs(cellStyle_.shadowStyle.offset.width)) ? LEFT_MARGIN - abs(cellStyle_.shadowStyle.offset.width) : 0;
-    CGFloat deltaY = (TOP_MARGIN >= abs(cellStyle_.shadowStyle.offset.height)) ? TOP_MARGIN - abs(cellStyle_.shadowStyle.offset.height) : 0;
+    CGFloat deltaX = (THUMBNAIL_LEFT_MARGIN >= abs(cellStyle_.shadowStyle.offset.width)) ? THUMBNAIL_LEFT_MARGIN - abs(cellStyle_.shadowStyle.offset.width) : 0;
+    CGFloat deltaY = (THUMBNAIL_TOP_MARGIN >= abs(cellStyle_.shadowStyle.offset.height)) ? THUMBNAIL_TOP_MARGIN - abs(cellStyle_.shadowStyle.offset.height) : 0;
     
     cellSize.width += deltaX;
     cellSize.height += deltaY;
@@ -288,7 +295,7 @@
         [cell setDelegate:self];
         [cell setIndexPath:indexPath];
         [cell setEditing:editing_];
-        [cell setUpperLeftMargin:CGPointMake(LEFT_MARGIN, TOP_MARGIN)];
+        [cell setUpperLeftMargin:CGPointMake(THUMBNAIL_LEFT_MARGIN, THUMBNAIL_TOP_MARGIN)];
         [cell setStyle:cellStyle_];
         [self addSubview:cell];
         [thumbnailsInUse_ setObject:cell forKey:[self keyFromIndexPath:indexPath]];
@@ -438,17 +445,15 @@
     return adornedImageLoadingIcon_;
 }
 
-#define DELETE_SIGN_SIDE_LENGTH 34.0
 #define DELETE_SIGN_LINE_WIDTH 4.0
 #define SCALE_FACTOR 0.75
-#define SQRT_OF_2 1.414213562
 #define BITS_PER_COMPONENT 8
 #define NUM_OF_COMPONENTS 4
 
 - (UIImage *) deleteSignIcon {
     if (nil == deleteSignIcon_) {
         // Assume always a square
-        CGSize size = CGSizeMake(DELETE_SIGN_SIDE_LENGTH, DELETE_SIGN_SIDE_LENGTH);
+        CGSize size = CGSizeMake(deleteSignSideLength_, deleteSignSideLength_);
         CGColorSpaceRef colorSpaceRef = CGColorSpaceCreateDeviceRGB();
         CGContextRef context = CGBitmapContextCreate(NULL, size.width, size.height,
                                                      BITS_PER_COMPONENT,

@@ -21,7 +21,6 @@
 @implementation DemoGridViewController
 @synthesize dataService = dataService_;
 @synthesize configEnabled = configEnabled_;
-@synthesize insertItemsDemo = insertItemsDemo_;
 
 - (void)dealloc {
     [demoItems_ release];
@@ -46,7 +45,6 @@
         // Custom initialization
         demoItems_ = nil;
         configEnabled_ = YES;
-        insertItemsDemo_ = NO;
         addItemViewController_ = nil;
     }
     return self;
@@ -55,6 +53,16 @@
 - (void) setEditing:(BOOL) editing animated:(BOOL) animated {
     [super setEditing:editing animated:animated];
     [self.thumbnailView setEditing:editing];
+    if (editing) {
+        UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd 
+                                                                                   target:self 
+                                                                                   action:@selector(addNewItem:)];
+        [self.navigationItem setLeftBarButtonItem:barButton animated:YES];
+        [barButton release];
+    } else {
+        [self.navigationItem setLeftBarButtonItem:[self.navigationItem backBarButtonItem] animated:YES];
+    }
+
 }
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
@@ -66,13 +74,6 @@
                                                                       style:UIBarButtonItemStyleBordered 
                                                                      target:self 
                                                                      action:@selector(configureGridViewSelected)]; 
-        self.navigationItem.rightBarButtonItem = barButton;
-        [barButton release];
-    }
-    if (insertItemsDemo_) {
-        UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd 
-                                                                                   target:self 
-                                                                                   action:@selector(addNewItem:)];
         self.navigationItem.rightBarButtonItem = barButton;
         [barButton release];
     }

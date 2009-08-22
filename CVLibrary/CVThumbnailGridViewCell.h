@@ -20,7 +20,6 @@
     CGPoint touchLocation_; // Location of touch in own coordinates (stays constant during dragging).
     BOOL dragging_, editing_;
     CGRect home_;
-//    UIImage *deleteSignImage_;
     UIImage *thumbnailImage_;
     CVImage *cachedImage_;
     CVStyle *style_;

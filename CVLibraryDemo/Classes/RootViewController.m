@@ -23,7 +23,7 @@
 
 - (id) initWithCoder:(NSCoder *) coder {
     if (self = [super initWithCoder:coder]) {
-        listOfDemos_ = [[NSArray alloc] initWithObjects:@"Generated Image List", @"Flickr Image List", @"Edit Image List", @"Insert Items", nil];
+        listOfDemos_ = [[NSArray alloc] initWithObjects:@"Generated Image List", @"Flickr Image List", @"Edit Image List", nil];
     }
     return self;
 }
@@ -147,12 +147,6 @@
             demoGridViewController.navigationItem.rightBarButtonItem = [demoGridViewController editButtonItem];
             break;
         }
-        case INSERT_ITEMS_DEMO : {
-            dataService = [[FakeDataService alloc] init];
-            [demoGridViewController setConfigEnabled:NO];
-            [demoGridViewController setInsertItemsDemo:YES];
-            break;
-        }
         default:
             break;
     }    
@@ -171,11 +165,6 @@
         case EDIT_IMAGE_LIST_DEMO : {
             [demoGridViewController setConfigEnabled:NO];
             demoGridViewController.navigationItem.rightBarButtonItem = [demoGridViewController editButtonItem];
-            break;
-        }
-        case INSERT_ITEMS_DEMO : {
-            [demoGridViewController setConfigEnabled:NO];
-            [demoGridViewController setInsertItemsDemo:YES];
             break;
         }
         default:

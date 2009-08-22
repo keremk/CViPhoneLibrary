@@ -40,9 +40,12 @@ typedef enum {
     NSTimer *autoscrollTimer_;  // Timer used for auto-scrolling.
     CGFloat autoscrollDistance_;  // Distance to scroll the thumb view when auto-scroll timer fires.
 
+    CGFloat deleteSignSideLength_;
     UIImage *deleteSignIcon_;
     UIColor *deleteSignForegroundColor_;
     UIColor *deleteSignBackgroundColor_;
+    
+    UIView *headerView_, *footerView_;
 }
 
 @property (nonatomic, assign) id <CVThumbnailGridViewDataSource> dataSource;
@@ -63,6 +66,9 @@ typedef enum {
 @property (nonatomic, retain) UIImage *deleteSignIcon;
 @property (nonatomic, retain) UIColor *deleteSignForegroundColor;
 @property (nonatomic, retain) UIColor *deleteSignBackgroundColor;
+@property (nonatomic) CGFloat deleteSignSideLength;
+@property (nonatomic, retain) UIView *headerView;
+@property (nonatomic, retain) UIView *footerView;
 
 - (id) initWithFrame:(CGRect)frame;
 - (void) reloadData;

@@ -13,16 +13,11 @@
 
 @interface DemoGridViewController : CVThumbnailGridViewController <DemoDataServiceDelegate, CVImageLoadingService, CVSettingsViewControllerDelegate> {
     NSMutableArray *demoItems_;
-//    UIImage *imageLoadingIcon_;
-//    UIImage *adornedImageLoadingIcon_;
     id<DemoDataService> dataService_;
-    BOOL configEnabled_, insertItemsDemo_;
+    BOOL configEnabled_;
     AddItemViewController *addItemViewController_;
 }
 
 @property (nonatomic, retain) id<DemoDataService> dataService;
 @property (nonatomic) BOOL configEnabled;
-@property (nonatomic) BOOL insertItemsDemo;
-//@property (nonatomic, retain) UIImage *imageLoadingIcon;
-//@property (nonatomic, retain) UIImage *adornedImageLoadingIcon;
 @end
