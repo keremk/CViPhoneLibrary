@@ -75,19 +75,11 @@
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
     NSString *url = [args objectForKey:@"url"];
-//    CVImage *cvImage = [[CVImageCache sharedCVImageCache] imageForKey:url];
     CVStyle *style = [args objectForKey:@"style"];
     NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
     UIImage *image = [UIImage imageWithData:data];
 
     UIImage *adornedImage = [style imageByApplyingStyleToImage:image];
-//    if (nil != image && nil != cvImage) {        
-//        [cvImage setImage:image usingStyle:style];
-//    } else {
-//        [cvImage setIsLoading:NO];
-//        [cvImage setIsLoaded:NO];
-//        NSLog(@"Url not downloaded = %@", url);
-//    }
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:adornedImage, @"image", url, @"url", nil];
     [self.delegate performSelectorOnMainThread:@selector(updatedImage:) withObject:dict waitUntilDone:YES];    
     [pool release];

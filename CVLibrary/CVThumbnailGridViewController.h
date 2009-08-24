@@ -16,6 +16,5 @@
 }
 
 @property (nonatomic, readonly) CVThumbnailGridView *thumbnailView;
-//@property (nonatomic) NSUInteger numOfColumns;
 
 @end

@@ -35,7 +35,6 @@
 - (CGFloat) footerHeight;
 - (NSInteger) startingRowOnPage;
 - (NSInteger) endingRowOnPage;
-
 @end 
 
 @implementation CVThumbnailGridView
@@ -223,7 +222,6 @@
 
 - (CGRect) rectForColumn:(NSUInteger) column row:(NSUInteger) row {
     CGFloat xPos = leftMargin_ + (thumbnailCellSize_.width + [self columnSpacing]) * column;
-//    CGFloat yPos = (thumbnailCellSize_.height + rowSpacing_) * row;
     CGFloat yPos = (thumbnailCellSize_.height + rowSpacing_) * row + [self headerHeight];
     CGRect rect = CGRectMake(xPos, yPos, thumbnailCellSize_.width, thumbnailCellSize_.height);
 
@@ -259,12 +257,9 @@
         
     // Refresh our thumbnail count    
     thumbnailCount_ = [dataSource_ numberOfCellsForThumbnailView:self];    
-
     thumbnailCellSize_ = [self recalculateThumbnailCellSize];
-//    CGRect visibleBounds = [self thumbnailAreaBounds];
 
     if (fitNumberOfColumnsToFullWidth_) {
-        // Calculate number of columns
         numOfColumns_ = [self calculateNumOfColumns];
     }
     numOfRows_ = ceil( (CGFloat) thumbnailCount_ / numOfColumns_);
@@ -272,7 +267,6 @@
     if (isAnimated_ || numOfRows_ == 0)
         return;
 
-//    CGFloat height = topMargin_ + (thumbnailCellSize_.height + rowSpacing_) * numOfRows_;
     CGFloat height = topMargin_ + [self headerHeight] + [self footerHeight] + (thumbnailCellSize_.height + rowSpacing_) * numOfRows_;
     CGSize scrollViewSize = CGSizeMake(self.bounds.size.width, height);
     [self setContentSize:scrollViewSize];
@@ -281,13 +275,9 @@
 
     [self cleanupNonVisibleCells];
     
-//    CGFloat rowHeight = rowSpacing_ + thumbnailCellSize_.height;
-//    NSInteger startingRowOnPage = MAX(0, floorf(self.contentOffset.y / rowHeight));
-//    NSInteger endingRowOnPage = MIN(numOfRows_ - 1, floorf(CGRectGetMaxY(visibleBounds) / rowHeight));
-
     NSInteger startingRowOnPage = [self startingRowOnPage];
     NSInteger endingRowOnPage = [self endingRowOnPage];
-    NSLog(@"Start: %d, End: %d", startingRowOnPage, endingRowOnPage);
+//    NSLog(@"Start: %d, End: %d", startingRowOnPage, endingRowOnPage);
     for (NSInteger row = startingRowOnPage; row <= endingRowOnPage; row++) {
         for (NSInteger column = 0; column < numOfColumns_; column++) {
             BOOL thumbnailMissing = (firstVisibleRow_ > row) || (lastVisibleRow_ < row);
@@ -312,7 +302,6 @@
 }
 
 - (void) cleanupNonVisibleCells {
-//    CGRect thumbnailAreaBounds = [self thumbnailAreaBounds];
     for (CVThumbnailGridViewCell *thumbnail in [self subviews]) {
         if ([thumbnail isKindOfClass:[CVThumbnailGridViewCell class]]) { 
             CGRect thumbnailFrame = [self convertRect:[thumbnail frame] toView:self];
@@ -322,11 +311,10 @@
                                         thumbnailFrame.size.width, thumbnailFrame.size.height + rowSpacing_);
             
             if (!CGRectIntersectsRect(thumbnailFrame, [self bounds])) {
-//            if (!CGRectIntersectsRect(thumbnailFrame, thumbnailAreaBounds)) {
                 [self removeCell:thumbnail];
-                NSLog(@"%@ removed, Bounds:(%f, %f) (%f, %f)", [[thumbnail cachedImage] imageUrl], 
-                      self.bounds.origin.x, self.bounds.origin.y,  
-                      self.bounds.size.width, self.bounds.size.height);
+//                NSLog(@"%@ removed, Bounds:(%f, %f) (%f, %f)", [[thumbnail cachedImage] imageUrl], 
+//                      self.bounds.origin.x, self.bounds.origin.y,  
+//                      self.bounds.size.width, self.bounds.size.height);
             }
         }
     }
@@ -389,8 +377,6 @@
         CGRect cellRect = [self rectForColumn:indexPath.column row:indexPath.row];
         if (CGRectIntersectsRect(cellRect, [self bounds])) {
             // Move the cells
-//            CGFloat rowHeight = rowSpacing_ + thumbnailCellSize_.height;
-//            NSInteger endingRowOnPage = MIN(numOfRows_ - 1, floorf(CGRectGetMaxY([self bounds]) / rowHeight));
             NSInteger endingRowOnPage = [self endingRowOnPage];
             
             NSUInteger startIndex = endingRowOnPage * numOfColumns_ + numOfColumns_;
@@ -414,11 +400,7 @@
     for (NSIndexPath *indexPath in indexPaths) {
         [self removeCell:[self cellForIndexPath:indexPath]];
 
-        // Move other cells up
-//        CGFloat rowHeight = rowSpacing_ + thumbnailCellSize_.height;
-//        NSInteger endingRowOnPage = MIN(numOfRows_ - 1, floorf(CGRectGetMaxY([self bounds]) / rowHeight));
-        NSInteger endingRowOnPage = [self endingRowOnPage];
-        
+        NSInteger endingRowOnPage = [self endingRowOnPage];        
         NSUInteger startIndex = [indexPath indexForNumOfColumns:numOfColumns_] + 1;
         NSUInteger endIndex = endingRowOnPage * numOfColumns_ + numOfColumns_;
         if (endIndex >= thumbnailCount_) {
@@ -429,8 +411,6 @@
             [self moveCellsStartingIndex:startIndex
                              endingIndex:endIndex withIncrement:increment excludingCell:nil];
         }
-//        // Refresh our thumbnail count    
-//        thumbnailCount_ = [dataSource_ numberOfCellsForThumbnailView:self];
     }
 }
 
@@ -552,7 +532,6 @@
     if ([dataSource_ respondsToSelector:@selector(thumbnailView:commitEditingStyle:forCellAtIndexPath:)]) {
         [dataSource_ thumbnailView:self commitEditingStyle:CVThumbnailGridViewCellEditingStyleDelete forCellAtIndexPath:cell.indexPath];
     }
-//    [self deleteCellsAtIndexPaths:[NSArray arrayWithObjects:cell.indexPath, nil]];
 }
 
 - (void)thumbnailGridViewCellWasTapped:(CVThumbnailGridViewCell *) cell {
@@ -574,7 +553,6 @@
     
     // Estimate cell number we are moving to based on location
     NSInteger draggingThumbMoveToColumn = floor((CGRectGetMidX([draggingThumb frame]) - leftMargin_) / (thumbnailCellSize_.width + [self columnSpacing]));
-//    NSInteger draggingThumbMoveToRow = floor(CGRectGetMidY([draggingThumb frame]) / (thumbnailCellSize_.height + rowSpacing_));
     NSInteger draggingThumbMoveToRow = floor((CGRectGetMidY([draggingThumb frame]) - [self headerHeight]) / (thumbnailCellSize_.height + rowSpacing_));
     NSInteger moveToIndex = draggingThumbMoveToRow * numOfColumns_ + draggingThumbMoveToColumn;
     
@@ -583,7 +561,6 @@
     
     // Calculate starting cell number
     NSUInteger startingColumn = floor(([draggingThumb home].origin.x - leftMargin_) / (thumbnailCellSize_.width + [self columnSpacing]));
-//    NSUInteger startingRow = floor([draggingThumb home].origin.y / (thumbnailCellSize_.height + rowSpacing_));
     NSUInteger startingRow = floor(([draggingThumb home].origin.y - [self headerHeight])/ (thumbnailCellSize_.height + rowSpacing_));
     NSUInteger startingIndex = startingRow * numOfColumns_ + startingColumn;
 

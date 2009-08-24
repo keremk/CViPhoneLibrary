@@ -159,14 +159,6 @@
     //[configViewController release];
 }
 
-/*
-// Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-*/
-
 - (void)didReceiveMemoryWarning {
 	// Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
@@ -194,7 +186,6 @@
     CVThumbnailGridViewCell *cell = [thumbnailView dequeueReusableCellWithIdentifier:@"Thumbnails"];
     if (nil == cell) {
         cell = [[[CVThumbnailGridViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"Thumbnails"] autorelease];
-//        [cell setDelegate:self.thumbnailView];
     }
     
     DemoItem *demoItem = (DemoItem *) [demoItems_ objectAtIndex:[indexPath indexForNumOfColumns:[self.thumbnailView numOfColumns]]];
@@ -254,8 +245,6 @@
     if (nil != cvImage && nil != image) {
         [cvImage setImage:image];
     }
-//    CVThumbnailGridViewCell *cell = [self.thumbnailView cellForIndexPath:image.indexPath];
-//    [cell setImage:image.adornedImage];
 }
 
 #pragma mark CVImageLoadingService methods

@@ -10,7 +10,6 @@
 #import "SynthesizeSingleton.h"
 
 @interface CVImageCache() 
-//- (NSUInteger) calculateMemSizeForImage:(UIImage *)image;
 - (void) removeObserversFromImages;
 - (void) checkAndHandleLowMemory;
 @end
