@@ -10,8 +10,6 @@
 #import "CellHandler.h"
 
 @interface ColorToStringConverter : NSObject<DataConverter> {
-    
 }
-
 - (id) convertUsingData:(id) data;
 @end

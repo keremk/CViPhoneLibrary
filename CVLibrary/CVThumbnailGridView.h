@@ -22,7 +22,7 @@ typedef enum {
 @private
 	id<CVThumbnailGridViewDataSource> dataSource_;
 	id<CVThumbnailGridViewDelegate> delegate_;
-	NSUInteger numOfRows_, numOfColumns_, thumbnailCount_;
+	NSInteger numOfRows_, numOfColumns_, thumbnailCount_;
 	CGFloat leftMargin_, rightMargin_, topMargin_, bottomMargin_, rowSpacing_;
 	CGSize	thumbnailCellSize_;
 	BOOL isAnimated_, animateSelection_;
@@ -50,9 +50,9 @@ typedef enum {
 
 @property (nonatomic, assign) id <CVThumbnailGridViewDataSource> dataSource;
 @property (nonatomic, assign) id <CVThumbnailGridViewDelegate> delegate;
-@property (nonatomic) NSUInteger thumbnailCount;
-@property (nonatomic) NSUInteger numOfRows;
-@property (nonatomic) NSUInteger numOfColumns;
+@property (nonatomic) NSInteger thumbnailCount;
+@property (nonatomic) NSInteger numOfRows;
+@property (nonatomic) NSInteger numOfColumns;
 @property (nonatomic) CGFloat leftMargin;
 @property (nonatomic) CGFloat rightMargin;
 @property (nonatomic) CGFloat topMargin;

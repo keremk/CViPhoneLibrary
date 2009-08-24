@@ -12,6 +12,12 @@
 #import "FlickrDataService.h"
 #import "CVLibrary.h"
 #import "DemoGridViewController.h"
+#import "TestView.h"
+
+@interface RootViewController()
+- (UIView *) testViewWithText:(NSString *) text;
+@end
+
 
 @implementation RootViewController
 @synthesize listOfDemos = listOfDemos_;
@@ -165,6 +171,8 @@
         case EDIT_IMAGE_LIST_DEMO : {
             [demoGridViewController setConfigEnabled:NO];
             demoGridViewController.navigationItem.rightBarButtonItem = [demoGridViewController editButtonItem];
+            [gridView setHeaderView:[self testViewWithText:@"Header View"]];
+            [gridView setFooterView:[self testViewWithText:@"Footer View"]];
             break;
         }
         default:
@@ -177,6 +185,14 @@
     [cellStyle release];
     [demoGridViewController release];
     [dataService release];    
+}
+
+- (UIView *) testViewWithText:(NSString *) text {
+    TestView *testView = [[[TestView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 100.0)] autorelease];
+    
+    [testView setBackgroundColor:[UIColor blueColor]];
+    [testView setText:text];
+    return testView;
 }
 
 @end

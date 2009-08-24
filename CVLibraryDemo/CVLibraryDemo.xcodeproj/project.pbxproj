@@ -31,6 +31,7 @@
 		BD82C71B103245E300B9A1CE /* X-Sign.png in Resources */ = {isa = PBXBuildFile; fileRef = BD82C71A103245E300B9A1CE /* X-Sign.png */; };
 		BD82C99C1036B62F00B9A1CE /* AddItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BD82C99A1036B62F00B9A1CE /* AddItemViewController.m */; };
 		BD82C99D1036B62F00B9A1CE /* AddItemViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BD82C99B1036B62F00B9A1CE /* AddItemViewController.xib */; };
+		BDBCCABD1042B55300515746 /* TestView.m in Sources */ = {isa = PBXBuildFile; fileRef = BDBCCABC1042B55300515746 /* TestView.m */; };
 		BDFA7E6B0FF591D400E916BC /* libCVLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BDA07AEB0FE9AB9100CDD739 /* libCVLibrary.a */; };
 		BDFA7EE60FF6C2E600E916BC /* LoadingIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = BDFA7EE50FF6C2E600E916BC /* LoadingIcon.png */; };
 /* End PBXBuildFile section */
@@ -120,6 +121,8 @@
 		BD82C99A1036B62F00B9A1CE /* AddItemViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AddItemViewController.m; path = ../AddItemViewController.m; sourceTree = "<group>"; };
 		BD82C99B1036B62F00B9A1CE /* AddItemViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddItemViewController.xib; sourceTree = "<group>"; };
 		BDA07AE50FE9AB9000CDD739 /* CVLibrary.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CVLibrary.xcodeproj; path = ../CVLibrary/CVLibrary.xcodeproj; sourceTree = SOURCE_ROOT; };
+		BDBCCABB1042B55300515746 /* TestView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestView.h; sourceTree = "<group>"; };
+		BDBCCABC1042B55300515746 /* TestView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestView.m; sourceTree = "<group>"; };
 		BDFA7EE50FF6C2E600E916BC /* LoadingIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LoadingIcon.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -157,6 +160,8 @@
 				BD351F3C100EA3C1006C3588 /* ColorToStringConverter.h */,
 				BD351F3D100EA3C1006C3588 /* ColorToStringConverter.m */,
 				BD4A2C03101FE7B900044AEE /* SampleAPIKey.h */,
+				BDBCCABB1042B55300515746 /* TestView.h */,
+				BDBCCABC1042B55300515746 /* TestView.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -383,6 +388,7 @@
 				BD7B0345101D1BF00091CA26 /* ConfigOptions.m in Sources */,
 				BD4A2BFF101F61A000044AEE /* FlickrDataService.m in Sources */,
 				BD82C99C1036B62F00B9A1CE /* AddItemViewController.m in Sources */,
+				BDBCCABD1042B55300515746 /* TestView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
