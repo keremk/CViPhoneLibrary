@@ -26,6 +26,8 @@
 		BD4A2BFF101F61A000044AEE /* FlickrDataService.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4A2BFE101F61A000044AEE /* FlickrDataService.m */; };
 		BD4A2CA7101FF6FC00044AEE /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD4A2CA6101FF6FC00044AEE /* SystemConfiguration.framework */; };
 		BD4A2EDA1022731300044AEE /* libObjectiveFlickr.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BD4A2ED1102272AE00044AEE /* libObjectiveFlickr.a */; };
+		BD669F201044BAF900DEDAE1 /* FlickrDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BD669F1F1044BAF900DEDAE1 /* FlickrDemoViewController.m */; };
+		BD669F631045F0D300DEDAE1 /* LoadMoreControl.m in Sources */ = {isa = PBXBuildFile; fileRef = BD669F621045F0D300DEDAE1 /* LoadMoreControl.m */; };
 		BD7B0345101D1BF00091CA26 /* ConfigOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = BD7B0344101D1BF00091CA26 /* ConfigOptions.m */; };
 		BD82BC591024EE1900B9A1CE /* BGTile.png in Resources */ = {isa = PBXBuildFile; fileRef = BD82BC581024EE1900B9A1CE /* BGTile.png */; };
 		BD82C71B103245E300B9A1CE /* X-Sign.png in Resources */ = {isa = PBXBuildFile; fileRef = BD82C71A103245E300B9A1CE /* X-Sign.png */; };
@@ -113,6 +115,10 @@
 		BD4A2BFE101F61A000044AEE /* FlickrDataService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlickrDataService.m; sourceTree = "<group>"; };
 		BD4A2C03101FE7B900044AEE /* SampleAPIKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SampleAPIKey.h; path = Classes/SampleAPIKey.h; sourceTree = SOURCE_ROOT; };
 		BD4A2CA6101FF6FC00044AEE /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		BD669F1E1044BAF900DEDAE1 /* FlickrDemoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlickrDemoViewController.h; sourceTree = "<group>"; };
+		BD669F1F1044BAF900DEDAE1 /* FlickrDemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlickrDemoViewController.m; sourceTree = "<group>"; };
+		BD669F611045F0D300DEDAE1 /* LoadMoreControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadMoreControl.h; sourceTree = "<group>"; };
+		BD669F621045F0D300DEDAE1 /* LoadMoreControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadMoreControl.m; sourceTree = "<group>"; };
 		BD7B0343101D1BF00091CA26 /* ConfigOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigOptions.h; sourceTree = "<group>"; };
 		BD7B0344101D1BF00091CA26 /* ConfigOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigOptions.m; sourceTree = "<group>"; };
 		BD82BC581024EE1900B9A1CE /* BGTile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BGTile.png; sourceTree = "<group>"; };
@@ -147,6 +153,7 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				BD669F2E1045EE6200DEDAE1 /* Views */,
 				BD32D8E30FF20ED2002DA5AF /* Services */,
 				BD32D8A50FF1BCCD002DA5AF /* Model */,
 				1D3623240D0F684500981E51 /* CVLibraryDemoAppDelegate.h */,
@@ -157,11 +164,11 @@
 				BD32D8CD0FF2078F002DA5AF /* DemoGridViewController.m */,
 				BD82C9991036B62F00B9A1CE /* AddItemViewController.h */,
 				BD82C99A1036B62F00B9A1CE /* AddItemViewController.m */,
+				BD669F1E1044BAF900DEDAE1 /* FlickrDemoViewController.h */,
+				BD669F1F1044BAF900DEDAE1 /* FlickrDemoViewController.m */,
 				BD351F3C100EA3C1006C3588 /* ColorToStringConverter.h */,
 				BD351F3D100EA3C1006C3588 /* ColorToStringConverter.m */,
 				BD4A2C03101FE7B900044AEE /* SampleAPIKey.h */,
-				BDBCCABB1042B55300515746 /* TestView.h */,
-				BDBCCABC1042B55300515746 /* TestView.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -256,6 +263,17 @@
 				BD4A2ED1102272AE00044AEE /* libObjectiveFlickr.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		BD669F2E1045EE6200DEDAE1 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				BDBCCABB1042B55300515746 /* TestView.h */,
+				BDBCCABC1042B55300515746 /* TestView.m */,
+				BD669F611045F0D300DEDAE1 /* LoadMoreControl.h */,
+				BD669F621045F0D300DEDAE1 /* LoadMoreControl.m */,
+			);
+			name = Views;
 			sourceTree = "<group>";
 		};
 		BDA07AE60FE9AB9000CDD739 /* Products */ = {
@@ -389,6 +407,8 @@
 				BD4A2BFF101F61A000044AEE /* FlickrDataService.m in Sources */,
 				BD82C99C1036B62F00B9A1CE /* AddItemViewController.m in Sources */,
 				BDBCCABD1042B55300515746 /* TestView.m in Sources */,
+				BD669F201044BAF900DEDAE1 /* FlickrDemoViewController.m in Sources */,
+				BD669F631045F0D300DEDAE1 /* LoadMoreControl.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -430,7 +450,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = CVLibraryDemo;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "5DB1477E-63C8-45B0-87A2-BFC5126ED90B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "8AD4866D-16C4-4A6E-B397-408099FB6F62";
 			};
 			name = Debug;
 		};
@@ -454,7 +474,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = CVLibraryDemo;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "5DB1477E-63C8-45B0-87A2-BFC5126ED90B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "8AD4866D-16C4-4A6E-B397-408099FB6F62";
 			};
 			name = Release;
 		};
