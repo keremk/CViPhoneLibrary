@@ -16,6 +16,11 @@
 static inline double radians (double degrees) {return degrees * M_PI/180;}
 
 void CVAddRoundedRectToPath(CGContextRef context, CGRect rect, CGFloat ovalWidth, CGFloat ovalHeight);
+void CVAddPolygonToPath(CGContextRef context, CGRect rect, CGFloat radius, unsigned int numOfSides, CGFloat angle);
+void CVAddStarToPath(CGContextRef context, CGRect rect, CGFloat radius);
+
 void CVPathAddRoundedRect(CGMutablePathRef path, CGRect rect, CGFloat ovalWidth, CGFloat ovalHeight);
+void CVPathAddPolygon(CGMutablePathRef path, CGRect rect, CGFloat radius, unsigned int numOfSides);
+void CVPathAddStar(CGMutablePathRef path, CGRect rect, CGFloat radius);
 
 #endif

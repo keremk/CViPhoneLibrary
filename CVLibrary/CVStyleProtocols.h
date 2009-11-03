@@ -11,7 +11,14 @@
 @required
 // Image size is the requested resized image size 
 - (void) drawInContext:(CGContextRef) context forImageSize:(CGSize) imageSize; 
+- (CGSize) sizeRequiredForRendering;
+//- (CGSize) sizeAfterRenderingGivenInitialSize:(CGSize) size;
 
-- (CGSize) sizeAfterRenderingGivenInitialSize:(CGSize) size;
+@optional
+- (CGPoint) upperLeftCorner;
 @end
 
+@protocol CVRenderPath
+@required
+- (void) addShapeToPath:(CGMutablePathRef) path boundedByRect:(CGRect) rect;
+@end

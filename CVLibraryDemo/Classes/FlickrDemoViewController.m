@@ -9,9 +9,11 @@
 #import "FlickrDemoViewController.h"
 #import "DemoItem.h"
 #import "LoadMoreControl.h"
+#import "TestView.h"
 
 @interface FlickrDemoViewController()
 - (void) loadFlickrItems;
+- (IBAction) loadMoreRequested:(id) sender;
 @end
 
 @implementation FlickrDemoViewController
@@ -21,6 +23,7 @@
     [flickrItems_ release];
     [dataService_ setDelegate:nil];
     [dataService_ release];
+    [activeDownloads_ release];
     [super dealloc];
 }
 
@@ -37,6 +40,8 @@
     if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
         // Custom initialization
         flickrItems_ = nil;
+        currentPage_ = 1;
+        activeDownloads_ = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
@@ -52,7 +57,18 @@
     [super viewDidLoad];
     
     LoadMoreControl *loadMoreControl = [[LoadMoreControl alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 100.0)];
-    self.thumbnailView.footerView = loadMoreControl;
+    [self.thumbnailView setFooterView:loadMoreControl];
+    [self.thumbnailView setNeedsLayout];
+    [loadMoreControl addTarget:self action:@selector(loadMoreRequested:) forControlEvents:UIControlEventTouchDown]; 
+    [loadMoreControl release];
+    
+}
+
+- (IBAction) loadMoreRequested:(id) sender {
+    currentPage_++;
+    [dataService_ beginLoadDemoDataForPage:currentPage_];
+    LoadMoreControl *loadMoreControl = (LoadMoreControl *) sender;
+    [loadMoreControl enableLoadMoreButton];
 }
 
 /*
@@ -93,19 +109,25 @@
     }
     
     DemoItem *demoItem = (DemoItem *) [flickrItems_ objectAtIndex:[indexPath indexForNumOfColumns:[self.thumbnailView numOfColumns]]];
-    CVImage *demoImage = [[[CVImageCache sharedCVImageCache] imageForKey:demoItem.imageUrl] retain];
-    if (nil == demoImage) {
-        demoImage = [[CVImage alloc] initWithUrl:demoItem.imageUrl indexPath:indexPath];
-        [demoImage setDelegate:self];
-        [demoImage beginLoadingImage];
-        [[CVImageCache sharedCVImageCache] setImage:demoImage];
-    }
-    
-    [cell setCachedImage:demoImage];
-    [demoImage release];
+    [cell setImageUrl:demoItem.imageUrl];
+
+//    CVImage *demoImage = [[[CVImageCache sharedCVImageCache] imageForKey:demoItem.imageUrl] retain];
+//    if (nil == demoImage) {
+//        demoImage = [[CVImage alloc] initWithUrl:demoItem.imageUrl indexPath:indexPath];
+//        [demoImage setDelegate:self];
+//        [demoImage beginLoadingImage];
+//        [[CVImageCache sharedCVImageCache] setImage:demoImage];
+//    }
+//    
+//    [cell setCachedImage:demoImage];
+//    [demoImage release];
     return cell;
 }
 
+- (void) thumbnailView:(CVThumbnailGridView *)thumbnailView loadImageForUrl:(NSString *) url forCellAtIndexPath:(NSIndexPath *) indexPath {
+    [activeDownloads_ setObject:indexPath forKey:url];
+    [dataService_ beginLoadImageForUrl:url]; 
+}
 
 
 #pragma mark DemoDataServiceDelegate methods
@@ -117,17 +139,18 @@
 - (void) updatedImage:(NSDictionary *) dict {
     NSString *url = [dict objectForKey:@"url"];
     UIImage *image = [dict objectForKey:@"image"];
-    CVImage *cvImage = [[CVImageCache sharedCVImageCache] imageForKey:url];
     
-    if (nil != cvImage && nil != image) {
-        [cvImage setImage:image];
+    NSIndexPath *indexPath = [activeDownloads_ objectForKey:url];
+    if (indexPath) {
+        [self.thumbnailView image:image loadedForUrl:url forCellAtIndexPath:indexPath]; 
+        [activeDownloads_ removeObjectForKey:url];
     }
 }
 
-#pragma mark CVImageLoadingService methods
-- (void) beginLoadImageForUrl:(NSString *) url {
-    [dataService_ beginLoadImageForUrl:url usingStyle:[self.thumbnailView cellStyle]];
-}
+//#pragma mark CVImageLoadingService methods
+//- (void) beginLoadImageForUrl:(NSString *) url {
+//    [dataService_ beginLoadImageForUrl:url usingStyle:[self.thumbnailView imageAdorner]];
+//}
 
 
 @end

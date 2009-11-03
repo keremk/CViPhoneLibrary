@@ -11,11 +11,12 @@
 #import "DataServices.h"
 #import "AddItemViewController.h"
 
-@interface DemoGridViewController : CVThumbnailGridViewController <DemoDataServiceDelegate, CVImageLoadingService, CVSettingsViewControllerDelegate> {
+@interface DemoGridViewController : CVThumbnailGridViewController <DemoDataServiceDelegate, CVSettingsViewControllerDelegate> {
     NSMutableArray *demoItems_;
     id<DemoDataService> dataService_;
     BOOL configEnabled_;
     AddItemViewController *addItemViewController_;
+    NSMutableDictionary *activeDownloads_;
 }
 
 @property (nonatomic, retain) id<DemoDataService> dataService;

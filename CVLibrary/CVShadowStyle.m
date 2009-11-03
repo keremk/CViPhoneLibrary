@@ -8,6 +8,11 @@
 
 #import "CVShadowStyle.h"
 
+@interface CVShadowStyle()
+- (CGPoint) zeroClippedOffsetAsPoint;
+@end
+
+
 @implementation CVShadowStyle       
 @synthesize color = color_;
 @synthesize offset = offset_;
@@ -29,29 +34,46 @@
 
 #define SHADOW_BLUR_PIXELS 3 // Fudge factor used to take into account the fading of blur effect
 
-- (CGPoint) effectiveOffset {
+- (CGPoint) zeroClippedOffsetAsPoint {
     // Take into account the shadow based on its direction
 
     CGPoint offset = CGPointZero;
     if (self.offset.width < 0) {
-        offset.x += abs(self.offset.width) + SHADOW_BLUR_PIXELS;
+        offset.x = abs(self.offset.width) + SHADOW_BLUR_PIXELS;
     }
     if (self.offset.height < 0) {
-        offset.y += abs(self.offset.height) + SHADOW_BLUR_PIXELS;
+        offset.y = abs(self.offset.height) + SHADOW_BLUR_PIXELS;
     }
     return offset;
 }
 
-- (CGPoint) effectiveOffsetInUIKitCoordinateSystem {
-    CGPoint offset = CGPointZero;
+- (CGSize) offsetWithBlurPixels {
+    
+    CGSize offset = CGSizeZero;
     if (self.offset.width < 0) {
-        offset.x += abs(self.offset.width) + SHADOW_BLUR_PIXELS;
-    }
-    if (self.offset.height > 0) {
-        offset.y += abs(self.offset.height) + SHADOW_BLUR_PIXELS;
-    }
+        offset.width = self.offset.width - SHADOW_BLUR_PIXELS;
+    } else if (self.offset.width > 0) {
+        offset.width = self.offset.width + SHADOW_BLUR_PIXELS;
+    } 
+
+    if (self.offset.height < 0) {
+        offset.height = self.offset.height - SHADOW_BLUR_PIXELS;
+    } else if (self.offset.height > 0) {
+        offset.height = self.offset.height + SHADOW_BLUR_PIXELS;
+    } 
     return offset;
 }
+
+//- (CGPoint) effectiveOffsetInUIKitCoordinateSystem {
+//    CGPoint offset = CGPointZero;
+//    if (self.offset.width < 0) {
+//        offset.x = abs(self.offset.width) + SHADOW_BLUR_PIXELS;
+//    }
+//    if (self.offset.height > 0) {
+//        offset.y = abs(self.offset.height) + SHADOW_BLUR_PIXELS;
+//    }
+//    return offset;
+//}
 
 #pragma mark CVRenderStyle
 
@@ -59,7 +81,7 @@
 - (void) drawInContext:(CGContextRef) context forImageSize:(CGSize) imageSize {
     CGContextSetShadow(context, self.offset, self.blur);
 
-    CGPoint effectiveOffset = [self effectiveOffset];
+    CGPoint effectiveOffset = [self zeroClippedOffsetAsPoint];
     CGContextTranslateCTM(context, effectiveOffset.x, effectiveOffset.y);
 }
 
@@ -69,6 +91,15 @@
     adornedImageSize.width += abs(self.offset.width) + SHADOW_BLUR_PIXELS;
     adornedImageSize.height += abs(self.offset.height) + SHADOW_BLUR_PIXELS;
     return adornedImageSize;
+}
+
+- (CGSize) sizeRequiredForRendering {
+    CGFloat width = abs(self.offset.width) + SHADOW_BLUR_PIXELS;
+    CGFloat height = abs(self.offset.height) + SHADOW_BLUR_PIXELS;
+    
+    CGSize size = CGSizeMake(width, height);
+    
+    return size;
 }
 
 @end

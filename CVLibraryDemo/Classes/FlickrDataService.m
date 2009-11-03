@@ -28,7 +28,7 @@
     self = [super init];
     if (self != nil) {
         operationQueue_ = [[NSOperationQueue alloc] init];
-        [operationQueue_ setMaxConcurrentOperationCount:1];
+        [operationQueue_ setMaxConcurrentOperationCount:4];
         context_ = [[OFFlickrAPIContext alloc] initWithAPIKey:OBJECTIVE_FLICKR_SAMPLE_API_KEY 
                                                 sharedSecret:OBJECTIVE_FLICKR_SAMPLE_API_SHARED_SECRET];
     }
@@ -39,7 +39,18 @@
     OFFlickrAPIRequest *request = [[OFFlickrAPIRequest alloc] initWithAPIContext:context_];
     [request setDelegate:self];
     
-    [request callAPIMethodWithGET:@"flickr.photos.getRecent" arguments:[NSDictionary dictionaryWithObjectsAndKeys:@"50", @"per_page", nil]];
+    [request callAPIMethodWithGET:@"flickr.interestingness.getList" arguments:[NSDictionary dictionaryWithObjectsAndKeys:@"50", @"per_page", nil]];
+}
+
+- (void) beginLoadDemoDataForPage:(NSUInteger) pageNo {
+    if (pageNo == 0) 
+        return;
+    OFFlickrAPIRequest *request = [[OFFlickrAPIRequest alloc] initWithAPIContext:context_];
+    [request setDelegate:self];
+    
+    NSString *page = [NSString stringWithFormat:@"%d", pageNo];
+    [request callAPIMethodWithGET:@"flickr.interestingness.getList" arguments:[NSDictionary dictionaryWithObjectsAndKeys:@"50", @"per_page", page, @"page", nil]];
+        
 }
 
 - (void)flickrAPIRequest:(OFFlickrAPIRequest *)inRequest didCompleteWithResponse:(NSDictionary *)inResponseDictionary {
@@ -49,7 +60,7 @@
         NSDictionary *photoDict = [[inResponseDictionary valueForKeyPath:@"photos.photo"] objectAtIndex:i];
         NSNumber *demoItemId = [NSNumber numberWithInt:i];
         NSString *title = [photoDict valueForKey:@"title"];
-        NSURL *url = [context_ photoSourceURLFromDictionary:photoDict size:OFFlickrSmallSize];
+        NSURL *url = [context_ photoSourceURLFromDictionary:photoDict size:OFFlickrThumbnailSize];
         NSString *urlString = [url absoluteString];
         NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:demoItemId, @"demo_item_id", title, @"title", urlString, @"image_url", nil];
         DemoItem *demoItem = [[DemoItem alloc] initWithDictionary:dict];
@@ -64,8 +75,8 @@
     
 }
 
-- (void) beginLoadImageForUrl:(NSString *) url usingStyle:(CVStyle *)style {
-    NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:url, @"url", style, @"style", nil];
+- (void) beginLoadImageForUrl:(NSString *) url {
+    NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:url, @"url", nil];
     NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(loadImageForUrl:) object:args];
     [operationQueue_ addOperation:operation];
     [operation release];
@@ -75,12 +86,12 @@
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
     NSString *url = [args objectForKey:@"url"];
-    CVStyle *style = [args objectForKey:@"style"];
+//    CVImageAdorner *style = [args objectForKey:@"style"];
     NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
     UIImage *image = [UIImage imageWithData:data];
 
-    UIImage *adornedImage = [style imageByApplyingStyleToImage:image];
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:adornedImage, @"image", url, @"url", nil];
+//    UIImage *adornedImage = [style adornedImageFromImage:image];
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:image, @"image", url, @"url", nil];
     [self.delegate performSelectorOnMainThread:@selector(updatedImage:) withObject:dict waitUntilDone:YES];    
     [pool release];
 }

@@ -97,7 +97,7 @@ static char imageSizeObservingContext;
     if (nil != imageCache_) { 
         for (CVImage *image in [imageCache_ allValues]) {
             [image removeObserver:self forKeyPath:@"image"];
-            [image setDelegate:nil];
+//            [image setDelegate:nil];
         }
     }
 }

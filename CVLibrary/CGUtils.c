@@ -12,7 +12,7 @@
 void CVAddRoundedRectToPath(CGContextRef context, CGRect rect, CGFloat ovalWidth, CGFloat ovalHeight) {
     CGFloat fw, fh;
     
-    if (ovalWidth == 0 || ovalHeight == 0) {
+    if (ovalWidth == 0.0 || ovalHeight == 0.0) {
         // Not rounded so just add the rectangle
         CGContextAddRect(context, rect);
     } else {
@@ -45,6 +45,55 @@ void CVAddRoundedRectToPath(CGContextRef context, CGRect rect, CGFloat ovalWidth
     }
 }
 
+void CVAddPolygonToPath(CGContextRef context, CGRect rect, CGFloat radius, unsigned int numOfSides, CGFloat angle) {
+    if (numOfSides < 3 || radius < 0.0) 
+        return;
+    
+    CGContextSaveGState(context);
+
+    CGPoint center = CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect));
+    CGContextTranslateCTM(context, center.x, center.y);
+    CGContextRotateCTM(context, angle);
+	CGContextMoveToPoint(context, 0.0, - radius);
+	for(unsigned int i = 1; i < numOfSides; ++i) {
+		CGFloat x = - radius * sinf(i * 2.0 * M_PI / numOfSides);
+		CGFloat y = - radius * cosf(i * 2.0 * M_PI / numOfSides);
+		CGContextAddLineToPoint(context, x, y);
+	}
+    
+    CGContextRestoreGState(context);
+}
+
+void CVAddCircleToPath(CGContextRef context, CGRect rect, CGFloat radius) {
+    if (radius < 0.0) 
+        return;
+    
+    CGContextSaveGState(context);
+    CGPoint center = CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect));
+
+    CGContextAddEllipseInRect(context, rect);
+    
+    CGContextRestoreGState(context);
+    
+}
+
+void CVAddStarToPath(CGContextRef context, CGRect rect, CGFloat radius) {
+    if (radius < 0.0)
+        return;
+
+    CGContextSaveGState(context);
+    
+    CGPoint center = CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect)); 
+	for(unsigned int i = 1; i < 5; ++i)
+	{
+		CGFloat x =  radius * sinf(i * 4.0 * M_PI / 5.0);
+		CGFloat y =  radius * cosf(i * 4.0 * M_PI / 5.0);
+		CGContextAddLineToPoint(context, center.x + x, center.y + y);
+	}
+ 
+    CGContextRestoreGState(context);    
+}
+
 void CVPathAddRoundedRect(CGMutablePathRef path, CGRect rect, CGFloat ovalWidth, CGFloat ovalHeight) {
     CGFloat fw, fh;
     
@@ -68,4 +117,32 @@ void CVPathAddRoundedRect(CGMutablePathRef path, CGRect rect, CGFloat ovalWidth,
         
         CGPathCloseSubpath(path);
     }
+}
+
+void CVPathAddPolygon(CGMutablePathRef path, CGRect rect, CGFloat radius, unsigned int numOfSides) {
+    if (numOfSides < 3 || radius < 0.0) 
+        return;
+         
+	CGPoint center = CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect));
+	CGPathMoveToPoint(path, NULL, center.x, center.y - radius);
+	for(unsigned int i = 1; i < numOfSides; ++i) {
+		CGFloat x = - radius * sinf(i * 2.0 * M_PI / numOfSides);
+		CGFloat y = - radius * cosf(i * 2.0 * M_PI / numOfSides);
+		CGPathAddLineToPoint(path, NULL, center.x + x, center.y + y);
+	}
+    CGPathCloseSubpath(path);
+}
+
+void CVPathAddStar(CGMutablePathRef path, CGRect rect, CGFloat radius) {
+    if (radius < 0.0)
+        return;
+    
+    CGPoint center = CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect)); 
+	for(unsigned int i = 1; i < 5; ++i)
+	{
+		CGFloat x =  radius * sinf(i * 4.0 * M_PI / 5.0);
+		CGFloat y =  radius * cosf(i * 4.0 * M_PI / 5.0);
+		CGPathAddLineToPoint(path, NULL, center.x + x, center.y + y);
+	}
+    CGPathCloseSubpath(path);
 }

@@ -7,7 +7,7 @@
  *
  */
 
-@class CVStyle, CVImage;
+@class CVImageAdorner, CVImage;
 
 @protocol DemoDataServiceDelegate <NSObject>
 @required
@@ -23,7 +23,8 @@
 @property (nonatomic, assign) NSObject<DemoDataServiceDelegate> *delegate;
 
 @optional
+- (void) beginLoadDemoDataForPage:(NSUInteger) pageNo;
 - (void) beginLoadImageForUrl:(NSString *) url;
-- (void) beginLoadImageForUrl:(NSString *) url usingStyle:(CVStyle *)style;
+//- (void) beginLoadImageForUrl:(NSString *) url usingStyle:(CVImageAdorner *)style;
 @end
 

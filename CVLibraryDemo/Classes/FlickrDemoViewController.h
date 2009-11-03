@@ -10,9 +10,11 @@
 #import "CVLibrary.h"
 #import "DataServices.h"
 
-@interface FlickrDemoViewController : CVThumbnailGridViewController <DemoDataServiceDelegate, CVImageLoadingService> {
+@interface FlickrDemoViewController : CVThumbnailGridViewController <DemoDataServiceDelegate> {
     NSMutableArray *flickrItems_;
     id<DemoDataService> dataService_;
+    NSUInteger currentPage_;
+    NSMutableDictionary *activeDownloads_;
 }
 
 @property (nonatomic, retain) id<DemoDataService> dataService;

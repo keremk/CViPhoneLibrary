@@ -10,14 +10,14 @@
 
 #import "CVThumbnailGridView.h"
 #import "UIImage+Adornments.h"
+#import "CVImageCache.h"
 
 @interface CVThumbnailGridView()
 - (void) commonInit;
 - (void) animateThumbnailViewCell:(CVThumbnailGridViewCell *) cell;
-- (CGSize) recalculateThumbnailCellSize;
+//- (CGSize) thumbnailCellSize;
 - (NSUInteger) calculateNumOfColumns;
 - (CGRect) rectForColumn:(NSUInteger) column row:(NSUInteger) row;
-- (CGFloat) columnSpacing;
 - (CVThumbnailGridViewCell *) createCellFromDataSourceForIndexPath:(NSIndexPath *) indexPath;
 - (NSString *) keyFromIndexPath:(NSIndexPath *) indexPath;
 - (void) cleanupNonVisibleCells;
@@ -30,11 +30,19 @@
                     endingIndex:(NSUInteger) endIndex
                   withIncrement:(NSInteger) increment
                   excludingCell:(CVThumbnailGridViewCell *) excludedCell;
-- (CGRect) thumbnailAreaBounds;
+- (void) asyncDoImageAdornmentUsingArgs:(NSDictionary *) args;
+- (void) setThumbnailImage:(NSDictionary *) args;
+- (void) updateSelectionForNewSelectedIndex:(NSIndexPath *) selectedIndex;
+//- (CGSize) paddingRequiredForDeleteSign;
+//- (CGRect) thumbnailAreaBounds;
+- (CGSize) targetImageSize;
 - (CGFloat) headerHeight;
 - (CGFloat) footerHeight;
 - (NSInteger) startingRowOnPage;
 - (NSInteger) endingRowOnPage;
+
+@property (nonatomic, readonly) NSOperationQueue *operationQueue;
+@property (nonatomic, retain) UIImage *adornedImageLoadingIcon;
 @end 
 
 @implementation CVThumbnailGridView
@@ -47,11 +55,13 @@
 @synthesize topMargin = topMargin_;
 @synthesize bottomMargin = bottomMargin_;
 @synthesize rowSpacing = rowSpacing_;
+@synthesize columnSpacing = columnSpacing_;
 @synthesize thumbnailCount = thumbnailCount_;
-@synthesize cellStyle = cellStyle_;
+@synthesize imageAdorner = imageAdorner_;
 @synthesize fitNumberOfColumnsToFullWidth = fitNumberOfColumnsToFullWidth_;
 @synthesize animateSelection = animateSelection_;
 @synthesize editing = editing_;
+@synthesize editModeEnabled = editModeEnabled_;
 @synthesize imageLoadingIcon = imageLoadingIcon_;
 @synthesize deleteSignIcon = deleteSignIcon_;
 @synthesize deleteSignBackgroundColor = deleteSignBackgroundColor_;
@@ -59,9 +69,14 @@
 @synthesize deleteSignSideLength = deleteSignSideLength_;
 @synthesize headerView = headerView_;
 @synthesize footerView = footerView_;
+@synthesize adornedImageLoadingIcon = adornedImageLoadingIcon_;
+@synthesize thumbnailCellSize = thumbnailCellSize_;
+@synthesize operationQueue = operationQueue_;
+@synthesize indexPathForSelectedCell = indexPathForSelectedCell_;
+@synthesize allowsSelection = allowsSelection_;
 
 - (void)dealloc {
-    [cellStyle_ release];
+    [imageAdorner_ release];
     [reusableThumbnails_ release];
     [thumbnailsInUse_ release];
     [adornedImageLoadingIcon_ release];
@@ -71,6 +86,8 @@
     [deleteSignBackgroundColor_ release];
     [headerView_ release];
     [footerView_ release];
+    [operationQueue_ release];
+    [indexPathForSelectedCell_ release];
     [super dealloc];
 }
 
@@ -80,6 +97,7 @@
 #define RIGHT_MARGIN_DEFAULT 5.0
 #define TOP_MARGIN_DEFAULT 0.0 // TODO: Top margin is always half of ROW_SPACING 
 #define ROW_SPACING_DEFAULT 10.0
+#define COLUMN_SPACING_DEFAULT -1.0
 #define COLUMN_COUNT_DEFAULT 1
 #define DELETE_SIGN_SIDE_LENGTH_DEFAULT 34.0
 
@@ -103,13 +121,15 @@
     rightMargin_ = RIGHT_MARGIN_DEFAULT;
     topMargin_ = TOP_MARGIN_DEFAULT;
     rowSpacing_ = ROW_SPACING_DEFAULT;
+    columnSpacing_ = COLUMN_SPACING_DEFAULT;
     numOfColumns_ = COLUMN_COUNT_DEFAULT;
     isAnimated_ = NO;
     animateSelection_ = YES;
     fitNumberOfColumnsToFullWidth_ = NO;
     editing_ = NO;
-    
-    cellStyle_ = [[CVStyle alloc] init];     
+    editModeEnabled_ = NO;
+    adornedImageLoadingIcon_ = nil;
+    imageAdorner_ = [[CVImageAdorner alloc] init];     
     thumbnailsInUse_ = [[NSMutableDictionary alloc] init];
     reusableThumbnails_ = [[NSMutableSet alloc] init];
     firstVisibleRow_ = NSIntegerMax;
@@ -120,17 +140,29 @@
     self.deleteSignForegroundColor = [UIColor redColor];
     headerView_ = nil;
     footerView_ = nil;
+    operationQueue_ = nil;
     [self setDelaysContentTouches:YES];
     [self setCanCancelContentTouches:NO];
+    indexPathForSelectedCell_ = nil;
+    allowsSelection_ = YES;
 }
 
-- (void) setCellStyle:(CVStyle *) style {
-    if (cellStyle_ != style) {
-        [cellStyle_ release];
-        cellStyle_ = [style retain];
-        thumbnailCellSize_ = [self recalculateThumbnailCellSize];
+- (void) setImageAdorner:(CVImageAdorner *) imageAdorner {
+    if (imageAdorner_ != imageAdorner) {
+        [imageAdorner_ release];
+        imageAdorner_ = [imageAdorner retain];
+//        thumbnailCellSize_ = [self thumbnailCellSize];
         [self setNeedsLayout];
     }
+}
+
+#define MAX_NUMBER_OPERATIONS 1
+- (NSOperationQueue *) operationQueue {
+    if (nil == operationQueue_) {
+        operationQueue_ = [[NSOperationQueue alloc] init];
+        [operationQueue_ setMaxConcurrentOperationCount:MAX_NUMBER_OPERATIONS];
+    }
+    return operationQueue_;
 }
 
 - (void) setNumOfColumns:(NSInteger) numOfColumns {    
@@ -142,25 +174,27 @@
 - (NSUInteger) calculateNumOfColumns {
     NSUInteger numOfColumns;
     CGRect visibleBounds = [self bounds];
-    numOfColumns = floorf((visibleBounds.size.width - leftMargin_ - rightMargin_)/thumbnailCellSize_.width);
+    CGSize thumbnailCellSize = [self thumbnailCellSize];
+    numOfColumns = floorf((visibleBounds.size.width - leftMargin_ - rightMargin_)/thumbnailCellSize.width);
     numOfColumns = (numOfColumns == 0) ? 1 : numOfColumns;
     return numOfColumns;
 }
 
-#define THUMBNAIL_LEFT_MARGIN 17.0
-#define THUMBNAIL_TOP_MARGIN 17.0
+//#define THUMBNAIL_LEFT_MARGIN 17.0
+//#define THUMBNAIL_TOP_MARGIN 17.0
 
-- (CGSize) recalculateThumbnailCellSize {
-    CGSize cellSize = [cellStyle_ sizeAfterStylingImage];
-
-    // Add the margin data
-    CGFloat deltaX = (THUMBNAIL_LEFT_MARGIN >= abs(cellStyle_.shadowStyle.offset.width)) ? THUMBNAIL_LEFT_MARGIN - abs(cellStyle_.shadowStyle.offset.width) : 0;
-    CGFloat deltaY = (THUMBNAIL_TOP_MARGIN >= abs(cellStyle_.shadowStyle.offset.height)) ? THUMBNAIL_TOP_MARGIN - abs(cellStyle_.shadowStyle.offset.height) : 0;
-    
-    cellSize.width += deltaX;
-    cellSize.height += deltaY;
-    return cellSize;
-}
+//- (CGSize) thumbnailCellSize {
+//    CGSize cellSize = [imageAdorner_ sizeAfterStylingImage];
+//
+//    CGFloat thumbnailLeftMargin;
+//    // Add the margin data
+//    CGFloat deltaX = (THUMBNAIL_LEFT_MARGIN >= abs(imageAdorner_.shadowStyle.offset.width)) ? THUMBNAIL_LEFT_MARGIN - abs(imageAdorner_.shadowStyle.offset.width) : 0;
+//    CGFloat deltaY = (THUMBNAIL_TOP_MARGIN >= abs(imageAdorner_.shadowStyle.offset.height)) ? THUMBNAIL_TOP_MARGIN - abs(imageAdorner_.shadowStyle.offset.height) : 0;
+//    
+//    cellSize.width += deltaX;
+//    cellSize.height += deltaY;
+//    return cellSize;
+//}
 
 - (void) reloadData {
     thumbnailCount_ = [dataSource_ numberOfCellsForThumbnailView:self];
@@ -179,6 +213,22 @@
     [self setNeedsLayout];
 }
 
+- (void) updateSelectionForNewSelectedIndex:(NSIndexPath *) selectedIndex {
+    if (allowsSelection_ && (selectedIndex != indexPathForSelectedCell_)) {
+        // Deselect the previous selection
+        CVThumbnailGridViewCell *cell = [self cellForIndexPath:indexPathForSelectedCell_];
+        [cell setSelected:NO];
+        
+        // Select new selection
+        indexPathForSelectedCell_ = selectedIndex;
+        cell = [self cellForIndexPath:indexPathForSelectedCell_];
+        [cell setSelected:YES];
+    }
+    if ([delegate_ respondsToSelector:@selector(thumbnailView:didSelectCellAtIndexPath:)]) {
+        [delegate_ thumbnailView:self didSelectCellAtIndexPath:selectedIndex];
+    }
+}
+
 #pragma mark Layout 
 
 - (void) setLeftMargin:(CGFloat) leftMargin {
@@ -195,12 +245,12 @@
     }
 }
 
-- (CGRect) thumbnailAreaBounds {
-    CGFloat newY = (nil != headerView_) ? self.bounds.origin.y + headerView_.frame.size.height : self.bounds.origin.y;
-    CGFloat newHeight = (nil != footerView_) ? self.bounds.size.height - footerView_.frame.size.height : self.bounds.size.height;
-    CGRect thumbnailAreaBounds = CGRectMake(self.bounds.origin.x, newY , self.bounds.size.width, newHeight);
-    return thumbnailAreaBounds;
-}
+//- (CGRect) thumbnailAreaBounds {
+//    CGFloat newY = (nil != headerView_) ? self.bounds.origin.y + headerView_.frame.size.height : self.bounds.origin.y;
+//    CGFloat newHeight = (nil != footerView_) ? self.bounds.size.height - footerView_.frame.size.height : self.bounds.size.height;
+//    CGRect thumbnailAreaBounds = CGRectMake(self.bounds.origin.x, newY , self.bounds.size.width, newHeight);
+//    return thumbnailAreaBounds;
+//}
 
 - (CGFloat) headerHeight {
     return (nil != headerView_) ? headerView_.frame.size.height : 0;
@@ -211,29 +261,37 @@
 }
 
 - (NSInteger) startingRowOnPage {
-    CGFloat rowHeight = rowSpacing_ + thumbnailCellSize_.height;
+    CGSize thumbnailCellSize = [self thumbnailCellSize];
+    CGFloat rowHeight = rowSpacing_ + thumbnailCellSize.height;
     return MAX(0, floorf((self.contentOffset.y - [self headerHeight]) / rowHeight));
 }
 
 - (NSInteger) endingRowOnPage {
-    CGFloat rowHeight = rowSpacing_ + thumbnailCellSize_.height;
+    CGSize thumbnailCellSize = [self thumbnailCellSize];
+    CGFloat rowHeight = rowSpacing_ + thumbnailCellSize.height;
     return MIN(numOfRows_ - 1, floorf(((CGRectGetMaxY([self bounds]) - [self headerHeight]) / rowHeight)));
 }
 
 - (CGRect) rectForColumn:(NSUInteger) column row:(NSUInteger) row {
-    CGFloat xPos = leftMargin_ + (thumbnailCellSize_.width + [self columnSpacing]) * column;
-    CGFloat yPos = (thumbnailCellSize_.height + rowSpacing_) * row + [self headerHeight];
-    CGRect rect = CGRectMake(xPos, yPos, thumbnailCellSize_.width, thumbnailCellSize_.height);
+    CGSize thumbnailCellSize = [self thumbnailCellSize];
+    CGFloat xPos = leftMargin_ + (thumbnailCellSize.width + [self columnSpacing]) * column;
+    CGFloat yPos = (thumbnailCellSize.height + rowSpacing_) * row + [self headerHeight];
+    CGRect rect = CGRectMake(xPos, yPos, thumbnailCellSize.width, thumbnailCellSize.height);
 
     return rect;
 }
 
 - (CGFloat) columnSpacing {
     CGFloat columnSpacing = 0;
-    if (numOfColumns_ > 1) {
-        columnSpacing = MAX(0, (self.bounds.size.width - (thumbnailCellSize_.width * numOfColumns_) - leftMargin_ - rightMargin_) / (numOfColumns_ - 1));
+    CGSize thumbnailCellSize = [self thumbnailCellSize];
+    if (columnSpacing_ == COLUMN_SPACING_DEFAULT) {
+        if (numOfColumns_ > 1) {
+            columnSpacing = MAX(0, (self.bounds.size.width - (thumbnailCellSize.width * numOfColumns_) - leftMargin_ - rightMargin_) / (numOfColumns_ - 1));
+        }
+    } else {
+        columnSpacing = columnSpacing_;
     }
-    
+
     return columnSpacing;
 }
 
@@ -257,7 +315,7 @@
         
     // Refresh our thumbnail count    
     thumbnailCount_ = [dataSource_ numberOfCellsForThumbnailView:self];    
-    thumbnailCellSize_ = [self recalculateThumbnailCellSize];
+    CGSize thumbnailCellSize = [self thumbnailCellSize];
 
     if (fitNumberOfColumnsToFullWidth_) {
         numOfColumns_ = [self calculateNumOfColumns];
@@ -267,7 +325,7 @@
     if (isAnimated_ || numOfRows_ == 0)
         return;
 
-    CGFloat height = topMargin_ + [self headerHeight] + [self footerHeight] + (thumbnailCellSize_.height + rowSpacing_) * numOfRows_;
+    CGFloat height = topMargin_ + [self headerHeight] + [self footerHeight] + (thumbnailCellSize.height + rowSpacing_) * numOfRows_;
     CGSize scrollViewSize = CGSizeMake(self.bounds.size.width, height);
     [self setContentSize:scrollViewSize];
 
@@ -340,8 +398,33 @@
         [cell setDelegate:self];
         [cell setIndexPath:indexPath];
         [cell setEditing:editing_];
-        [cell setUpperLeftMargin:CGPointMake(THUMBNAIL_LEFT_MARGIN, THUMBNAIL_TOP_MARGIN)];
-        [cell setStyle:cellStyle_];
+        if (indexPath == indexPathForSelectedCell_) {
+            [cell setSelected:YES];
+        } else {
+            [cell setSelected:NO];
+        }
+
+//        [cell setUpperLeftMargin:CGPointMake(THUMBNAIL_LEFT_MARGIN, THUMBNAIL_TOP_MARGIN)];
+        [cell setImageAdorner:imageAdorner_];
+        
+        if (nil != cell.imageUrl) {
+            CVImage *demoImage = [[CVImageCache sharedCVImageCache] imageForKey:cell.imageUrl];
+            if (nil == demoImage) {
+                // Start loading the image for url
+                [dataSource_ thumbnailView:self loadImageForUrl:cell.imageUrl forCellAtIndexPath:indexPath];
+                
+                // In the mean time set the thumbnail to image loading icon
+                if (self.imageAdorner) {
+                    [cell setImage:[self adornedImageLoadingIcon]];
+                } else {
+                    [cell setImage:[self imageLoadingIcon]];
+                }
+            } else {
+                // The cached image is always the adorned image unless, there is no imageAdorner
+                
+                [cell setImage:[demoImage image]];
+            }
+        }
         [self addSubview:cell];
         [thumbnailsInUse_ setObject:cell forKey:[self keyFromIndexPath:indexPath]];
     } else {
@@ -362,6 +445,74 @@
     return key;
 }
 
+#pragma mark Image Operations
+- (void) image:(UIImage *) image loadedForUrl:(NSString *) url forCellAtIndexPath:(NSIndexPath *) indexPath {
+    NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:url, @"url", indexPath, @"index_path", image, @"image", nil];
+    NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(asyncDoImageAdornmentUsingArgs:) object:args];
+    [self.operationQueue addOperation:operation];
+    [operation release];    
+}
+
+- (CGSize) targetImageSize {
+    // Calculate the target image size:
+    //  targetImageSize: thumbnailCellSize - paddingRequiredForDeleteSign
+    // thumbnailCellSize is specified by the user of the framework and always stay constant
+    // 
+
+    CGSize targetImageSize = self.thumbnailCellSize;
+    
+    if (self.editModeEnabled) {
+        CGSize paddingRequiredForDeleteSign = [self.imageAdorner paddingRequiredForUpperLeftBadgeSize:CGSizeMake(deleteSignSideLength_, deleteSignSideLength_)];
+        targetImageSize.width -= paddingRequiredForDeleteSign.width;
+        targetImageSize.height -= paddingRequiredForDeleteSign.height;
+    }
+
+    return targetImageSize;
+}
+
+- (void) asyncDoImageAdornmentUsingArgs:(NSDictionary *) args {
+    NSString *url = [args objectForKey:@"url"]; 
+    UIImage *image = [args objectForKey:@"image"];
+    NSIndexPath *indexPath = [args objectForKey:@"index_path"];
+
+    UIImage *adornedImage = [self.imageAdorner adornedImageFromImage:image usingTargetImageSize:self.targetImageSize];
+    CVImage *cachedImage = [[CVImage alloc] initWithUrl:url indexPath:indexPath];
+    [cachedImage setImage:adornedImage];
+    [[CVImageCache sharedCVImageCache] setImage:cachedImage];
+    [cachedImage release];
+
+    // Set the thumbnail cell in main thread
+    NSDictionary *newArgs = [NSDictionary dictionaryWithObjectsAndKeys:adornedImage, @"image", indexPath, @"index_path", nil];
+    [self performSelectorOnMainThread:@selector(setThumbnailImage:) withObject:newArgs waitUntilDone:YES];
+}
+
+- (void) setThumbnailImage:(NSDictionary *) args{
+    UIImage *image = [args objectForKey:@"image"];
+    NSIndexPath *indexPath = [args objectForKey:@"index_path"];
+
+    CVThumbnailGridViewCell *cell = [self cellForIndexPath:indexPath];    
+    [cell setImage:image];
+}
+
+//- (CGSize) paddingRequiredForDeleteSign {
+//    //  paddingRequiredForDeleteSign: depends on the shadow direction and the shape of the border
+//    //  upperLeftCorner: Each border shape defines a point as its designated upperLeftCorner
+//    //                   e.g. For rectangle, it is (0,0), 
+//    //                        For circle, it is the point on the circle where angle = -45
+//
+//    
+//    CGFloat widthAdjustment = (self.imageAdorner.shadowStyle.offset.width < 0) ? abs(self.imageAdorner.shadowStyle.offset.width) : 0.0;
+//    CGFloat heightAdjustment = (self.imageAdorner.shadowStyle.offset.height > 0) ? self.imageAdorner.shadowStyle.offset.height : 0.0;
+//    
+//    CGFloat xPadding = self.imageAdorner.borderStyle.upperLeftCorner.x - (deleteSignSideLength_ / 2) + widthAdjustment;
+//    xPadding = (xPadding > 0) ? 0.0 : abs(xPadding);
+//    
+//    CGFloat yPadding = self.imageAdorner.borderStyle.upperLeftCorner.y - (deleteSignSideLength_ / 2) + heightAdjustment;
+//    yPadding = (yPadding > 0) ? 0.0 : abs(yPadding);
+//    
+//    return CGSizeMake(xPadding, yPadding);
+//}
+//
 #pragma mark Editing 
 
 - (void) setEditing:(BOOL) editing {
@@ -460,8 +611,9 @@
 
 - (UIImage *) adornedImageLoadingIcon {
     if (nil == adornedImageLoadingIcon_) {
-        if (nil != self.cellStyle) {
-            adornedImageLoadingIcon_ = [[self.cellStyle imageByApplyingStyleToImage:self.imageLoadingIcon] retain];
+        if (nil != self.imageAdorner) {
+            self.adornedImageLoadingIcon = [self.imageAdorner adornedImageFromImage:self.imageLoadingIcon usingTargetImageSize:self.targetImageSize];
+//            self.adornedImageLoadingIcon = self.imageLoadingIcon;
         }
     }
     return adornedImageLoadingIcon_;
@@ -538,9 +690,10 @@
     if (animateSelection_) {
         [self animateThumbnailViewCell:cell];
     } else {
-        if ([delegate_ respondsToSelector:@selector(thumbnailView:didSelectCellAtIndexPath:)]) {
-            [delegate_ thumbnailView:self didSelectCellAtIndexPath:[cell indexPath]];
-        }
+        // Note that the animation logic calls the below if the animateSelection_ is YES.
+        [self updateSelectionForNewSelectedIndex:[cell indexPath]];
+//        if ([delegate_ respondsToSelector:@selector(thumbnailView:didSelectCellAtIndexPath:)]) 
+//            [delegate_ thumbnailView:self didSelectCellAtIndexPath:[cell indexPath]];
     }
 }
 
@@ -551,17 +704,18 @@
 - (void)thumbnailGridViewCellMoved:(CVThumbnailGridViewCell *) draggingThumb {
     [self maybeAutoscrollForThumb:draggingThumb];
     
+    CGSize thumbnailCellSize = [self thumbnailCellSize];
     // Estimate cell number we are moving to based on location
-    NSInteger draggingThumbMoveToColumn = floor((CGRectGetMidX([draggingThumb frame]) - leftMargin_) / (thumbnailCellSize_.width + [self columnSpacing]));
-    NSInteger draggingThumbMoveToRow = floor((CGRectGetMidY([draggingThumb frame]) - [self headerHeight]) / (thumbnailCellSize_.height + rowSpacing_));
+    NSInteger draggingThumbMoveToColumn = floor((CGRectGetMidX([draggingThumb frame]) - leftMargin_) / (thumbnailCellSize.width + [self columnSpacing]));
+    NSInteger draggingThumbMoveToRow = floor((CGRectGetMidY([draggingThumb frame]) - [self headerHeight]) / (thumbnailCellSize.height + rowSpacing_));
     NSInteger moveToIndex = draggingThumbMoveToRow * numOfColumns_ + draggingThumbMoveToColumn;
     
     if (draggingThumbMoveToColumn < 0 || draggingThumbMoveToColumn >= numOfColumns_) return;
     if (moveToIndex < 0 || moveToIndex >= thumbnailCount_) return;
     
     // Calculate starting cell number
-    NSUInteger startingColumn = floor(([draggingThumb home].origin.x - leftMargin_) / (thumbnailCellSize_.width + [self columnSpacing]));
-    NSUInteger startingRow = floor(([draggingThumb home].origin.y - [self headerHeight])/ (thumbnailCellSize_.height + rowSpacing_));
+    NSUInteger startingColumn = floor(([draggingThumb home].origin.x - leftMargin_) / (thumbnailCellSize.width + [self columnSpacing]));
+    NSUInteger startingRow = floor(([draggingThumb home].origin.y - [self headerHeight])/ (thumbnailCellSize.height + rowSpacing_));
     NSUInteger startingIndex = startingRow * numOfColumns_ + startingColumn;
 
 //    NSLog(@"Start %d, %d - %d  -- Move to: %d, %d - %d", startingRow, startingColumn, startingIndex, draggingThumbMoveToRow, draggingThumbMoveToColumn, moveToIndex);
@@ -668,18 +822,21 @@
 	CVThumbnailGridViewCell *cell = (CVThumbnailGridViewCell *) context;
 	if (animationID == @"SelectThumbnail") {
 		//NSLog(@"**Animation 2 - x=%f, y=%f, width=%f, height=%f ", cell.frame.origin.x, cell.frame.origin.y, cell.frame.size.width, cell.frame.size.height);
-		[UIView beginAnimations:@"DeSelectThumbnail" context:cell];
-		[UIView setAnimationDidStopSelector:@selector(animationFinished:finished:context:)];
-		[UIView setAnimationDelegate:self];
-		[UIView setAnimationDuration:SELECT_ANIMATION_DURATION];
-		CGAffineTransform transform = CGAffineTransformIdentity;
-		cell.transform = transform;
-		[UIView commitAnimations];			
+		
+        [UIView beginAnimations:@"DeSelectThumbnail" context:cell];
+        [UIView setAnimationDidStopSelector:@selector(animationFinished:finished:context:)];
+        [UIView setAnimationDelegate:self];
+        [UIView setAnimationDuration:SELECT_ANIMATION_DURATION];
+        CGAffineTransform transform = CGAffineTransformIdentity;
+        cell.transform = transform;
+        [UIView commitAnimations];		
 	} else {
 		//NSLog(@"***Animation 3 - x=%f, y=%f, width=%f, height=%f ", cell.frame.origin.x, cell.frame.origin.y, cell.frame.size.width, cell.frame.size.height);
-        if ([delegate_ respondsToSelector:@selector(thumbnailView:didSelectCellAtIndexPath:)]) {
-            [delegate_ thumbnailView:self didSelectCellAtIndexPath:[cell indexPath]];
-        }
+
+        [self updateSelectionForNewSelectedIndex:[cell indexPath]];
+//        if ([delegate_ respondsToSelector:@selector(thumbnailView:didSelectCellAtIndexPath:)]) {
+//            [delegate_ thumbnailView:self didSelectCellAtIndexPath:[cell indexPath]];
+//        }
 
 		isAnimated_ = NO;
 	}	

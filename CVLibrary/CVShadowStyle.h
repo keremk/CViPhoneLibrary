@@ -19,6 +19,7 @@
 @property (nonatomic, retain) UIColor *color;
 @property (nonatomic) CGSize offset;
 @property (nonatomic) CGFloat blur;
-- (CGPoint) effectiveOffset;
-- (CGPoint) effectiveOffsetInUIKitCoordinateSystem;
+
+- (CGSize) offsetWithBlurPixels;
+//- (CGPoint) effectiveOffsetInUIKitCoordinateSystem;
 @end

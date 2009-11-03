@@ -39,8 +39,8 @@
     [operation release];
 }
 
-- (void) beginLoadImageForUrl:(NSString *) url usingStyle:(CVStyle *)style {
-    NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:url, @"url", style, @"style", nil];
+- (void) beginLoadImageForUrl:(NSString *) url {
+    NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:url, @"url", nil];
     NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(asynchCreateFakeImageForUrl:) object:args];
     [operationQueue_ addOperation:operation];
     [operation release];
@@ -71,17 +71,17 @@
 
 - (void) asynchCreateFakeImageForUrl:(NSDictionary *) args {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    NSString *url = [args objectForKey:@"url"]; 
+    NSString *url = [[[args objectForKey:@"url"] copy] autorelease]; 
     UIImage *adornedImage = [self createFakeImageForUrl:args];
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:adornedImage, @"image", url, @"url", nil];
     [self.delegate performSelectorOnMainThread:@selector(updatedImage:) withObject:dict waitUntilDone:YES];
-    [pool release];
+    [pool drain];
 }
 
 - (UIImage *) createFakeImageForUrl:(NSDictionary *) args { 
     NSString *url = [args objectForKey:@"url"];    
-    CVStyle *style = [args objectForKey:@"style"];
-    CGSize size = {80, 87};
+//    CVImageAdorner *style = [args objectForKey:@"style"];
+    CGSize size = {70, 70};
 
     // IMPORTANT NOTE:
     // DONOT use UIGraphicsBeginImageContext here
@@ -102,21 +102,21 @@
     CGContextSetRGBFillColor(context, 0.0, 0.0, 1.0, 1.0);
     CGContextFillRect(context, rect);
     CGContextSetRGBFillColor(context, 0.0, 1.0, 1.0, 1.0);
-    NSString *text = [NSString stringWithFormat:@"%@", url];
-    NSUInteger textLen = [text length] + 1;  // +1 for the \0 string end
-    char *textChar = malloc(textLen);
-    [text getCString:textChar maxLength:textLen encoding:NSUTF8StringEncoding];
+    NSUInteger textLen = [url lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
+    char *textChar = malloc(textLen + 1); // +1 for the NULL terminator
+    [url getCString:textChar maxLength:textLen + 1 encoding:NSUTF8StringEncoding];
     CGContextSetTextMatrix(context, CGAffineTransformIdentity);
     CGContextSelectFont(context, "Arial", 64.0, kCGEncodingMacRoman);
-    CGContextShowTextAtPoint(context, 5.0, 20.0, textChar, textLen - 1);
+    CGContextShowTextAtPoint(context, 5.0, 10.0, textChar, textLen);
     free(textChar);
     CGImageRef cgImage = CGBitmapContextCreateImage(context);
     UIImage *image = [UIImage imageWithCGImage:cgImage];
     CGImageRelease(cgImage);
     CGContextRelease(context);
 
-    UIImage *adornedImage = [style imageByApplyingStyleToImage:image];
-    
-    return adornedImage;
+    return image;
+//    UIImage *adornedImage = [style adornedImageFromImage:image];
+//    
+//    return adornedImage;
 }
 @end

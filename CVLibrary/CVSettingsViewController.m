@@ -31,7 +31,7 @@
         if (!configSections) {
             // This is some catastrophic error
             // TODO: figure out what to do.
-            NSLog(error);
+            NSLog(@"%@", error);
             [error release];
         } else {
             cellHandlers_ = [[NSMutableArray alloc] init];

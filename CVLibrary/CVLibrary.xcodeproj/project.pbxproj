@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		BD32D9C70FF3FAFE002DA5AF /* CVImageLoadingService.h in Headers */ = {isa = PBXBuildFile; fileRef = BD32D9C60FF3FAFE002DA5AF /* CVImageLoadingService.h */; };
+		BD439A031059C08000CD1CED /* CVPolygonBorder.h in Headers */ = {isa = PBXBuildFile; fileRef = BD439A011059C08000CD1CED /* CVPolygonBorder.h */; };
+		BD439A041059C08000CD1CED /* CVPolygonBorder.m in Sources */ = {isa = PBXBuildFile; fileRef = BD439A021059C08000CD1CED /* CVPolygonBorder.m */; };
+		BD439A051059C08000CD1CED /* CVPolygonBorder.m in Sources */ = {isa = PBXBuildFile; fileRef = BD439A021059C08000CD1CED /* CVPolygonBorder.m */; };
 		BD4A29DB101E9BD200044AEE /* CVSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4A29D1101E9BD200044AEE /* CVSettingsViewController.m */; };
 		BD4A29DC101E9BD200044AEE /* TextCellHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4A29D4101E9BD200044AEE /* TextCellHandler.m */; };
 		BD4A29DD101E9BD200044AEE /* EnumCellHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4A29D6101E9BD200044AEE /* EnumCellHandler.m */; };
@@ -27,6 +30,12 @@
 		BD6668550F83F84100ABF98B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD6668540F83F84100ABF98B /* Foundation.framework */; };
 		BD6668570F83F84100ABF98B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD6668560F83F84100ABF98B /* UIKit.framework */; };
 		BD6668F80F83F87C00ABF98B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD6668F70F83F87C00ABF98B /* CoreGraphics.framework */; };
+		BD6717B5105EE6F400E0ECE3 /* CVEllipseBorder.h in Headers */ = {isa = PBXBuildFile; fileRef = BD6717B3105EE6F400E0ECE3 /* CVEllipseBorder.h */; };
+		BD6717B6105EE6F400E0ECE3 /* CVEllipseBorder.m in Sources */ = {isa = PBXBuildFile; fileRef = BD6717B4105EE6F400E0ECE3 /* CVEllipseBorder.m */; };
+		BD6717B7105EE6F400E0ECE3 /* CVEllipseBorder.m in Sources */ = {isa = PBXBuildFile; fileRef = BD6717B4105EE6F400E0ECE3 /* CVEllipseBorder.m */; };
+		BD797DA71056F43300914624 /* CVRoundedRectBorder.h in Headers */ = {isa = PBXBuildFile; fileRef = BD797DA31056F43300914624 /* CVRoundedRectBorder.h */; };
+		BD797DA81056F43300914624 /* CVRoundedRectBorder.m in Sources */ = {isa = PBXBuildFile; fileRef = BD797DA41056F43300914624 /* CVRoundedRectBorder.m */; };
+		BD797DAA1056F43300914624 /* CVRoundedRectBorder.m in Sources */ = {isa = PBXBuildFile; fileRef = BD797DA41056F43300914624 /* CVRoundedRectBorder.m */; };
 		BD7B0189101961520091CA26 /* CVImageCacheTest.m in Sources */ = {isa = PBXBuildFile; fileRef = BD7B0188101961520091CA26 /* CVImageCacheTest.m */; };
 		BD7B01AE101A3C4A0091CA26 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD6668F70F83F87C00ABF98B /* CoreGraphics.framework */; };
 		BD7B01AF101A3C5C0091CA26 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD6668540F83F84100ABF98B /* Foundation.framework */; };
@@ -67,9 +76,9 @@
 		BDE55D700F90866E004EBA23 /* CVThumbnailGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BDE55D650F90866E004EBA23 /* CVThumbnailGridViewController.m */; };
 		BDE55D710F90866E004EBA23 /* CVThumbnailGridViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BDE55D660F90866E004EBA23 /* CVThumbnailGridViewCell.m */; };
 		BDE55D720F90866E004EBA23 /* CVThumbnailGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = BDE55D670F90866E004EBA23 /* CVThumbnailGridView.m */; };
-		BDF8764E0FBCD5C500D8973C /* CVStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = BDF8764C0FBCD5C500D8973C /* CVStyle.h */; };
-		BDF8764F0FBCD5C500D8973C /* CVStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = BDF8764D0FBCD5C500D8973C /* CVStyle.m */; };
-		BDF876500FBCD5C500D8973C /* CVStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = BDF8764D0FBCD5C500D8973C /* CVStyle.m */; };
+		BDF8764E0FBCD5C500D8973C /* CVImageAdorner.h in Headers */ = {isa = PBXBuildFile; fileRef = BDF8764C0FBCD5C500D8973C /* CVImageAdorner.h */; };
+		BDF8764F0FBCD5C500D8973C /* CVImageAdorner.m in Sources */ = {isa = PBXBuildFile; fileRef = BDF8764D0FBCD5C500D8973C /* CVImageAdorner.m */; };
+		BDF876500FBCD5C500D8973C /* CVImageAdorner.m in Sources */ = {isa = PBXBuildFile; fileRef = BDF8764D0FBCD5C500D8973C /* CVImageAdorner.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -98,6 +107,8 @@
 /* Begin PBXFileReference section */
 		32DBCF5E0370ADEE00C91783 /* CVLibrary_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVLibrary_Prefix.pch; sourceTree = "<group>"; };
 		BD32D9C60FF3FAFE002DA5AF /* CVImageLoadingService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVImageLoadingService.h; sourceTree = "<group>"; };
+		BD439A011059C08000CD1CED /* CVPolygonBorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVPolygonBorder.h; sourceTree = "<group>"; };
+		BD439A021059C08000CD1CED /* CVPolygonBorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVPolygonBorder.m; sourceTree = "<group>"; };
 		BD4A29D0101E9BD200044AEE /* CVSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVSettingsViewController.h; sourceTree = "<group>"; };
 		BD4A29D1101E9BD200044AEE /* CVSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVSettingsViewController.m; sourceTree = "<group>"; };
 		BD4A29D2101E9BD200044AEE /* CellHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CellHandler.h; sourceTree = "<group>"; };
@@ -112,6 +123,10 @@
 		BD6668540F83F84100ABF98B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		BD6668560F83F84100ABF98B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		BD6668F70F83F87C00ABF98B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		BD6717B3105EE6F400E0ECE3 /* CVEllipseBorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVEllipseBorder.h; sourceTree = "<group>"; };
+		BD6717B4105EE6F400E0ECE3 /* CVEllipseBorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVEllipseBorder.m; sourceTree = "<group>"; };
+		BD797DA31056F43300914624 /* CVRoundedRectBorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVRoundedRectBorder.h; sourceTree = "<group>"; };
+		BD797DA41056F43300914624 /* CVRoundedRectBorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVRoundedRectBorder.m; sourceTree = "<group>"; };
 		BD7B0188101961520091CA26 /* CVImageCacheTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVImageCacheTest.m; sourceTree = "<group>"; };
 		BD7B9F600FBF67DB00E49BF7 /* CGUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGUtils.h; sourceTree = "<group>"; };
 		BD7B9F610FBF67DB00E49BF7 /* CGUtils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CGUtils.c; sourceTree = "<group>"; };
@@ -144,8 +159,8 @@
 		BDE55D670F90866E004EBA23 /* CVThumbnailGridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVThumbnailGridView.m; sourceTree = "<group>"; };
 		BDE55D680F90866E004EBA23 /* CVThumbnailGridViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVThumbnailGridViewCell.h; sourceTree = "<group>"; };
 		BDE55D690F90866E004EBA23 /* CVThumbnailGridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVThumbnailGridView.h; sourceTree = "<group>"; };
-		BDF8764C0FBCD5C500D8973C /* CVStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVStyle.h; sourceTree = "<group>"; };
-		BDF8764D0FBCD5C500D8973C /* CVStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVStyle.m; sourceTree = "<group>"; };
+		BDF8764C0FBCD5C500D8973C /* CVImageAdorner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVImageAdorner.h; sourceTree = "<group>"; };
+		BDF8764D0FBCD5C500D8973C /* CVImageAdorner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVImageAdorner.m; sourceTree = "<group>"; };
 		D2AAC07E0554694100DB518D /* libCVLibrary.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCVLibrary.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -212,7 +227,7 @@
 		08FB77AEFE84172EC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				BD82C4C71030B31200B9A1CE /* CVStyle */,
+				BD82C4C71030B31200B9A1CE /* CVImageAdornment */,
 				BD4A29CF101E94C800044AEE /* CVSettingsViewController */,
 				BD4A29CE101E948D00044AEE /* CVImageCache */,
 				BD4A29CC101E946500044AEE /* CVThumbnailGridView */,
@@ -275,20 +290,26 @@
 			name = CVSettingsViewController;
 			sourceTree = "<group>";
 		};
-		BD82C4C71030B31200B9A1CE /* CVStyle */ = {
+		BD82C4C71030B31200B9A1CE /* CVImageAdornment */ = {
 			isa = PBXGroup;
 			children = (
 				BD82C4D71030CDFF00B9A1CE /* CVStyleProtocols.h */,
-				BDF8764C0FBCD5C500D8973C /* CVStyle.h */,
-				BDF8764D0FBCD5C500D8973C /* CVStyle.m */,
+				BDF8764C0FBCD5C500D8973C /* CVImageAdorner.h */,
+				BDF8764D0FBCD5C500D8973C /* CVImageAdorner.m */,
 				BD82C4C81030B34300B9A1CE /* CVBorderStyle.h */,
 				BD82C4C91030B34300B9A1CE /* CVBorderStyle.m */,
 				BD82C4CD1030B3BC00B9A1CE /* CVShadowStyle.h */,
 				BD82C4CE1030B3BC00B9A1CE /* CVShadowStyle.m */,
 				BD7B9F600FBF67DB00E49BF7 /* CGUtils.h */,
 				BD7B9F610FBF67DB00E49BF7 /* CGUtils.c */,
+				BD797DA31056F43300914624 /* CVRoundedRectBorder.h */,
+				BD797DA41056F43300914624 /* CVRoundedRectBorder.m */,
+				BD439A011059C08000CD1CED /* CVPolygonBorder.h */,
+				BD439A021059C08000CD1CED /* CVPolygonBorder.m */,
+				BD6717B3105EE6F400E0ECE3 /* CVEllipseBorder.h */,
+				BD6717B4105EE6F400E0ECE3 /* CVEllipseBorder.m */,
 			);
-			name = CVStyle;
+			name = CVImageAdornment;
 			sourceTree = "<group>";
 		};
 		BD849B6C0F8921BB00EB1682 /* UnitTests */ = {
@@ -323,7 +344,7 @@
 				BDE55D6E0F90866E004EBA23 /* CVThumbnailGridViewCell.h in Headers */,
 				BDE55D6F0F90866E004EBA23 /* CVThumbnailGridView.h in Headers */,
 				BDA485200F91700F0048C704 /* CVLibrary.h in Headers */,
-				BDF8764E0FBCD5C500D8973C /* CVStyle.h in Headers */,
+				BDF8764E0FBCD5C500D8973C /* CVImageAdorner.h in Headers */,
 				BD7B9F630FBF67DB00E49BF7 /* CGUtils.h in Headers */,
 				BD7B9FF30FC09CA700E49BF7 /* CVImageCache.h in Headers */,
 				BD7BA0B70FC87E9D00E49BF7 /* SynthesizeSingleton.h in Headers */,
@@ -339,6 +360,9 @@
 				BD82C4CA1030B34300B9A1CE /* CVBorderStyle.h in Headers */,
 				BD82C4CF1030B3BC00B9A1CE /* CVShadowStyle.h in Headers */,
 				BD82C4D81030CDFF00B9A1CE /* CVStyleProtocols.h in Headers */,
+				BD797DA71056F43300914624 /* CVRoundedRectBorder.h in Headers */,
+				BD439A031059C08000CD1CED /* CVPolygonBorder.h in Headers */,
+				BD6717B5105EE6F400E0ECE3 /* CVEllipseBorder.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -440,7 +464,7 @@
 				BDE55D700F90866E004EBA23 /* CVThumbnailGridViewController.m in Sources */,
 				BDE55D710F90866E004EBA23 /* CVThumbnailGridViewCell.m in Sources */,
 				BDE55D720F90866E004EBA23 /* CVThumbnailGridView.m in Sources */,
-				BDF876500FBCD5C500D8973C /* CVStyle.m in Sources */,
+				BDF876500FBCD5C500D8973C /* CVImageAdorner.m in Sources */,
 				BD7B9F620FBF67DB00E49BF7 /* CGUtils.c in Sources */,
 				BD7B9FF20FC09CA700E49BF7 /* CVImageCache.m in Sources */,
 				BD7BA0EF0FCA35D700E49BF7 /* CVImage.m in Sources */,
@@ -453,6 +477,9 @@
 				BD4A29DF101E9BD200044AEE /* BoolCellHandler.m in Sources */,
 				BD82C4CC1030B34300B9A1CE /* CVBorderStyle.m in Sources */,
 				BD82C4D11030B3BC00B9A1CE /* CVShadowStyle.m in Sources */,
+				BD797DAA1056F43300914624 /* CVRoundedRectBorder.m in Sources */,
+				BD439A051059C08000CD1CED /* CVPolygonBorder.m in Sources */,
+				BD6717B7105EE6F400E0ECE3 /* CVEllipseBorder.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -463,7 +490,7 @@
 				BDE55D6B0F90866E004EBA23 /* CVThumbnailGridViewController.m in Sources */,
 				BDE55D6C0F90866E004EBA23 /* CVThumbnailGridViewCell.m in Sources */,
 				BDE55D6D0F90866E004EBA23 /* CVThumbnailGridView.m in Sources */,
-				BDF8764F0FBCD5C500D8973C /* CVStyle.m in Sources */,
+				BDF8764F0FBCD5C500D8973C /* CVImageAdorner.m in Sources */,
 				BD7B9F640FBF67DB00E49BF7 /* CGUtils.c in Sources */,
 				BD7B9FF40FC09CA700E49BF7 /* CVImageCache.m in Sources */,
 				BD7BA0F10FCA35D700E49BF7 /* CVImage.m in Sources */,
@@ -475,6 +502,9 @@
 				BD4A29EA101E9BD200044AEE /* BoolCellHandler.m in Sources */,
 				BD82C4CB1030B34300B9A1CE /* CVBorderStyle.m in Sources */,
 				BD82C4D01030B3BC00B9A1CE /* CVShadowStyle.m in Sources */,
+				BD797DA81056F43300914624 /* CVRoundedRectBorder.m in Sources */,
+				BD439A041059C08000CD1CED /* CVPolygonBorder.m in Sources */,
+				BD6717B6105EE6F400E0ECE3 /* CVEllipseBorder.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

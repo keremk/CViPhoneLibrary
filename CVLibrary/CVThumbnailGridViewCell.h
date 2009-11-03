@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "CVImage.h"
-#import "CVStyle.h"
+#import "CVImageAdorner.h"
 
 @protocol CVThumbnailGridViewCellDelegate;
 
@@ -16,24 +16,27 @@
 @private
 	id delegate_;
 	NSIndexPath *indexPath_;
-	UIImageView *thumbnailImageView_;
+//	UIImageView *thumbnailImageView_;
     CGPoint touchLocation_; // Location of touch in own coordinates (stays constant during dragging).
-    BOOL dragging_, editing_;
+    BOOL dragging_, editing_, selected_;
     CGRect home_;
     UIImage *thumbnailImage_;
-    CVImage *cachedImage_;
-    CVStyle *style_;
-    CGPoint upperLeftMargin_;
+//    CVImage *cachedImage_;
+    CVImageAdorner *imageAdorner_;
+//    CGPoint upperLeftMargin_;
+    NSString *imageUrl_;
 }
 
 @property (nonatomic, assign) id<CVThumbnailGridViewCellDelegate> delegate;
 @property (nonatomic, retain) NSIndexPath *indexPath;
 @property (nonatomic, assign) CGRect home;
 @property (nonatomic, assign) CGPoint touchLocation;
-@property (nonatomic, retain) CVImage *cachedImage;
-@property (nonatomic, retain) CVStyle *style;
+//@property (nonatomic, retain) CVImage *cachedImage;
+@property (nonatomic, retain) CVImageAdorner *imageAdorner;
 @property (nonatomic) BOOL editing; 
-@property (nonatomic) CGPoint upperLeftMargin;
+@property (nonatomic) BOOL selected;
+//@property (nonatomic) CGPoint upperLeftMargin;
+@property (nonatomic, copy) NSString *imageUrl;
 
 - (id) initWithFrame:(CGRect)frame reuseIdentifier:(NSString *) identifier;
 - (void) setImage:(UIImage *) image;
@@ -44,7 +47,7 @@
 @protocol CVThumbnailGridViewCellDelegate <NSObject>
 
 @optional
-- (UIImage *) adornedImageLoadingIcon;
+//- (UIImage *) adornedImageLoadingIcon;
 - (void) deleteSignWasTapped:(CVThumbnailGridViewCell *) cell;
 - (void) thumbnailGridViewCellWasTapped:(CVThumbnailGridViewCell *) cell;
 - (void) thumbnailGridViewCellStartedTracking:(CVThumbnailGridViewCell *) cell;

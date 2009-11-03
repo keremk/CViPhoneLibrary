@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "CVStyle.h"
+#import "CVImageAdorner.h"
 
 @interface UIImage (CVAdornments)
 - (NSUInteger) imageMemorySize;

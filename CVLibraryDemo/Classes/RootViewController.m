@@ -12,6 +12,7 @@
 #import "FlickrDataService.h"
 #import "CVLibrary.h"
 #import "DemoGridViewController.h"
+#import "FlickrDemoViewController.h"
 #import "TestView.h"
 
 @interface RootViewController()
@@ -29,7 +30,7 @@
 
 - (id) initWithCoder:(NSCoder *) coder {
     if (self = [super initWithCoder:coder]) {
-        listOfDemos_ = [[NSArray alloc] initWithObjects:@"Generated Image List", @"Flickr Image List", @"Edit Image List", nil];
+        listOfDemos_ = [[NSArray alloc] initWithObjects:@"Generated Image List", @"Flickr Image List", @"Edit Image List", @"Many Images Demo", nil];
     }
     return self;
 }
@@ -83,74 +84,118 @@
 #define GENERATED_IMAGE_LIST_DEMO 0
 #define FLICKR_IMAGE_LIST_DEMO 1
 #define EDIT_IMAGE_LIST_DEMO 2
-#define INSERT_ITEMS_DEMO 3
+#define MANY_IMAGES_DEMO 3
 #define THUMBNAIL_WIDTH 70
 #define THUMBNAIL_HEIGHT 70 
 
 // Override to support row selection in the table view.
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    CVBorderStyle *borderStyle = [[CVBorderStyle alloc] init];
-    borderStyle.width = 3.0;
-    borderStyle.roundedRadius = 20.0;
+//    CVRoundedRectBorder *borderStyle = [[CVRoundedRectBorder alloc] init];
+//    borderStyle.width = 3.0;
+//    borderStyle.radius = 20.0;
+//    borderStyle.color = [UIColor orangeColor];
+
+    CVPolygonBorder *borderStyle = [[CVPolygonBorder alloc] init];
+    borderStyle.width = 5.0;
+//    borderStyle.radius = THUMBNAIL_WIDTH / 2;
     borderStyle.color = [UIColor orangeColor];
+    borderStyle.numOfSides = 5;
+//
+//    CVEllipseBorder *borderStyle = [[CVEllipseBorder alloc] init];
+//    borderStyle.width = 5.0;
+//    borderStyle.color = [UIColor orangeColor];
     
     CVShadowStyle *shadowStyle = [[CVShadowStyle alloc] init];
     shadowStyle.offset = CGSizeMake(-10.0, 10.0);
+//    shadowStyle.offset = CGSizeZero;
     shadowStyle.blur = 5.0;
     
-    CVStyle *cellStyle = [[CVStyle alloc] init];
-    cellStyle.borderStyle = borderStyle;
-    cellStyle.shadowStyle = shadowStyle;
-    cellStyle.imageSize = CGSizeMake(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
-
-    DemoGridViewController *demoGridViewController = [[DemoGridViewController alloc] initWithNibName:nil bundle:nil];
-    id<DemoDataService> dataService;
+    CVImageAdorner *imageAdorner = [[CVImageAdorner alloc] init];
+    imageAdorner.borderStyle = borderStyle;
+    imageAdorner.shadowStyle = shadowStyle;
+//    imageAdorner.targetImageSize = CGSizeMake(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
+    
+    id<DemoDataService> dataService = nil;
     switch (indexPath.row) {
         case GENERATED_IMAGE_LIST_DEMO : {
+            DemoGridViewController *demoGridViewController = [[DemoGridViewController alloc] initWithNibName:nil bundle:nil];
             dataService = [[FakeDataService alloc] init];
+            [demoGridViewController setDataService:dataService];
+            [self.navigationController pushViewController:demoGridViewController animated:YES];
+            
+            CVThumbnailGridView *gridView = [demoGridViewController thumbnailView];
+            [gridView setImageAdorner:imageAdorner];
+            [gridView setNumOfColumns:0];
+            [gridView setRightMargin:20.0];
+            [gridView setLeftMargin:20.0];
+            [gridView setEditing:YES];
+            [gridView setEditModeEnabled:YES];
+            [gridView setFitNumberOfColumnsToFullWidth:YES];
+            [gridView setThumbnailCellSize:CGSizeMake(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)];
+            [demoGridViewController release];
+            
             break;
         }
         case FLICKR_IMAGE_LIST_DEMO : {
+            DemoGridViewController *demoGridViewController = [[DemoGridViewController alloc] initWithNibName:nil bundle:nil];
             dataService = [[FlickrDataService alloc] init];
+            [demoGridViewController setDataService:dataService];
+            [self.navigationController pushViewController:demoGridViewController animated:YES];
+            
+            CVThumbnailGridView *gridView = [demoGridViewController thumbnailView];
+            [gridView setImageAdorner:imageAdorner];
+            [gridView setNumOfColumns:0];
+            [gridView setEditModeEnabled:NO];
+            [gridView setFitNumberOfColumnsToFullWidth:YES];
+            [gridView setThumbnailCellSize:CGSizeMake(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)];
+            [demoGridViewController release];
+            
             break;
         }
         case EDIT_IMAGE_LIST_DEMO : {
+            DemoGridViewController *demoGridViewController = [[DemoGridViewController alloc] initWithNibName:nil bundle:nil];
             dataService = [[FakeDataService alloc] init];
             [demoGridViewController setConfigEnabled:NO];
             demoGridViewController.navigationItem.rightBarButtonItem = [demoGridViewController editButtonItem];
+            [demoGridViewController setDataService:dataService];    
+            [self.navigationController pushViewController:demoGridViewController animated:YES];
+            
+            CVThumbnailGridView *gridView = [demoGridViewController thumbnailView];
+            [gridView setImageAdorner:imageAdorner];
+            [gridView setNumOfColumns:0];
+            [gridView setEditModeEnabled:YES];
+            [demoGridViewController setConfigEnabled:NO];
+            demoGridViewController.navigationItem.rightBarButtonItem = [demoGridViewController editButtonItem];
+            [gridView setHeaderView:[self testViewWithText:@"Header View"]];
+            [gridView setFooterView:[self testViewWithText:@"Footer View"]];            
+            [gridView setFitNumberOfColumnsToFullWidth:YES];
+            [gridView setThumbnailCellSize:CGSizeMake(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)];
+            [demoGridViewController release];
+            
+            break;
+        }
+        case MANY_IMAGES_DEMO : {
+            FlickrDemoViewController *flickrDemoViewController = [[FlickrDemoViewController alloc] initWithNibName:nil bundle:nil];
+            dataService = [[FlickrDataService alloc] init];
+            [flickrDemoViewController setDataService:dataService];
+            [self.navigationController pushViewController:flickrDemoViewController animated:YES];
+            
+            CVThumbnailGridView *gridView = [flickrDemoViewController thumbnailView];
+            [gridView setImageAdorner:imageAdorner];
+            [gridView setNumOfColumns:0];
+            [gridView setEditModeEnabled:NO];
+            [gridView setFitNumberOfColumnsToFullWidth:YES];
+            [gridView setThumbnailCellSize:CGSizeMake(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)];
+            [flickrDemoViewController release];
             break;
         }
         default:
             break;
     }    
-    [demoGridViewController setDataService:dataService];
-
-    [self.navigationController pushViewController:demoGridViewController animated:YES];
-    
-    CVThumbnailGridView *gridView = [demoGridViewController thumbnailView];
-    [gridView setCellStyle:cellStyle];
-    [gridView setNumOfColumns:0];
-    switch (indexPath.row) {
-        case GENERATED_IMAGE_LIST_DEMO: {
-            [gridView setEditing:YES];
-            break;
-        }
-        case EDIT_IMAGE_LIST_DEMO : {
-            [demoGridViewController setConfigEnabled:NO];
-            demoGridViewController.navigationItem.rightBarButtonItem = [demoGridViewController editButtonItem];
-            [gridView setHeaderView:[self testViewWithText:@"Header View"]];
-            [gridView setFooterView:[self testViewWithText:@"Footer View"]];
-            break;
-        }
-        default:
-            break;
-    }
-    [gridView setFitNumberOfColumnsToFullWidth:YES];
-
+        
     [borderStyle release];
     [shadowStyle release];
-    [cellStyle release];
-    [demoGridViewController release];
+    [imageAdorner release];
     [dataService release];    
 }
 
