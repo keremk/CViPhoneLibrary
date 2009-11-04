@@ -130,6 +130,10 @@
     [self dismissModalViewControllerAnimated:YES];
 }
 
+#define ROUNDEDRECT_SHAPE @"RoundedRect"
+#define POLYGON_SHAPE @"Polygon"
+#define CIRCLE_SHAPE @"Circle"
+
 - (void) configureGridViewSelected {
     CVSettingsViewController *configViewController = [[[CVSettingsViewController alloc] initWithStyle:UITableViewStyleGrouped] autorelease];
     ConfigOptions *configOptions = [[ConfigOptions alloc] init];
@@ -139,11 +143,28 @@
     configOptions.fitNumberOfColumnsToFullWidth = self.thumbnailView.fitNumberOfColumnsToFullWidth;
     configOptions.borderWidth = self.thumbnailView.imageAdorner.borderStyle.width;
     configOptions.borderColor = self.thumbnailView.imageAdorner.borderStyle.color;
+    
+    if ([self.thumbnailView.imageAdorner.borderStyle isKindOfClass:[CVRoundedRectBorder class]]) {
+        configOptions.shape = ROUNDEDRECT_SHAPE;
+    } else if ([self.thumbnailView.imageAdorner.borderStyle isKindOfClass:[CVPolygonBorder class]]) {
+        configOptions.shape = POLYGON_SHAPE;
+    } else if ([self.thumbnailView.imageAdorner.borderStyle isKindOfClass:[CVEllipseBorder class]]) {
+        configOptions.shape = CIRCLE_SHAPE;
+    }
     if ([self.thumbnailView.imageAdorner.borderStyle respondsToSelector:@selector(radius)]) {
-        configOptions.borderRoundedRadius = self.thumbnailView.imageAdorner.borderStyle.radius;
+        CVRoundedRectBorder *roundedRectBorder = (CVRoundedRectBorder *) self.thumbnailView.imageAdorner.borderStyle;
+        configOptions.borderRoundedRadius = [roundedRectBorder radius];
     } else {
         configOptions.borderRoundedRadius = 0.0;
     }
+    if ([self.thumbnailView.imageAdorner.borderStyle respondsToSelector:@selector(numOfSides)]) {
+        CVPolygonBorder *polygonBorder = (CVPolygonBorder *) self.thumbnailView.imageAdorner.borderStyle;
+        configOptions.numOfSides = [polygonBorder numOfSides];
+    } else {
+        configOptions.numOfSides = 0;
+    }
+    
+    
     configOptions.shadowBlur = self.thumbnailView.imageAdorner.shadowStyle.blur;
     configOptions.shadowOffsetWidth = self.thumbnailView.imageAdorner.shadowStyle.offset.width;
     configOptions.shadowOffsetHeight = self.thumbnailView.imageAdorner.shadowStyle.offset.height;    
@@ -196,16 +217,6 @@
     
     DemoItem *demoItem = (DemoItem *) [demoItems_ objectAtIndex:[indexPath indexForNumOfColumns:[self.thumbnailView numOfColumns]]];
     [cell setImageUrl:demoItem.imageUrl];
-//    CVImage *demoImage = [[[CVImageCache sharedCVImageCache] imageForKey:demoItem.imageUrl] retain];
-//    if (nil == demoImage) {
-//        demoImage = [[CVImage alloc] initWithUrl:demoItem.imageUrl indexPath:indexPath];
-//        [demoImage setDelegate:self];
-//        [demoImage beginLoadingImage];
-//        [[CVImageCache sharedCVImageCache] setImage:demoImage];
-//    }
-//    
-//    [cell setCachedImage:demoImage];
-//    [demoImage release];
     return cell;
 }
 
@@ -269,21 +280,34 @@
     [self.thumbnailView setFitNumberOfColumnsToFullWidth:configOptions.fitNumberOfColumnsToFullWidth];
     [self.thumbnailView setThumbnailCellSize:CGSizeMake(configOptions.thumbnailWidth, configOptions.thumbnailHeight)];
     
-    CVImageAdorner *imageAdorner = [self.thumbnailView imageAdorner];
-    imageAdorner.borderStyle.width = configOptions.borderWidth;
-    if ([imageAdorner.borderStyle respondsToSelector:@selector(setRadius:)]) {
-        [imageAdorner.borderStyle setRadius:configOptions.borderRoundedRadius];
+    CVBorderStyle *borderStyle = nil;
+    if ([configOptions.shape isEqualToString:ROUNDEDRECT_SHAPE]) {
+        borderStyle = [[CVRoundedRectBorder alloc] init];
+        if ([borderStyle respondsToSelector:@selector(setRadius:)]) {
+            CVRoundedRectBorder *roundedRectBorder = (CVRoundedRectBorder *) borderStyle;
+            [roundedRectBorder setRadius:configOptions.borderRoundedRadius];
+        }
+    } else if ([configOptions.shape isEqualToString:POLYGON_SHAPE]) {
+        borderStyle = [[CVPolygonBorder alloc] init];
+        if ([borderStyle respondsToSelector:@selector(setNumOfSides:)]) {
+            CVPolygonBorder *polygonBorder = (CVPolygonBorder *) borderStyle;
+            [polygonBorder setNumOfSides:configOptions.numOfSides];
+        }
+    } else if ([configOptions.shape isEqualToString:CIRCLE_SHAPE]) {
+        borderStyle = [[CVEllipseBorder alloc] init];
     }
-    imageAdorner.borderStyle.color = configOptions.borderColor;
+    borderStyle.width = configOptions.borderWidth;
+    borderStyle.color = configOptions.borderColor;
     
+    CVImageAdorner *imageAdorner = [self.thumbnailView imageAdorner];
+    
+    imageAdorner.borderStyle = borderStyle;
     imageAdorner.shadowStyle.offset = CGSizeMake(configOptions.shadowOffsetWidth, configOptions.shadowOffsetHeight);
     imageAdorner.shadowStyle.blur = configOptions.shadowBlur;
 
-//    imageAdorner.targetImageSize = CGSizeMake(configOptions.thumbnailWidth, configOptions.thumbnailHeight);
-
     // Clear the image cache
-    [[CVImageCache sharedCVImageCache] clearMemoryCache];
-    
+//    [[CVImageCache sharedCVImageCache] clearMemoryCache];
+    [self.thumbnailView resetCachedImages];
     [self.thumbnailView reloadData];
 }
 

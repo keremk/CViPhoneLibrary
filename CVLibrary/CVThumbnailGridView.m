@@ -15,7 +15,6 @@
 @interface CVThumbnailGridView()
 - (void) commonInit;
 - (void) animateThumbnailViewCell:(CVThumbnailGridViewCell *) cell;
-//- (CGSize) thumbnailCellSize;
 - (NSUInteger) calculateNumOfColumns;
 - (CGRect) rectForColumn:(NSUInteger) column row:(NSUInteger) row;
 - (CVThumbnailGridViewCell *) createCellFromDataSourceForIndexPath:(NSIndexPath *) indexPath;
@@ -33,8 +32,6 @@
 - (void) asyncDoImageAdornmentUsingArgs:(NSDictionary *) args;
 - (void) setThumbnailImage:(NSDictionary *) args;
 - (void) updateSelectionForNewSelectedIndex:(NSIndexPath *) selectedIndex;
-//- (CGSize) paddingRequiredForDeleteSign;
-//- (CGRect) thumbnailAreaBounds;
 - (CGSize) targetImageSize;
 - (CGFloat) headerHeight;
 - (CGFloat) footerHeight;
@@ -74,6 +71,8 @@
 @synthesize operationQueue = operationQueue_;
 @synthesize indexPathForSelectedCell = indexPathForSelectedCell_;
 @synthesize allowsSelection = allowsSelection_;
+@synthesize selectionBorderColor = selectionBorderColor_;
+@synthesize selectionBorderWidth = selectionBorderWidth_;
 
 - (void)dealloc {
     [imageAdorner_ release];
@@ -88,6 +87,7 @@
     [footerView_ release];
     [operationQueue_ release];
     [indexPathForSelectedCell_ release];
+    [selectionBorderColor_ release];
     [super dealloc];
 }
 
@@ -100,6 +100,7 @@
 #define COLUMN_SPACING_DEFAULT -1.0
 #define COLUMN_COUNT_DEFAULT 1
 #define DELETE_SIGN_SIDE_LENGTH_DEFAULT 34.0
+#define SELECTION_BORDER_WIDTH_DEFAULT 3.0
 
 - (id) initWithCoder:(NSCoder *) coder {
 	if (self = [super initWithCoder:coder]) {
@@ -145,6 +146,8 @@
     [self setCanCancelContentTouches:NO];
     indexPathForSelectedCell_ = nil;
     allowsSelection_ = YES;
+    selectionBorderColor_ = [UIColor redColor];
+    selectionBorderWidth_ = SELECTION_BORDER_WIDTH_DEFAULT;
 }
 
 - (void) setImageAdorner:(CVImageAdorner *) imageAdorner {
@@ -180,21 +183,9 @@
     return numOfColumns;
 }
 
-//#define THUMBNAIL_LEFT_MARGIN 17.0
-//#define THUMBNAIL_TOP_MARGIN 17.0
-
-//- (CGSize) thumbnailCellSize {
-//    CGSize cellSize = [imageAdorner_ sizeAfterStylingImage];
-//
-//    CGFloat thumbnailLeftMargin;
-//    // Add the margin data
-//    CGFloat deltaX = (THUMBNAIL_LEFT_MARGIN >= abs(imageAdorner_.shadowStyle.offset.width)) ? THUMBNAIL_LEFT_MARGIN - abs(imageAdorner_.shadowStyle.offset.width) : 0;
-//    CGFloat deltaY = (THUMBNAIL_TOP_MARGIN >= abs(imageAdorner_.shadowStyle.offset.height)) ? THUMBNAIL_TOP_MARGIN - abs(imageAdorner_.shadowStyle.offset.height) : 0;
-//    
-//    cellSize.width += deltaX;
-//    cellSize.height += deltaY;
-//    return cellSize;
-//}
+- (void) resetCachedImages {
+    [[CVImageCache sharedCVImageCache] clearMemoryCache];    
+}
 
 - (void) reloadData {
     thumbnailCount_ = [dataSource_ numberOfCellsForThumbnailView:self];
@@ -244,13 +235,6 @@
         numOfColumns_ = [self calculateNumOfColumns];
     }
 }
-
-//- (CGRect) thumbnailAreaBounds {
-//    CGFloat newY = (nil != headerView_) ? self.bounds.origin.y + headerView_.frame.size.height : self.bounds.origin.y;
-//    CGFloat newHeight = (nil != footerView_) ? self.bounds.size.height - footerView_.frame.size.height : self.bounds.size.height;
-//    CGRect thumbnailAreaBounds = CGRectMake(self.bounds.origin.x, newY , self.bounds.size.width, newHeight);
-//    return thumbnailAreaBounds;
-//}
 
 - (CGFloat) headerHeight {
     return (nil != headerView_) ? headerView_.frame.size.height : 0;
@@ -404,7 +388,6 @@
             [cell setSelected:NO];
         }
 
-//        [cell setUpperLeftMargin:CGPointMake(THUMBNAIL_LEFT_MARGIN, THUMBNAIL_TOP_MARGIN)];
         [cell setImageAdorner:imageAdorner_];
         
         if (nil != cell.imageUrl) {
@@ -494,25 +477,6 @@
     [cell setImage:image];
 }
 
-//- (CGSize) paddingRequiredForDeleteSign {
-//    //  paddingRequiredForDeleteSign: depends on the shadow direction and the shape of the border
-//    //  upperLeftCorner: Each border shape defines a point as its designated upperLeftCorner
-//    //                   e.g. For rectangle, it is (0,0), 
-//    //                        For circle, it is the point on the circle where angle = -45
-//
-//    
-//    CGFloat widthAdjustment = (self.imageAdorner.shadowStyle.offset.width < 0) ? abs(self.imageAdorner.shadowStyle.offset.width) : 0.0;
-//    CGFloat heightAdjustment = (self.imageAdorner.shadowStyle.offset.height > 0) ? self.imageAdorner.shadowStyle.offset.height : 0.0;
-//    
-//    CGFloat xPadding = self.imageAdorner.borderStyle.upperLeftCorner.x - (deleteSignSideLength_ / 2) + widthAdjustment;
-//    xPadding = (xPadding > 0) ? 0.0 : abs(xPadding);
-//    
-//    CGFloat yPadding = self.imageAdorner.borderStyle.upperLeftCorner.y - (deleteSignSideLength_ / 2) + heightAdjustment;
-//    yPadding = (yPadding > 0) ? 0.0 : abs(yPadding);
-//    
-//    return CGSizeMake(xPadding, yPadding);
-//}
-//
 #pragma mark Editing 
 
 - (void) setEditing:(BOOL) editing {
@@ -613,7 +577,6 @@
     if (nil == adornedImageLoadingIcon_) {
         if (nil != self.imageAdorner) {
             self.adornedImageLoadingIcon = [self.imageAdorner adornedImageFromImage:self.imageLoadingIcon usingTargetImageSize:self.targetImageSize];
-//            self.adornedImageLoadingIcon = self.imageLoadingIcon;
         }
     }
     return adornedImageLoadingIcon_;
@@ -692,8 +655,6 @@
     } else {
         // Note that the animation logic calls the below if the animateSelection_ is YES.
         [self updateSelectionForNewSelectedIndex:[cell indexPath]];
-//        if ([delegate_ respondsToSelector:@selector(thumbnailView:didSelectCellAtIndexPath:)]) 
-//            [delegate_ thumbnailView:self didSelectCellAtIndexPath:[cell indexPath]];
     }
 }
 
@@ -834,10 +795,6 @@
 		//NSLog(@"***Animation 3 - x=%f, y=%f, width=%f, height=%f ", cell.frame.origin.x, cell.frame.origin.y, cell.frame.size.width, cell.frame.size.height);
 
         [self updateSelectionForNewSelectedIndex:[cell indexPath]];
-//        if ([delegate_ respondsToSelector:@selector(thumbnailView:didSelectCellAtIndexPath:)]) {
-//            [delegate_ thumbnailView:self didSelectCellAtIndexPath:[cell indexPath]];
-//        }
-
 		isAnimated_ = NO;
 	}	
 }

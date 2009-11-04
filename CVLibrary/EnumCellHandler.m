@@ -44,6 +44,21 @@
     if (cell == nil) {
         cell = [self tableViewCellWithReuseIdentifier:identifier_];
     }
+
+    NSString *selectedOptionString = (NSString *) data;
+    Class converterClass = NSClassFromString(dataConverterClassName_);
+    if (nil != converterClass) {
+        id<DataConverter> dataConverter = [[converterClass alloc] init]; 
+        selectedOptionString = [dataConverter convertToString:data];
+        [dataConverter release];
+    }
+    
+    for (NSInteger i = 0; i < [options_ count]; i++) {
+        if ([[options_ objectAtIndex:i] isEqualToString:selectedOptionString]) {
+            selectedOptionIndex_ = i;
+            break;
+        }
+    }
     
     cell.textLabel.text = label_;
     cell.detailTextLabel.text = [options_ objectAtIndex:selectedOptionIndex_];

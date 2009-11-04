@@ -86,11 +86,9 @@
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
     NSString *url = [args objectForKey:@"url"];
-//    CVImageAdorner *style = [args objectForKey:@"style"];
     NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
     UIImage *image = [UIImage imageWithData:data];
 
-//    UIImage *adornedImage = [style adornedImageFromImage:image];
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:image, @"image", url, @"url", nil];
     [self.delegate performSelectorOnMainThread:@selector(updatedImage:) withObject:dict waitUntilDone:YES];    
     [pool release];

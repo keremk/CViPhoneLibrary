@@ -20,6 +20,8 @@
     CGFloat shadowOffsetHeight_;
     CGFloat shadowBlur_;
     UIColor *borderColor_;
+    NSInteger numOfSides_;
+    NSString *shape_;
 }
 
 @property (nonatomic, retain) UIColor *borderColor;
@@ -32,5 +34,7 @@
 @property (nonatomic) CGFloat shadowOffsetWidth;
 @property (nonatomic) CGFloat shadowOffsetHeight;
 @property (nonatomic) CGFloat borderRoundedRadius;
+@property (nonatomic, copy) NSString *shape;
+@property (nonatomic) NSInteger numOfSides;
 
 @end

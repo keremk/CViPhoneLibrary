@@ -167,6 +167,7 @@
     NSIndexPath *selectedIndexPath = [[NSIndexPath alloc] initWithIndexes:indexes length:2];
     imageView = (UIImageView *) [[tableView cellForRowAtIndexPath:selectedIndexPath] viewWithTag:CHECKBOX_TAG];
     imageView.image = uncheckedImage_;
+    [selectedIndexPath release];
     
     imageView = (UIImageView *) [[tableView cellForRowAtIndexPath:indexPath] viewWithTag:CHECKBOX_TAG];
     imageView.image = checkedImage_;

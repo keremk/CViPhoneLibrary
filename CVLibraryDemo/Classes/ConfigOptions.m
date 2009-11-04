@@ -21,9 +21,12 @@
 @synthesize shadowBlur = shadowBlur_;
 @synthesize shadowOffsetWidth = shadowOffsetWidth_;
 @synthesize shadowOffsetHeight = shadowOffsetHeight_;
+@synthesize numOfSides = numOfSides_;
+@synthesize shape = shape_;
 
 - (void) dealloc {
     [borderColor_ release];
+    [shape_ release];
     [super dealloc];
 }
 

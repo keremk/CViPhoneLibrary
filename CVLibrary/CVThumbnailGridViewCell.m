@@ -20,12 +20,9 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
 
 @interface CVThumbnailGridViewCell()
 @property (nonatomic, retain) UIImage *thumbnailImage;
-//- (void) renderAdornedImageLoadingIcon;
-//- (CGPoint) deleteSignOrigin;
 - (UIImage *) deleteSignIcon;
 - (CGFloat) deleteSignSideLength;
 - (CGRect) deleteSignRect;
-//- (CGPoint) pointToDrawImage;
 @end
 
 @implementation CVThumbnailGridViewCell
@@ -33,11 +30,9 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
 @synthesize indexPath = indexPath_;
 @synthesize home = home_;
 @synthesize touchLocation = touchLocation_;
-//@synthesize cachedImage = cachedImage_;
 @synthesize thumbnailImage = thumbnailImage_;
 @synthesize imageAdorner = imageAdorner_;
 @synthesize editing = editing_;
-//@synthesize upperLeftMargin = upperLeftMargin_;
 @synthesize imageUrl = imageUrl_;
 @synthesize selected = selected_;
 
@@ -74,16 +69,6 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
     }
 }
 
-//- (void) renderAdornedImageLoadingIcon {
-//    if ([delegate_ respondsToSelector:@selector(adornedImageLoadingIcon)]) {
-//        UIImage *adornedImageLoadingIcon = [delegate_ adornedImageLoadingIcon];
-//        if (nil != adornedImageLoadingIcon) {
-//            self.thumbnailImage = adornedImageLoadingIcon;
-//            [self setNeedsDisplay];
-//        }
-//    }
-//}
-
 - (UIImage *) deleteSignIcon {
     UIImage *deleteSignIcon = nil;
     if ([delegate_ respondsToSelector:@selector(deleteSignIcon)]) {
@@ -94,15 +79,8 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
 
 #define CORNER_OVAL_WIDTH 10
 #define CORNER_OVAL_HEIGHT 10
-#define DEFAULT_SELECTED_BORDER_WIDTH 3
 
 - (void) drawRect:(CGRect) rect {    
-//    CGPoint shadowOffset = [imageAdorner_.shadowStyle effectiveOffsetInUIKitCoordinateSystem];
-//    CGPoint thumbnailPoint;
-    
-//    thumbnailPoint.x = (upperLeftMargin_.x >= shadowOffset.x) ? upperLeftMargin_.x - shadowOffset.x : shadowOffset.x;
-//    thumbnailPoint.y = (upperLeftMargin_.y >= shadowOffset.y) ? upperLeftMargin_.y - shadowOffset.y : shadowOffset.y;
-    
     CGSize padding = CGSizeZero;
     if ([delegate_ respondsToSelector:@selector(editModeEnabled)]) {
         if ([delegate_ editModeEnabled]) {
@@ -123,8 +101,10 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
         CGContextBeginPath(context);
         CVAddRoundedRectToPath(context, rect, CORNER_OVAL_WIDTH, CORNER_OVAL_HEIGHT); 
         CGContextClosePath(context);
-        CGContextSetStrokeColorWithColor(context, [[UIColor redColor] CGColor]);
-        CGContextSetLineWidth(context, DEFAULT_SELECTED_BORDER_WIDTH);
+        UIColor *borderColor = [self.delegate selectionBorderColor];
+        CGContextSetStrokeColorWithColor(context, [borderColor CGColor]);
+        CGFloat borderWidth = [self.delegate selectionBorderWidth];
+        CGContextSetLineWidth(context, borderWidth);
         CGContextDrawPath(context, kCGPathStroke);
     }
 }
@@ -136,25 +116,9 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
     return deleteSignSideLength;
 }
 
-//- (CGPoint) pointToDrawImage {
-//    CGFloat widthAdjustment = (self.imageAdorner.shadowStyle.offset.width < 0) ? abs(self.imageAdorner.shadowStyle.offset.width) : 0.0;
-//    CGFloat heightAdjustment = (self.imageAdorner.shadowStyle.offset.height > 0) ? self.imageAdorner.shadowStyle.offset.height : 0.0;
-//    
-//    CGFloat xPadding = self.imageAdorner.borderStyle.upperLeftCorner.x - (self.deleteSignSideLength / 2) + widthAdjustment;
-//    xPadding = (xPadding > 0) ? 0.0 : abs(xPadding);
-//    
-//    CGFloat yPadding = self.imageAdorner.borderStyle.upperLeftCorner.y - (self.deleteSignSideLength / 2) + heightAdjustment;
-//    yPadding = (yPadding > 0) ? 0.0 : abs(yPadding);
-//
-//    return CGPointMake(xPadding, yPadding);
-//}
-
 - (CGRect) deleteSignRect {
     CGSize padding = [self.imageAdorner paddingRequiredForUpperLeftBadgeSize:[[self deleteSignIcon] size]];
     
-//    CGFloat widthAdjustment = (self.imageAdorner.shadowStyle.offset.width < 0) ? abs(self.imageAdorner.shadowStyle.offset.width) : 0.0;
-//    CGFloat heightAdjustment = (self.imageAdorner.shadowStyle.offset.height > 0) ? self.imageAdorner.shadowStyle.offset.height : 0.0;
-
     CGFloat deleteSignOriginX, deleteSignOriginY;
     if (padding.width > 0) {
         deleteSignOriginX = 0;
@@ -168,57 +132,16 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
         deleteSignOriginY = padding.height;
     }
 
-//    CGFloat deleteSignOriginX = padding.width + widthAdjustment + self.imageAdorner.borderStyle.upperLeftCorner.x - (self.deleteSignSideLength / 2);
-//    CGFloat deleteSignOriginY = padding.height + heightAdjustment + self.imageAdorner.borderStyle.upperLeftCorner.y - (self.deleteSignSideLength / 2);
-    
     return CGRectMake(deleteSignOriginX, deleteSignOriginY, self.deleteSignSideLength, self.deleteSignSideLength);
 }
 
-//- (CGPoint) deleteSignOrigin {
-//    CGPoint shadowOffset = [imageAdorner_.shadowStyle effectiveOffsetInUIKitCoordinateSystem];
-//
-//    CGPoint deleteSignPoint;
-//    deleteSignPoint.x = (upperLeftMargin_.x >= shadowOffset.x) ? 0 : shadowOffset.x - upperLeftMargin_.x;
-//    deleteSignPoint.y = (upperLeftMargin_.y >= shadowOffset.y) ? 0 : shadowOffset.y - upperLeftMargin_.y;
-//    
-//    return deleteSignPoint;
-//}
 
 - (void) setImage:(UIImage *)image {
     if (nil != image) {
         self.thumbnailImage = image;
         [self setNeedsDisplay];
     } 
-//    else {
-//        if (nil == delegate_) {
-//            // Wait until the CVThumbnailGridView sets the delegate
-//            [self performSelector:@selector(renderAdornedImageLoadingIcon) withObject:nil afterDelay:0.01];
-//        } else  {
-//            [self renderAdornedImageLoadingIcon];
-//        }
-//    }
 }
-
-//static char imageObservingContext;
-//
-//- (void) setCachedImage:(CVImage *) image {
-//    if (cachedImage_ != image) {
-//        [cachedImage_ removeObserver:self forKeyPath:@"image"];
-//        [cachedImage_ release];
-//        cachedImage_ = [image retain];
-//        [self setImage:[cachedImage_ image]];
-//        [cachedImage_ addObserver:self forKeyPath:@"image" options:NSKeyValueChangeSetting context:&imageObservingContext];
-//    }
-//}
-//
-//- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-//    if (context == &imageObservingContext) {
-//        CVImage *cachedImage = (CVImage *) object;
-//        [self setImage:[cachedImage image]];
-//    } else {
-//        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-//    }
-//}
 
 #pragma mark Touch events
 
@@ -257,9 +180,6 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
         dragging_ = NO;
     } else if ([[touches anyObject] tapCount] == 1) {
         CGPoint touchLocation = [[touches anyObject] locationInView:self];
-//        CGPoint deleteSignOrigin = [self deleteSignOrigin];
-//        CGSize deleteSignSize = [[self deleteSignIcon] size];
-//        CGRect deleteSignRect = CGRectMake(deleteSignOrigin.x, deleteSignOrigin.y, deleteSignSize.width, deleteSignSize.width);
         
         if (editing_ && CGRectContainsPoint(self.deleteSignRect, touchLocation)) {         
             if ([delegate_ respondsToSelector:@selector(deleteSignWasTapped:)]) {

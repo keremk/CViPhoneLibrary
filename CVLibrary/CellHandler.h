@@ -34,5 +34,6 @@
 
 @protocol DataConverter<NSObject>
 @required
-- (id) convertUsingData:(id) data;
+- (id) convertFromString:(NSString *) input;
+- (NSString *) convertToString:(id) input;
 @end

@@ -181,9 +181,11 @@
     if ([handler respondsToSelector:@selector(dataConverterClassName)]) {
         Class converterClass = NSClassFromString(handler.dataConverterClassName);
         
-        id<DataConverter> dataConverter = [[converterClass alloc] init]; 
-        convertedData = [dataConverter convertUsingData:data];
-        [dataConverter release];
+        if (nil != converterClass) {
+            id<DataConverter> dataConverter = [[converterClass alloc] init]; 
+            convertedData = [dataConverter convertFromString:data];
+            [dataConverter release];
+        }
     }
     [self setValue:convertedData forKeyPath:handler.keyPath];
     [self.tableView reloadData];

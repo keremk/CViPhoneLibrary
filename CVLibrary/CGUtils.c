@@ -69,7 +69,6 @@ void CVAddCircleToPath(CGContextRef context, CGRect rect, CGFloat radius) {
         return;
     
     CGContextSaveGState(context);
-    CGPoint center = CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect));
 
     CGContextAddEllipseInRect(context, rect);
     

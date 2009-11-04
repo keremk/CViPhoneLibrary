@@ -29,8 +29,8 @@
 				<key>keyboardType</key>
 				<string>Numeric</string>
 			</dict>
-		</array>    
-    </dict>
+		</array>
+	</dict>
 	<dict>
 		<key>sectionName</key>
 		<string>Thumbnail Config</string>
@@ -69,6 +69,18 @@
 		<array>
 			<dict>
 				<key>identifier</key>
+				<string>EnumCell</string>
+				<key>label</key>
+				<string>Shape</string>
+				<key>keyPath</key>
+				<string>shape</string>
+				<key>cellHandlerClass</key>
+				<string>EnumCellHandler</string>
+				<key>options</key>
+				<string>RoundedRect,Polygon,Circle</string>
+			</dict>
+			<dict>
+				<key>identifier</key>
 				<string>TextCell</string>
 				<key>label</key>
 				<string>Width</string>
@@ -101,6 +113,18 @@
 				<key>cellHandlerClass</key>
 				<string>TextCellHandler</string>
 			</dict>
+			<dict>
+				<key>identifier</key>
+				<string>TextCell</string>
+				<key>label</key>
+				<string># sides</string>
+				<key>keyPath</key>
+				<string>numOfSides</string>
+				<key>cellHandlerClass</key>
+				<string>TextCellHandler</string>
+				<key>keyboardType</key>
+				<string>Numeric</string>
+			</dict>
 		</array>
 	</dict>
 	<dict>
@@ -128,7 +152,7 @@
 				<key>cellHandlerClass</key>
 				<string>TextCellHandler</string>
 			</dict>
-            <dict>
+			<dict>
 				<key>identifier</key>
 				<string>TextCell</string>
 				<key>label</key>

@@ -24,7 +24,7 @@ enum CVBorderShape {
 
 @property (nonatomic, retain) UIColor *color;
 @property (nonatomic) CGFloat width;
-@property (nonatomic) CGFloat radius;
+//@property (nonatomic) CGFloat radius;
 
 @end
 

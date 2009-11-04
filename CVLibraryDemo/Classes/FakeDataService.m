@@ -80,7 +80,6 @@
 
 - (UIImage *) createFakeImageForUrl:(NSDictionary *) args { 
     NSString *url = [args objectForKey:@"url"];    
-//    CVImageAdorner *style = [args objectForKey:@"style"];
     CGSize size = {70, 70};
 
     // IMPORTANT NOTE:
@@ -115,8 +114,5 @@
     CGContextRelease(context);
 
     return image;
-//    UIImage *adornedImage = [style adornedImageFromImage:image];
-//    
-//    return adornedImage;
 }
 @end

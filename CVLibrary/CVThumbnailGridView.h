@@ -27,7 +27,6 @@ typedef enum {
 	BOOL isAnimated_, animateSelection_;
     CVImageAdorner *imageAdorner_;
     CGSize thumbnailCellSize_;
-//    CGRect moveToFrame_;
     
     NSIndexPath *indexPathForSelectedCell_;
     NSMutableSet *reusableThumbnails_;
@@ -50,6 +49,9 @@ typedef enum {
     
     UIView *headerView_, *footerView_;
     NSOperationQueue *operationQueue_;
+    
+    CGFloat selectionBorderWidth_;
+    UIColor *selectionBorderColor_;
 }
 
 @property (nonatomic, assign) id <CVThumbnailGridViewDataSource> dataSource;
@@ -67,9 +69,7 @@ typedef enum {
 @property (nonatomic) BOOL fitNumberOfColumnsToFullWidth;
 @property (nonatomic) BOOL animateSelection;
 @property (nonatomic) BOOL editing;
-@property (nonatomic) BOOL editModeEnabled;
 @property (nonatomic, retain) UIImage *imageLoadingIcon;
-@property (nonatomic, retain) UIImage *deleteSignIcon;
 @property (nonatomic, retain) UIColor *deleteSignForegroundColor;
 @property (nonatomic, retain) UIColor *deleteSignBackgroundColor;
 @property (nonatomic) CGFloat deleteSignSideLength;
@@ -80,6 +80,7 @@ typedef enum {
 @property (nonatomic) BOOL allowsSelection;
 
 - (id) initWithFrame:(CGRect)frame;
+- (void) resetCachedImages;
 - (void) reloadData;
 - (CVThumbnailGridViewCell *) dequeueReusableCellWithIdentifier:(NSString *) identifier;
 - (CVThumbnailGridViewCell *) cellForIndexPath:(NSIndexPath *) indexPath;
