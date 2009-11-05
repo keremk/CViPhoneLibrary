@@ -20,7 +20,7 @@
 @synthesize delegate = delegate_;
 
 - (void) dealloc {
-    [operationQueue_ release];
+    [operationQueue_ release], operationQueue_ = nil;
     [super dealloc];
 }
 

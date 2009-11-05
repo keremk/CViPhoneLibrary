@@ -13,7 +13,7 @@
 @synthesize width = width_;
 
 - (void) dealloc {
-    [color_ release];
+    [color_ release], color_ = nil;
     [super dealloc];
 }
 

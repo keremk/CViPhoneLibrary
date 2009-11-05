@@ -19,13 +19,11 @@
 @synthesize selectedIndex = selectedIndex_;
 
 - (void)dealloc {
-    [options_ release];
-    [checkedImage_ release];
-    [uncheckedImage_ release];
+    [options_ release], options_ = nil;
+    [checkedImage_ release], checkedImage_ = nil;
+    [uncheckedImage_ release], uncheckedImage_ = nil;
     [super dealloc];
 }
-
-
 
 - (id)initWithStyle:(UITableViewStyle)style {
     // Override initWithStyle: if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
@@ -37,46 +35,12 @@
     return self;
 }
 
-
-/*
-- (void)viewDidLoad {
-    [super viewDidLoad];
-
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-}
-*/
-
-/*
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-}
-*/
-/*
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-}
-*/
-
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
     
     [delegate_ selectionChangedToOptionIndex:selectedIndex_];
 }
 
-/*
-- (void)viewDidDisappear:(BOOL)animated {
-	[super viewDidDisappear:animated];
-}
-*/
-
-/*
-// Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-*/
 
 - (void)didReceiveMemoryWarning {
 	// Releases the view if it doesn't have a superview.

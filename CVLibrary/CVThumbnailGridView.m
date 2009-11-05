@@ -75,19 +75,19 @@
 @synthesize selectionBorderWidth = selectionBorderWidth_;
 
 - (void)dealloc {
-    [imageAdorner_ release];
-    [reusableThumbnails_ release];
-    [thumbnailsInUse_ release];
-    [adornedImageLoadingIcon_ release];
-    [imageLoadingIcon_ release];
-    [deleteSignIcon_ release];
-    [deleteSignForegroundColor_ release];
-    [deleteSignBackgroundColor_ release];
-    [headerView_ release];
-    [footerView_ release];
-    [operationQueue_ release];
-    [indexPathForSelectedCell_ release];
-    [selectionBorderColor_ release];
+    [imageAdorner_ release], imageAdorner_ = nil;
+    [reusableThumbnails_ release], reusableThumbnails_ = nil;
+    [thumbnailsInUse_ release], thumbnailsInUse_ = nil;
+    [adornedImageLoadingIcon_ release], adornedImageLoadingIcon_ = nil;
+    [imageLoadingIcon_ release], imageLoadingIcon_ = nil;
+    [deleteSignIcon_ release], deleteSignIcon_ = nil;
+    [deleteSignForegroundColor_ release], deleteSignForegroundColor_ = nil;
+    [deleteSignBackgroundColor_ release], deleteSignBackgroundColor_ = nil;
+    [headerView_ release], headerView_ = nil;
+    [footerView_ release], footerView_ = nil;
+    [operationQueue_ release], operationQueue_ = nil;
+    [indexPathForSelectedCell_ release], indexPathForSelectedCell_ = nil;
+    [selectionBorderColor_ release], selectionBorderColor_ = nil;
     [super dealloc];
 }
 
@@ -154,7 +154,6 @@
     if (imageAdorner_ != imageAdorner) {
         [imageAdorner_ release];
         imageAdorner_ = [imageAdorner retain];
-//        thumbnailCellSize_ = [self thumbnailCellSize];
         [self setNeedsLayout];
     }
 }

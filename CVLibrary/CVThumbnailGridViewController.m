@@ -16,7 +16,7 @@
 @synthesize thumbnailView = thumbnailView_;
 
 - (void) dealloc {
-    [thumbnailView_ release];
+    [thumbnailView_ release], thumbnailView_ = nil;
     [super dealloc];
 }
 

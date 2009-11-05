@@ -14,9 +14,9 @@
 @synthesize demoItemId = demoItemId_;
 
 - (void) dealloc {
-    [title_ release];
-    [imageUrl_ release];
-    [demoItemId_ release];
+    [title_ release], title_ = nil;
+    [imageUrl_ release], imageUrl_ = nil;
+    [demoItemId_ release], demoItemId_ = nil;
     [super dealloc];
 }
 

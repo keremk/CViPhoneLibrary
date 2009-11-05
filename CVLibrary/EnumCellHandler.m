@@ -23,11 +23,11 @@
 @synthesize dataConverterClassName = dataConverterClassName_;
 
 - (void) dealloc {
-    [label_ release];
-    [keyPath_ release];
-    [identifier_ release];
-    [options_ release];
-    [dataConverterClassName_ release];
+    [label_ release], label_ = nil;
+    [keyPath_ release], keyPath_ = nil;
+    [identifier_ release], identifier_ = nil;
+    [options_ release], options_ = nil;
+    [dataConverterClassName_ release], dataConverterClassName_ = nil;
     [super dealloc];
 }
 

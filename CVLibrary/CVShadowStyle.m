@@ -19,7 +19,7 @@
 @synthesize blur = blur_;
 
 - (void) dealloc {
-    [color_ release];
+    [color_ release], color_ = nil;
     [super dealloc];
 }
 
@@ -63,17 +63,6 @@
     } 
     return offset;
 }
-
-//- (CGPoint) effectiveOffsetInUIKitCoordinateSystem {
-//    CGPoint offset = CGPointZero;
-//    if (self.offset.width < 0) {
-//        offset.x = abs(self.offset.width) + SHADOW_BLUR_PIXELS;
-//    }
-//    if (self.offset.height > 0) {
-//        offset.y = abs(self.offset.height) + SHADOW_BLUR_PIXELS;
-//    }
-//    return offset;
-//}
 
 #pragma mark CVRenderStyle
 

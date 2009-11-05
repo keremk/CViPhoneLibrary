@@ -19,8 +19,8 @@
 @synthesize delegate = delegate_;
 
 - (void) dealloc {
-    [context_ release];
-    [operationQueue_ release];
+    [context_ release], context_ = nil;
+    [operationQueue_ release], operationQueue_ = nil;
     [super dealloc];
 }
 

@@ -13,8 +13,8 @@
 @synthesize text = text_;
 
 - (void)dealloc {
-    [text_ release];
-    [label_ release];
+    [text_ release], text_ = nil;
+    [label_ release], label_ = nil;
     [super dealloc];
 }
 

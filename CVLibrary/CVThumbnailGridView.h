@@ -18,26 +18,47 @@ typedef enum {
 
 @protocol CVThumbnailGridViewDataSource, CVThumbnailGridViewDelegate;
 
+/**
+ * An instance of thumbnail view is a means for displaying and editing a list of thumbnail images.
+ */
 @interface CVThumbnailGridView : UIScrollView<CVThumbnailGridViewCellDelegate> {
 @private
 	id<CVThumbnailGridViewDataSource> dataSource_;
 	id<CVThumbnailGridViewDelegate> delegate_;
-	NSInteger numOfRows_, numOfColumns_, thumbnailCount_;
-	CGFloat leftMargin_, rightMargin_, topMargin_, bottomMargin_, rowSpacing_, columnSpacing_;
-	BOOL isAnimated_, animateSelection_;
+	NSInteger numOfRows_; 
+    NSInteger numOfColumns_;
+    NSInteger thumbnailCount_;
+    
+	CGFloat leftMargin_;
+    CGFloat rightMargin_;
+    CGFloat topMargin_; 
+    CGFloat bottomMargin_;
+    CGFloat rowSpacing_;
+    CGFloat columnSpacing_;
+    
+	BOOL isAnimated_;
+
+    BOOL animateSelection_;
+    BOOL allowsSelection_;
+    CGFloat selectionBorderWidth_;
+    UIColor *selectionBorderColor_;
+    
     CVImageAdorner *imageAdorner_;
     CGSize thumbnailCellSize_;
     
     NSIndexPath *indexPathForSelectedCell_;
     NSMutableSet *reusableThumbnails_;
     NSMutableDictionary *thumbnailsInUse_;
-    NSInteger firstVisibleRow_, lastVisibleRow_;
-    BOOL fitNumberOfColumnsToFullWidth_;
+    NSInteger firstVisibleRow_;
+    NSInteger lastVisibleRow_;
 
-    BOOL allowsSelection_;
+    BOOL fitNumberOfColumnsToFullWidth_;
+    
     BOOL editModeEnabled_;
     BOOL editing_;
-    UIImage *imageLoadingIcon_, *adornedImageLoadingIcon_;
+
+    UIImage *imageLoadingIcon_; 
+    UIImage *adornedImageLoadingIcon_;
     
     NSTimer *autoscrollTimer_;  // Timer used for auto-scrolling.
     CGFloat autoscrollDistance_;  // Distance to scroll the thumb view when auto-scroll timer fires.
@@ -47,14 +68,18 @@ typedef enum {
     UIColor *deleteSignForegroundColor_;
     UIColor *deleteSignBackgroundColor_;
     
-    UIView *headerView_, *footerView_;
+    UIView *headerView_;
+    UIView *footerView_;
+
     NSOperationQueue *operationQueue_;
-    
-    CGFloat selectionBorderWidth_;
-    UIColor *selectionBorderColor_;
 }
 
+/**
+ * The object that acts as a data source of the receiving thumbnail view.
+ * 
+ */
 @property (nonatomic, assign) id <CVThumbnailGridViewDataSource> dataSource;
+
 @property (nonatomic, assign) id <CVThumbnailGridViewDelegate> delegate;
 @property (nonatomic, readonly) NSInteger thumbnailCount;
 @property (nonatomic, readonly) NSInteger numOfRows;
@@ -86,7 +111,6 @@ typedef enum {
 - (CVThumbnailGridViewCell *) cellForIndexPath:(NSIndexPath *) indexPath;
 - (void) deleteCellsAtIndexPaths:(NSArray *)indexPaths;
 - (void) insertCellsAtIndexPaths:(NSArray *) indexPaths;
-
 - (void) image:(UIImage *) image loadedForUrl:(NSString *) url forCellAtIndexPath:(NSIndexPath *) indexPath;
 @end
 

@@ -17,20 +17,10 @@
 @implementation CVImageAdorner
 @synthesize borderStyle = borderStyle_;
 @synthesize shadowStyle = shadowStyle_;
-//@synthesize imageSize = imageSize_;
-//@synthesize targetImageSize = targetImageSize_;
-//@synthesize upperLeftBadgeExists = upperLeftBadgeExists_;
-//@synthesize upperRightBadgeExists = upperRightBadgeExists_;
-//@synthesize lowerLeftBadgeExists = lowerLeftBadgeExists_;
-//@synthesize lowerRightBadgeExists = lowerRightBadgeExists_;
-//@synthesize upperLeftBadgeSize = upperLeftBadgeSize_;
-//@synthesize upperRightBadgeSize = upperRightBadgeSize_;
-//@synthesize lowerLeftBadgeSize = lowerLeftBadgeSize_;
-//@synthesize lowerRightBadgeSize = lowerRightBadgeSize_;
 
 - (void) dealloc {
-    [borderStyle_ release];
-    [shadowStyle_ release];
+    [borderStyle_ release], borderStyle_ = nil;
+    [shadowStyle_ release], shadowStyle_ = nil;
     [super dealloc];
 }
 
@@ -39,7 +29,6 @@
     if (self != nil) {
         borderStyle_ = [[CVBorderStyle alloc] init];
         shadowStyle_ = [[CVShadowStyle alloc] init];
-//        imageSize_ = CGSizeZero;
     }
     return self;
 }
@@ -54,7 +43,6 @@
     // This is done in the background thread and the UI* calls are not threadsafe with the 
     // main UI thread. So use the pure CoreGraphics APIs instead.
     
-//    CGSize size = [self sizeAfterStylingImage];
     CGColorSpaceRef colorSpaceRef = CGColorSpaceCreateDeviceRGB();
     CGContextRef context = CGBitmapContextCreate(NULL, targetImageSize.width, targetImageSize.height,
                                                  BITS_PER_COMPONENT,
@@ -113,34 +101,5 @@
 
     return CGSizeMake(xPadding, yPadding);
 }
-
-
-//- (CGSize) sizeAfterStylingImage {
-//    CGSize size = [shadowStyle_ sizeAfterRenderingGivenInitialSize:[borderStyle_ sizeAfterRenderingGivenInitialSize:[self imageSize]]];
-//    
-//    return size;
-//}
-
-
-
-//- (CGRect) upperLeftBadgeRect {
-//    
-// 
-//}
-//
-//- (CGRect) lowerLeftBadgeRect {
-//    
-//}
-//
-//- (CGRect) upperRightBadgeRect {
-//    
-//}
-//
-//- (CGRect) lowerRightBadgeRect {
-//    
-//}
-
-
-
 
 @end

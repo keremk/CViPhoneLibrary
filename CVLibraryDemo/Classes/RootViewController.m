@@ -24,7 +24,7 @@
 @synthesize listOfDemos = listOfDemos_;
 
 - (void)dealloc {
-    [listOfDemos_ release];
+    [listOfDemos_ release], listOfDemos_ = nil;
     [super dealloc];
 }
 

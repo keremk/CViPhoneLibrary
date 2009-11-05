@@ -37,10 +37,10 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
 @synthesize selected = selected_;
 
 - (void)dealloc {
-	[indexPath_ release];
-    [thumbnailImage_ release];
-    [imageAdorner_ release];
-    [imageUrl_ release];
+	[indexPath_ release], indexPath_ = nil;
+    [thumbnailImage_ release], thumbnailImage_ = nil;
+    [imageAdorner_ release], imageAdorner_ = nil;
+    [imageUrl_ release], imageUrl_ = nil;
     [super dealloc];
 }
 

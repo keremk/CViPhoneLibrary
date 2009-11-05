@@ -19,8 +19,8 @@
 #pragma mark Memory management
 
 - (void)dealloc {
-	[navigationController_ release];
-	[window_ release];
+	[navigationController_ release], navigationController_ = nil;
+	[window_ release], window_ = nil;
 	[super dealloc];
 }
 

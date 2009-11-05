@@ -21,12 +21,11 @@
 SYNTHESIZE_SINGLETON_FOR_CLASS(CVImageCache)
 
 static NSUInteger const kDefaultMemCacheSize = 10000 * 1024; // 10MB
-static NSUInteger const kDefaultDiskCacheSize = 1000000 * 1024; // 1GB
 
 - (void) dealloc {
     [self removeObserversFromImages];
-    [imageCache_ release];
-    [imageCacheHistory_ release];
+    [imageCache_ release], imageCache_ = nil;
+    [imageCacheHistory_ release], imageCacheHistory_ = nil;
     [super dealloc];
 }
 
@@ -34,7 +33,6 @@ static NSUInteger const kDefaultDiskCacheSize = 1000000 * 1024; // 1GB
     self = [super init];
     if (self != nil) {
         memoryCacheSize_ = kDefaultMemCacheSize;
-        diskCacheSize_ = kDefaultDiskCacheSize;
         imageCache_ = nil;
         imageCacheHistory_ = nil;        
         [self clearMemoryCache];
@@ -97,7 +95,6 @@ static char imageSizeObservingContext;
     if (nil != imageCache_) { 
         for (CVImage *image in [imageCache_ allValues]) {
             [image removeObserver:self forKeyPath:@"image"];
-//            [image setDelegate:nil];
         }
     }
 }

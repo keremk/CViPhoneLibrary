@@ -13,7 +13,7 @@
 @private
     NSMutableArray *imageCacheHistory_;     // To manage to LRU cache management
     NSMutableDictionary *imageCache_;       // Fast access to cache objects by id
-    NSUInteger memoryCacheSize_, diskCacheSize_; 
+    NSUInteger memoryCacheSize_;
     NSUInteger currentMemCacheSize_;
 }
 

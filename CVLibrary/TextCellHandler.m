@@ -22,10 +22,10 @@
 @synthesize keyboardType = keyboardType_;
 
 - (void) dealloc {
-    [label_ release];
-    [keyPath_ release];
-    [identifier_ release];
-    [keyboardType_ release];
+    [label_ release], label_ = nil;
+    [keyPath_ release], keyPath_ = nil;
+    [identifier_ release], identifier_ = nil;
+    [keyboardType_ release], keyboardType_ = nil;
     [super dealloc];
 }
 

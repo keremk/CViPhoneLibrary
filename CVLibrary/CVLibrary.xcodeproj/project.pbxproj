@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BD32D9C70FF3FAFE002DA5AF /* CVImageLoadingService.h in Headers */ = {isa = PBXBuildFile; fileRef = BD32D9C60FF3FAFE002DA5AF /* CVImageLoadingService.h */; };
 		BD439A031059C08000CD1CED /* CVPolygonBorder.h in Headers */ = {isa = PBXBuildFile; fileRef = BD439A011059C08000CD1CED /* CVPolygonBorder.h */; };
 		BD439A041059C08000CD1CED /* CVPolygonBorder.m in Sources */ = {isa = PBXBuildFile; fileRef = BD439A021059C08000CD1CED /* CVPolygonBorder.m */; };
 		BD439A051059C08000CD1CED /* CVPolygonBorder.m in Sources */ = {isa = PBXBuildFile; fileRef = BD439A021059C08000CD1CED /* CVPolygonBorder.m */; };
@@ -106,7 +105,6 @@
 
 /* Begin PBXFileReference section */
 		32DBCF5E0370ADEE00C91783 /* CVLibrary_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVLibrary_Prefix.pch; sourceTree = "<group>"; };
-		BD32D9C60FF3FAFE002DA5AF /* CVImageLoadingService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVImageLoadingService.h; sourceTree = "<group>"; };
 		BD439A011059C08000CD1CED /* CVPolygonBorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVPolygonBorder.h; sourceTree = "<group>"; };
 		BD439A021059C08000CD1CED /* CVPolygonBorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVPolygonBorder.m; sourceTree = "<group>"; };
 		BD4A29D0101E9BD200044AEE /* CVSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVSettingsViewController.h; sourceTree = "<group>"; };
@@ -235,7 +233,6 @@
 				BDA4851F0F91700F0048C704 /* CVLibrary.h */,
 				BDC291200FD8A9A400E1B892 /* UIImage+Adornments.h */,
 				BDC291210FD8A9A400E1B892 /* UIImage+Adornments.m */,
-				BD32D9C60FF3FAFE002DA5AF /* CVImageLoadingService.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -350,7 +347,6 @@
 				BD7BA0B70FC87E9D00E49BF7 /* SynthesizeSingleton.h in Headers */,
 				BD7BA0F00FCA35D700E49BF7 /* CVImage.h in Headers */,
 				BDC291230FD8A9A400E1B892 /* UIImage+Adornments.h in Headers */,
-				BD32D9C70FF3FAFE002DA5AF /* CVImageLoadingService.h in Headers */,
 				BD4A29E0101E9BD200044AEE /* CVSettingsViewController.h in Headers */,
 				BD4A29E2101E9BD200044AEE /* CellHandler.h in Headers */,
 				BD4A29E3101E9BD200044AEE /* TextCellHandler.h in Headers */,
@@ -396,6 +392,7 @@
 				D2AAC07A0554694100DB518D /* Headers */,
 				D2AAC07B0554694100DB518D /* Sources */,
 				D2AAC07C0554694100DB518D /* Frameworks */,
+				BD144D1C10A3395700A249CD /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -437,6 +434,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		BD144D1C10A3395700A249CD /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/bin/sh\n# See also http://developer.apple.com/tools/creatingdocsetswithdoxygen.html \n\nset -x\n\nVERSION=$(agvtool mvers -terse1)\n\nDOXYFILE=$DERIVED_FILES_DIR/doxygen.config\nDOXYGEN=/Applications/Doxygen.app/Contents/Resources/doxygen\nDOCSET=$INSTALL_DIR/Docset\n\nrm -rf $DOCSET\nmkdir -p $DOCSET || exit 1\nmkdir -p $DERIVED_FILES_DIR || exit 1\n\nif ! test -x $DOXYGEN ; then\n    echo \"*** Install Doxygen to get documentation generated for you automatically ***\"\n    exit 1\nfi\n\n# Create a doxygen configuration file with only the settings we care about\n$DOXYGEN -g - > $DOXYFILE\n\ncat <<EOF >> $DOXYFILE\n\nPROJECT_NAME           = $FULL_PRODUCT_NAME\nPROJECT_NUMBER         = $VERSION\nOUTPUT_DIRECTORY       = $DOCSET\nINPUT                  = $SOURCE_ROOT\nFILE_PATTERNS          = *.h *.m\n\nHIDE_UNDOC_MEMBERS     = YES\nHIDE_UNDOC_CLASSES     = YES\nHIDE_UNDOC_RELATIONS   = YES\nREPEAT_BRIEF           = NO\nCASE_SENSE_NAMES       = YES\nINLINE_INHERITED_MEMB  = YES\nSHOW_FILES             = NO\nSHOW_INCLUDE_FILES     = NO\nGENERATE_LATEX         = NO\nGENERATE_HTML          = YES\nGENERATE_DOCSET        = YES\nDOCSET_FEEDNAME        = \"$PROJECT.framework API Documentation\"\nDOCSET_BUNDLE_ID       = org.codingventures.$PROJECT\n\nEOF\n\n#  Run doxygen on the updated config file.\n#  doxygen creates a Makefile that does most of the heavy lifting.\n$DOXYGEN $DOXYFILE\n\n#  make will invoke docsetutil. Take a look at the Makefile to see how this is done.\nmake -C $DOCSET/html install\n\n#  Construct a temporary applescript file to tell Xcode to load a docset.\nrm -f $TEMP_DIR/loadDocSet.scpt\n\ncat <<EOF > $TEMP_DIR/loadDocSet.scpt\ntell application \"Xcode\"\n    load documentation set with path \"/Users/$USER/Library/Developer/Shared/Documentation/DocSets/org.codingventures.${PROJECT}.docset/\"\nend tell\nEOF\n\n# Run the load-docset applescript command.\nosascript $TEMP_DIR/loadDocSet.scpt";
+		};
 		BD80A3C90F894CDD0067878C /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

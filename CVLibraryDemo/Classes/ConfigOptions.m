@@ -25,8 +25,8 @@
 @synthesize shape = shape_;
 
 - (void) dealloc {
-    [borderColor_ release];
-    [shape_ release];
+    [borderColor_ release], borderColor_ = nil;
+    [shape_ release], shape_ = nil;
     [super dealloc];
 }
 

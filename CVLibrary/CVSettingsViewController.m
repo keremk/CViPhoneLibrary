@@ -13,8 +13,8 @@
 @synthesize settingsData = settingsData_;
 
 - (void)dealloc {
-    [cellHandlers_ release];
-    [sectionNames_ release];
+    [cellHandlers_ release], cellHandlers_ = nil;
+    [sectionNames_ release], sectionNames_ = nil;
     [super dealloc];
 }
 
@@ -77,25 +77,6 @@
                  
     }
 }
-/*
-- (void)viewDidLoad {
-    [super viewDidLoad];
-
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-}
-*/
-
-/*
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-}
-*/
-/*
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-}
-*/
 
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
@@ -103,19 +84,6 @@
     [self.delegate configurationUpdatedForGridConfigViewController:self];
 }
 
-/*
-- (void)viewDidDisappear:(BOOL)animated {
-	[super viewDidDisappear:animated];
-}
-*/
-
-/*
-// Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-*/
 
 - (void)didReceiveMemoryWarning {
 	// Releases the view if it doesn't have a superview.

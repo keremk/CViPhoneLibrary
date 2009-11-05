@@ -20,9 +20,9 @@
 @synthesize identifier = identifier_;
 
 - (void) dealloc {
-    [label_ release];
-    [keyPath_ release];
-    [identifier_ release];
+    [label_ release], label_ = nil;
+    [keyPath_ release], keyPath_ = nil;
+    [identifier_ release], identifier_ = nil;
     [super dealloc];
 }
 

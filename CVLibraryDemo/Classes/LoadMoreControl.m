@@ -17,7 +17,7 @@
 
 - (void)dealloc {
     [loadMoreButton_ removeTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchDown];
-    [loadMoreButton_ release];
+    [loadMoreButton_ release], loadMoreButton_ = nil;
     [super dealloc];
 }
 

@@ -20,10 +20,10 @@
 @synthesize dataService = dataService_;
 
 - (void)dealloc {
-    [flickrItems_ release];
+    [flickrItems_ release], flickrItems_ = nil;
     [dataService_ setDelegate:nil];
-    [dataService_ release];
-    [activeDownloads_ release];
+    [dataService_ release], dataService_ = nil;
+    [activeDownloads_ release], activeDownloads_ = nil;
     [super dealloc];
 }
 
@@ -46,12 +46,6 @@
     return self;
 }
 
-/*
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView {
-}
-*/
-
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -70,14 +64,6 @@
     LoadMoreControl *loadMoreControl = (LoadMoreControl *) sender;
     [loadMoreControl enableLoadMoreButton];
 }
-
-/*
-// Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-*/
 
 - (void)didReceiveMemoryWarning {
 	// Releases the view if it doesn't have a superview.
@@ -111,16 +97,6 @@
     DemoItem *demoItem = (DemoItem *) [flickrItems_ objectAtIndex:[indexPath indexForNumOfColumns:[self.thumbnailView numOfColumns]]];
     [cell setImageUrl:demoItem.imageUrl];
 
-//    CVImage *demoImage = [[[CVImageCache sharedCVImageCache] imageForKey:demoItem.imageUrl] retain];
-//    if (nil == demoImage) {
-//        demoImage = [[CVImage alloc] initWithUrl:demoItem.imageUrl indexPath:indexPath];
-//        [demoImage setDelegate:self];
-//        [demoImage beginLoadingImage];
-//        [[CVImageCache sharedCVImageCache] setImage:demoImage];
-//    }
-//    
-//    [cell setCachedImage:demoImage];
-//    [demoImage release];
     return cell;
 }
 
@@ -146,11 +122,5 @@
         [activeDownloads_ removeObjectForKey:url];
     }
 }
-
-//#pragma mark CVImageLoadingService methods
-//- (void) beginLoadImageForUrl:(NSString *) url {
-//    [dataService_ beginLoadImageForUrl:url usingStyle:[self.thumbnailView imageAdorner]];
-//}
-
 
 @end

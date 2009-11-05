@@ -17,6 +17,5 @@
 #import "CVImageCache.h"
 #import "CVImage.h"
 #import "UIImage+Adornments.h"
-//#import "CVImageLoadingService.h"
 #import "CVSettingsViewController.h"
 #import "CellHandler.h"

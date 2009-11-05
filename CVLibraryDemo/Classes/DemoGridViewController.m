@@ -23,11 +23,11 @@
 @synthesize configEnabled = configEnabled_;
 
 - (void)dealloc {
-    [demoItems_ release];
+    [demoItems_ release], demoItems_ = nil;
     [dataService_ setDelegate:nil];
-    [dataService_ release];
-    [addItemViewController_ release];
-    [activeDownloads_ release];
+    [dataService_ release], dataService_ = nil;
+    [addItemViewController_ release], addItemViewController_ = nil;
+    [activeDownloads_ release], activeDownloads_ = nil;
     [super dealloc];
 }
 
@@ -306,7 +306,6 @@
     imageAdorner.shadowStyle.blur = configOptions.shadowBlur;
 
     // Clear the image cache
-//    [[CVImageCache sharedCVImageCache] clearMemoryCache];
     [self.thumbnailView resetCachedImages];
     [self.thumbnailView reloadData];
 }

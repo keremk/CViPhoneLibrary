@@ -13,17 +13,14 @@
 
 @implementation CVImage
 @synthesize imageUrl = imageUrl_;
-//@synthesize isLoaded = isLoaded_;
-//@synthesize isLoading = isLoading_;
 @synthesize image = image_;
-//@synthesize delegate = delegate_;
 @synthesize indexPath = indexPath_;
 @synthesize previousMemorySize = previousMemorySize_;
 
 - (void) dealloc {
-    [image_ release];
-    [imageUrl_ release];
-    [indexPath_ release];
+    [image_ release], image_ = nil;
+    [imageUrl_ release], imageUrl_ = nil;
+    [indexPath_ release], indexPath_ = nil;
     [super dealloc];
 }
 
@@ -43,21 +40,11 @@
     if (self != nil) {
         self.imageUrl = url;
         self.indexPath = indexPath;
-//        isLoaded_ = NO;
-//        isLoading_ = NO;
         image_ = nil;
         previousMemorySize_ = 0;
     }
     return self;    
 }
-
-//- (void) beginLoadingImage {
-//    if (!isLoading_) {
-//        isLoading_ = YES;
-//        if ([self.delegate respondsToSelector:@selector(beginLoadImageForUrl:)])
-//            [self.delegate performSelector:@selector(beginLoadImageForUrl:) withObject:imageUrl_];                
-//    }
-//}
 
 - (void) setImage:(UIImage *) image {
     if (image_ != image) {
@@ -65,8 +52,6 @@
         previousMemorySize_ = [self memorySize];
         [image_ release];
         image_ = [image retain];
-//        isLoaded_ = YES;
-//        isLoading_ = NO;
         [self didChangeValueForKey:@"image"];
     }
 }

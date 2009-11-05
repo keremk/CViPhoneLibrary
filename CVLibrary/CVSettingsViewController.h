@@ -20,12 +20,12 @@
     NSArray *configSections_;
     id<CVSettingsViewControllerDelegate> delegate_;
     id settingsData_;
-    NSMutableArray *cellHandlers_, *sectionNames_;
+    NSMutableArray *cellHandlers_;
+    NSMutableArray *sectionNames_;
 }
 
 @property (assign) id<CVSettingsViewControllerDelegate> delegate;
 @property (nonatomic, retain) id settingsData;
-
 @end
 
 

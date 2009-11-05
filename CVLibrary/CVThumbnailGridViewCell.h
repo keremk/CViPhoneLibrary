@@ -17,7 +17,9 @@
 	id<CVThumbnailGridViewCellDelegate> delegate_;
 	NSIndexPath *indexPath_;
     CGPoint touchLocation_; // Location of touch in own coordinates (stays constant during dragging).
-    BOOL dragging_, editing_, selected_;
+    BOOL dragging_; 
+    BOOL editing_;
+    BOOL selected_;
     CGRect home_;
     UIImage *thumbnailImage_;
     CVImageAdorner *imageAdorner_;

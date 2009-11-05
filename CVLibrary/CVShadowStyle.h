@@ -21,5 +21,4 @@
 @property (nonatomic) CGFloat blur;
 
 - (CGSize) offsetWithBlurPixels;
-//- (CGPoint) effectiveOffsetInUIKitCoordinateSystem;
 @end
