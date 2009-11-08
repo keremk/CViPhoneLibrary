@@ -78,9 +78,9 @@
     [dataService_ setDelegate:nil];
 }
 
-#pragma mark CVThumbnailGridViewDelegate methods
+#pragma mark CVThumbnailViewDelegate methods
 
-- (NSInteger) numberOfCellsForThumbnailView:(CVThumbnailGridView *)thumbnailView {
+- (NSInteger) numberOfCellsForThumbnailView:(CVThumbnailView *)thumbnailView {
     if (nil == flickrItems_) {
         [self loadFlickrItems];
         self.thumbnailView.imageLoadingIcon = [UIImage imageNamed:@"LoadingIcon.png"];
@@ -88,10 +88,10 @@
     return [flickrItems_ count];
 }
 
-- (CVThumbnailGridViewCell *)thumbnailView:(CVThumbnailGridView *)thumbnailView cellAtIndexPath:(NSIndexPath *)indexPath {
-    CVThumbnailGridViewCell *cell = [thumbnailView dequeueReusableCellWithIdentifier:@"Thumbnails"];
+- (CVThumbnailViewCell *)thumbnailView:(CVThumbnailView *)thumbnailView cellAtIndexPath:(NSIndexPath *)indexPath {
+    CVThumbnailViewCell *cell = [thumbnailView dequeueReusableCellWithIdentifier:@"Thumbnails"];
     if (nil == cell) {
-        cell = [[[CVThumbnailGridViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"Thumbnails"] autorelease];
+        cell = [[[CVThumbnailViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"Thumbnails"] autorelease];
     }
     
     DemoItem *demoItem = (DemoItem *) [flickrItems_ objectAtIndex:[indexPath indexForNumOfColumns:[self.thumbnailView numOfColumns]]];
@@ -100,7 +100,7 @@
     return cell;
 }
 
-- (void) thumbnailView:(CVThumbnailGridView *)thumbnailView loadImageForUrl:(NSString *) url forCellAtIndexPath:(NSIndexPath *) indexPath {
+- (void) thumbnailView:(CVThumbnailView *)thumbnailView loadImageForUrl:(NSString *) url forCellAtIndexPath:(NSIndexPath *) indexPath {
     [activeDownloads_ setObject:indexPath forKey:url];
     [dataService_ beginLoadImageForUrl:url]; 
 }

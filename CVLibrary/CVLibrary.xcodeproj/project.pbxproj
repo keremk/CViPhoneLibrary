@@ -66,15 +66,15 @@
 		BDC291220FD8A9A400E1B892 /* UIImage+Adornments.m in Sources */ = {isa = PBXBuildFile; fileRef = BDC291210FD8A9A400E1B892 /* UIImage+Adornments.m */; };
 		BDC291230FD8A9A400E1B892 /* UIImage+Adornments.h in Headers */ = {isa = PBXBuildFile; fileRef = BDC291200FD8A9A400E1B892 /* UIImage+Adornments.h */; };
 		BDC291240FD8A9A400E1B892 /* UIImage+Adornments.m in Sources */ = {isa = PBXBuildFile; fileRef = BDC291210FD8A9A400E1B892 /* UIImage+Adornments.m */; };
-		BDE55D6A0F90866E004EBA23 /* CVThumbnailGridViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = BDE55D640F90866E004EBA23 /* CVThumbnailGridViewController.h */; };
-		BDE55D6B0F90866E004EBA23 /* CVThumbnailGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BDE55D650F90866E004EBA23 /* CVThumbnailGridViewController.m */; };
-		BDE55D6C0F90866E004EBA23 /* CVThumbnailGridViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BDE55D660F90866E004EBA23 /* CVThumbnailGridViewCell.m */; };
-		BDE55D6D0F90866E004EBA23 /* CVThumbnailGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = BDE55D670F90866E004EBA23 /* CVThumbnailGridView.m */; };
-		BDE55D6E0F90866E004EBA23 /* CVThumbnailGridViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = BDE55D680F90866E004EBA23 /* CVThumbnailGridViewCell.h */; };
-		BDE55D6F0F90866E004EBA23 /* CVThumbnailGridView.h in Headers */ = {isa = PBXBuildFile; fileRef = BDE55D690F90866E004EBA23 /* CVThumbnailGridView.h */; };
-		BDE55D700F90866E004EBA23 /* CVThumbnailGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BDE55D650F90866E004EBA23 /* CVThumbnailGridViewController.m */; };
-		BDE55D710F90866E004EBA23 /* CVThumbnailGridViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BDE55D660F90866E004EBA23 /* CVThumbnailGridViewCell.m */; };
-		BDE55D720F90866E004EBA23 /* CVThumbnailGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = BDE55D670F90866E004EBA23 /* CVThumbnailGridView.m */; };
+		BDE55D6A0F90866E004EBA23 /* CVThumbnailViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = BDE55D640F90866E004EBA23 /* CVThumbnailViewController.h */; };
+		BDE55D6B0F90866E004EBA23 /* CVThumbnailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BDE55D650F90866E004EBA23 /* CVThumbnailViewController.m */; };
+		BDE55D6C0F90866E004EBA23 /* CVThumbnailViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BDE55D660F90866E004EBA23 /* CVThumbnailViewCell.m */; };
+		BDE55D6D0F90866E004EBA23 /* CVThumbnailView.m in Sources */ = {isa = PBXBuildFile; fileRef = BDE55D670F90866E004EBA23 /* CVThumbnailView.m */; };
+		BDE55D6E0F90866E004EBA23 /* CVThumbnailViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = BDE55D680F90866E004EBA23 /* CVThumbnailViewCell.h */; };
+		BDE55D6F0F90866E004EBA23 /* CVThumbnailView.h in Headers */ = {isa = PBXBuildFile; fileRef = BDE55D690F90866E004EBA23 /* CVThumbnailView.h */; };
+		BDE55D700F90866E004EBA23 /* CVThumbnailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BDE55D650F90866E004EBA23 /* CVThumbnailViewController.m */; };
+		BDE55D710F90866E004EBA23 /* CVThumbnailViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BDE55D660F90866E004EBA23 /* CVThumbnailViewCell.m */; };
+		BDE55D720F90866E004EBA23 /* CVThumbnailView.m in Sources */ = {isa = PBXBuildFile; fileRef = BDE55D670F90866E004EBA23 /* CVThumbnailView.m */; };
 		BDF8764E0FBCD5C500D8973C /* CVImageAdorner.h in Headers */ = {isa = PBXBuildFile; fileRef = BDF8764C0FBCD5C500D8973C /* CVImageAdorner.h */; };
 		BDF8764F0FBCD5C500D8973C /* CVImageAdorner.m in Sources */ = {isa = PBXBuildFile; fileRef = BDF8764D0FBCD5C500D8973C /* CVImageAdorner.m */; };
 		BDF876500FBCD5C500D8973C /* CVImageAdorner.m in Sources */ = {isa = PBXBuildFile; fileRef = BDF8764D0FBCD5C500D8973C /* CVImageAdorner.m */; };
@@ -151,12 +151,12 @@
 		BDA4851F0F91700F0048C704 /* CVLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVLibrary.h; sourceTree = "<group>"; };
 		BDC291200FD8A9A400E1B892 /* UIImage+Adornments.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Adornments.h"; sourceTree = "<group>"; };
 		BDC291210FD8A9A400E1B892 /* UIImage+Adornments.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Adornments.m"; sourceTree = "<group>"; };
-		BDE55D640F90866E004EBA23 /* CVThumbnailGridViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVThumbnailGridViewController.h; sourceTree = "<group>"; };
-		BDE55D650F90866E004EBA23 /* CVThumbnailGridViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVThumbnailGridViewController.m; sourceTree = "<group>"; };
-		BDE55D660F90866E004EBA23 /* CVThumbnailGridViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVThumbnailGridViewCell.m; sourceTree = "<group>"; };
-		BDE55D670F90866E004EBA23 /* CVThumbnailGridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVThumbnailGridView.m; sourceTree = "<group>"; };
-		BDE55D680F90866E004EBA23 /* CVThumbnailGridViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVThumbnailGridViewCell.h; sourceTree = "<group>"; };
-		BDE55D690F90866E004EBA23 /* CVThumbnailGridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVThumbnailGridView.h; sourceTree = "<group>"; };
+		BDE55D640F90866E004EBA23 /* CVThumbnailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVThumbnailViewController.h; sourceTree = "<group>"; };
+		BDE55D650F90866E004EBA23 /* CVThumbnailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVThumbnailViewController.m; sourceTree = "<group>"; };
+		BDE55D660F90866E004EBA23 /* CVThumbnailViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVThumbnailViewCell.m; sourceTree = "<group>"; };
+		BDE55D670F90866E004EBA23 /* CVThumbnailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVThumbnailView.m; sourceTree = "<group>"; };
+		BDE55D680F90866E004EBA23 /* CVThumbnailViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVThumbnailViewCell.h; sourceTree = "<group>"; };
+		BDE55D690F90866E004EBA23 /* CVThumbnailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVThumbnailView.h; sourceTree = "<group>"; };
 		BDF8764C0FBCD5C500D8973C /* CVImageAdorner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVImageAdorner.h; sourceTree = "<group>"; };
 		BDF8764D0FBCD5C500D8973C /* CVImageAdorner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVImageAdorner.m; sourceTree = "<group>"; };
 		D2AAC07E0554694100DB518D /* libCVLibrary.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCVLibrary.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -248,12 +248,12 @@
 		BD4A29CC101E946500044AEE /* CVThumbnailGridView */ = {
 			isa = PBXGroup;
 			children = (
-				BDE55D640F90866E004EBA23 /* CVThumbnailGridViewController.h */,
-				BDE55D650F90866E004EBA23 /* CVThumbnailGridViewController.m */,
-				BDE55D680F90866E004EBA23 /* CVThumbnailGridViewCell.h */,
-				BDE55D660F90866E004EBA23 /* CVThumbnailGridViewCell.m */,
-				BDE55D690F90866E004EBA23 /* CVThumbnailGridView.h */,
-				BDE55D670F90866E004EBA23 /* CVThumbnailGridView.m */,
+				BDE55D640F90866E004EBA23 /* CVThumbnailViewController.h */,
+				BDE55D650F90866E004EBA23 /* CVThumbnailViewController.m */,
+				BDE55D680F90866E004EBA23 /* CVThumbnailViewCell.h */,
+				BDE55D660F90866E004EBA23 /* CVThumbnailViewCell.m */,
+				BDE55D690F90866E004EBA23 /* CVThumbnailView.h */,
+				BDE55D670F90866E004EBA23 /* CVThumbnailView.m */,
 			);
 			name = CVThumbnailGridView;
 			sourceTree = "<group>";
@@ -337,9 +337,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BDE55D6A0F90866E004EBA23 /* CVThumbnailGridViewController.h in Headers */,
-				BDE55D6E0F90866E004EBA23 /* CVThumbnailGridViewCell.h in Headers */,
-				BDE55D6F0F90866E004EBA23 /* CVThumbnailGridView.h in Headers */,
+				BDE55D6A0F90866E004EBA23 /* CVThumbnailViewController.h in Headers */,
+				BDE55D6E0F90866E004EBA23 /* CVThumbnailViewCell.h in Headers */,
+				BDE55D6F0F90866E004EBA23 /* CVThumbnailView.h in Headers */,
 				BDA485200F91700F0048C704 /* CVLibrary.h in Headers */,
 				BDF8764E0FBCD5C500D8973C /* CVImageAdorner.h in Headers */,
 				BD7B9F630FBF67DB00E49BF7 /* CGUtils.h in Headers */,
@@ -471,9 +471,9 @@
 				BD80A79A0F8D2EA50067878C /* GTMSenTestCase.m in Sources */,
 				BD80A79B0F8D2EA50067878C /* GTMIPhoneUnitTestMain.m in Sources */,
 				BD80A79C0F8D2EA50067878C /* GTMIPhoneUnitTestDelegate.m in Sources */,
-				BDE55D700F90866E004EBA23 /* CVThumbnailGridViewController.m in Sources */,
-				BDE55D710F90866E004EBA23 /* CVThumbnailGridViewCell.m in Sources */,
-				BDE55D720F90866E004EBA23 /* CVThumbnailGridView.m in Sources */,
+				BDE55D700F90866E004EBA23 /* CVThumbnailViewController.m in Sources */,
+				BDE55D710F90866E004EBA23 /* CVThumbnailViewCell.m in Sources */,
+				BDE55D720F90866E004EBA23 /* CVThumbnailView.m in Sources */,
 				BDF876500FBCD5C500D8973C /* CVImageAdorner.m in Sources */,
 				BD7B9F620FBF67DB00E49BF7 /* CGUtils.c in Sources */,
 				BD7B9FF20FC09CA700E49BF7 /* CVImageCache.m in Sources */,
@@ -497,9 +497,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BDE55D6B0F90866E004EBA23 /* CVThumbnailGridViewController.m in Sources */,
-				BDE55D6C0F90866E004EBA23 /* CVThumbnailGridViewCell.m in Sources */,
-				BDE55D6D0F90866E004EBA23 /* CVThumbnailGridView.m in Sources */,
+				BDE55D6B0F90866E004EBA23 /* CVThumbnailViewController.m in Sources */,
+				BDE55D6C0F90866E004EBA23 /* CVThumbnailViewCell.m in Sources */,
+				BDE55D6D0F90866E004EBA23 /* CVThumbnailView.m in Sources */,
 				BDF8764F0FBCD5C500D8973C /* CVImageAdorner.m in Sources */,
 				BD7B9F640FBF67DB00E49BF7 /* CGUtils.c in Sources */,
 				BD7B9FF40FC09CA700E49BF7 /* CVImageCache.m in Sources */,

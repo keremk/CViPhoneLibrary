@@ -13,8 +13,8 @@
 
 @synthesize borderColor = borderColor_;
 @synthesize borderRoundedRadius = borderRoundedRadius_;
-@synthesize numOfColumns = numOfColumns_;
-@synthesize fitNumberOfColumnsToFullWidth = fitNumberOfColumnsToFullWidth_;
+//@synthesize numOfColumns = numOfColumns_;
+//@synthesize fitNumberOfColumnsToFullWidth = fitNumberOfColumnsToFullWidth_;
 @synthesize thumbnailWidth = thumbnailWidth_;
 @synthesize thumbnailHeight = thumbnailHeight_;
 @synthesize borderWidth = borderWidth_;
@@ -23,6 +23,9 @@
 @synthesize shadowOffsetHeight = shadowOffsetHeight_;
 @synthesize numOfSides = numOfSides_;
 @synthesize shape = shape_;
+@synthesize leftMargin = leftMargin_;
+@synthesize rightMargin = rightMargin_;
+@synthesize columnSpacing = columnSpacing_;
 
 - (void) dealloc {
     [borderColor_ release], borderColor_ = nil;

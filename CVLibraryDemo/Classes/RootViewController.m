@@ -123,14 +123,14 @@
             [demoGridViewController setDataService:dataService];
             [self.navigationController pushViewController:demoGridViewController animated:YES];
             
-            CVThumbnailGridView *gridView = [demoGridViewController thumbnailView];
+            CVThumbnailView *gridView = [demoGridViewController thumbnailView];
             [gridView setImageAdorner:imageAdorner];
-            [gridView setNumOfColumns:0];
+//            [gridView setNumOfColumns:0];
             [gridView setRightMargin:20.0];
             [gridView setLeftMargin:20.0];
             [gridView setEditing:YES];
             [gridView setEditModeEnabled:YES];
-            [gridView setFitNumberOfColumnsToFullWidth:YES];
+//            [gridView setFitNumberOfColumnsToFullWidth:YES];
             [gridView setThumbnailCellSize:CGSizeMake(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)];
             [demoGridViewController release];
             
@@ -142,11 +142,11 @@
             [demoGridViewController setDataService:dataService];
             [self.navigationController pushViewController:demoGridViewController animated:YES];
             
-            CVThumbnailGridView *gridView = [demoGridViewController thumbnailView];
+            CVThumbnailView *gridView = [demoGridViewController thumbnailView];
             [gridView setImageAdorner:imageAdorner];
-            [gridView setNumOfColumns:0];
+//            [gridView setNumOfColumns:0];
             [gridView setEditModeEnabled:NO];
-            [gridView setFitNumberOfColumnsToFullWidth:YES];
+//            [gridView setFitNumberOfColumnsToFullWidth:YES];
             [gridView setThumbnailCellSize:CGSizeMake(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)];
             [demoGridViewController release];
             
@@ -160,15 +160,15 @@
             [demoGridViewController setDataService:dataService];    
             [self.navigationController pushViewController:demoGridViewController animated:YES];
             
-            CVThumbnailGridView *gridView = [demoGridViewController thumbnailView];
+            CVThumbnailView *gridView = [demoGridViewController thumbnailView];
             [gridView setImageAdorner:imageAdorner];
-            [gridView setNumOfColumns:0];
+//            [gridView setNumOfColumns:0];
             [gridView setEditModeEnabled:YES];
             [demoGridViewController setConfigEnabled:NO];
             demoGridViewController.navigationItem.rightBarButtonItem = [demoGridViewController editButtonItem];
             [gridView setHeaderView:[self testViewWithText:@"Header View"]];
             [gridView setFooterView:[self testViewWithText:@"Footer View"]];            
-            [gridView setFitNumberOfColumnsToFullWidth:YES];
+//            [gridView setFitNumberOfColumnsToFullWidth:YES];
             [gridView setThumbnailCellSize:CGSizeMake(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)];
             [demoGridViewController release];
             
@@ -180,11 +180,11 @@
             [flickrDemoViewController setDataService:dataService];
             [self.navigationController pushViewController:flickrDemoViewController animated:YES];
             
-            CVThumbnailGridView *gridView = [flickrDemoViewController thumbnailView];
+            CVThumbnailView *gridView = [flickrDemoViewController thumbnailView];
             [gridView setImageAdorner:imageAdorner];
-            [gridView setNumOfColumns:0];
+//            [gridView setNumOfColumns:0];
             [gridView setEditModeEnabled:NO];
-            [gridView setFitNumberOfColumnsToFullWidth:YES];
+//            [gridView setFitNumberOfColumnsToFullWidth:YES];
             [gridView setThumbnailCellSize:CGSizeMake(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)];
             [flickrDemoViewController release];
             break;

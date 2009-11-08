@@ -7,9 +7,9 @@
  *
  */
 
-#import "CVThumbnailGridView.h"
-#import "CVThumbnailGridViewCell.h"
-#import "CVThumbnailGridViewController.h"
+#import "CVThumbnailView.h"
+#import "CVThumbnailViewCell.h"
+#import "CVThumbnailViewController.h"
 #import "CVImageAdorner.h"
 #import "CVRoundedRectBorder.h"
 #import "CVPolygonBorder.h"

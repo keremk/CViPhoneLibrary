@@ -11,7 +11,7 @@
 #import "DataServices.h"
 #import "AddItemViewController.h"
 
-@interface DemoGridViewController : CVThumbnailGridViewController <DemoDataServiceDelegate, CVSettingsViewControllerDelegate> {
+@interface DemoGridViewController : CVThumbnailViewController <DemoDataServiceDelegate, CVSettingsViewControllerDelegate> {
     NSMutableArray *demoItems_;
     id<DemoDataService> dataService_;
     BOOL configEnabled_;

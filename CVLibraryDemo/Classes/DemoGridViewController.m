@@ -137,10 +137,13 @@
 - (void) configureGridViewSelected {
     CVSettingsViewController *configViewController = [[[CVSettingsViewController alloc] initWithStyle:UITableViewStyleGrouped] autorelease];
     ConfigOptions *configOptions = [[ConfigOptions alloc] init];
+    configOptions.leftMargin = self.thumbnailView.leftMargin;
+    configOptions.rightMargin = self.thumbnailView.rightMargin;
+    configOptions.columnSpacing = self.thumbnailView.columnSpacing;
     configOptions.thumbnailWidth = self.thumbnailView.thumbnailCellSize.width;
     configOptions.thumbnailHeight = self.thumbnailView.thumbnailCellSize.height;    
-    configOptions.numOfColumns = self.thumbnailView.numOfColumns;
-    configOptions.fitNumberOfColumnsToFullWidth = self.thumbnailView.fitNumberOfColumnsToFullWidth;
+//    configOptions.numOfColumns = self.thumbnailView.numOfColumns;
+//    configOptions.fitNumberOfColumnsToFullWidth = self.thumbnailView.fitNumberOfColumnsToFullWidth;
     configOptions.borderWidth = self.thumbnailView.imageAdorner.borderStyle.width;
     configOptions.borderColor = self.thumbnailView.imageAdorner.borderStyle.color;
     
@@ -199,9 +202,9 @@
     [dataService_ setDelegate:nil];
 }
 
-#pragma mark CVThumbnailGridViewDelegate methods
+#pragma mark CVThumbnailViewDelegate methods
 
-- (NSInteger) numberOfCellsForThumbnailView:(CVThumbnailGridView *)thumbnailView {
+- (NSInteger) numberOfCellsForThumbnailView:(CVThumbnailView *)thumbnailView {
     if (nil == demoItems_) {
         [self loadDemoItems];
         self.thumbnailView.imageLoadingIcon = [UIImage imageNamed:@"LoadingIcon.png"];
@@ -209,10 +212,10 @@
     return [demoItems_ count];
 }
 
-- (CVThumbnailGridViewCell *)thumbnailView:(CVThumbnailGridView *)thumbnailView cellAtIndexPath:(NSIndexPath *)indexPath {
-    CVThumbnailGridViewCell *cell = [thumbnailView dequeueReusableCellWithIdentifier:@"Thumbnails"];
+- (CVThumbnailViewCell *)thumbnailView:(CVThumbnailView *)thumbnailView cellAtIndexPath:(NSIndexPath *)indexPath {
+    CVThumbnailViewCell *cell = [thumbnailView dequeueReusableCellWithIdentifier:@"Thumbnails"];
     if (nil == cell) {
-        cell = [[[CVThumbnailGridViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"Thumbnails"] autorelease];
+        cell = [[[CVThumbnailViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"Thumbnails"] autorelease];
     }
     
     DemoItem *demoItem = (DemoItem *) [demoItems_ objectAtIndex:[indexPath indexForNumOfColumns:[self.thumbnailView numOfColumns]]];
@@ -220,12 +223,12 @@
     return cell;
 }
 
-- (void) thumbnailView:(CVThumbnailGridView *)thumbnailView loadImageForUrl:(NSString *) url forCellAtIndexPath:(NSIndexPath *) indexPath {
+- (void) thumbnailView:(CVThumbnailView *)thumbnailView loadImageForUrl:(NSString *) url forCellAtIndexPath:(NSIndexPath *) indexPath {
     [activeDownloads_ setObject:indexPath forKey:url];
     [dataService_ beginLoadImageForUrl:url]; 
 }
 
-- (void)thumbnailView:(CVThumbnailGridView *)thumbnailView moveCellAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+- (void)thumbnailView:(CVThumbnailView *)thumbnailView moveCellAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
     NSUInteger startingIndex = [fromIndexPath indexForNumOfColumns:[self.thumbnailView numOfColumns]];
     NSUInteger endingIndex = [toIndexPath indexForNumOfColumns:[self.thumbnailView numOfColumns]];
     
@@ -235,12 +238,12 @@
     [demoItem release];
 }
 
-- (void) thumbnailView:(CVThumbnailGridView *)thumbnailView commitEditingStyle:(CVThumbnailGridViewCellEditingStyle) editingStyle forCellAtIndexPath:(NSIndexPath *) indexPath {
+- (void) thumbnailView:(CVThumbnailView *)thumbnailView commitEditingStyle:(CVThumbnailViewCellEditingStyle) editingStyle forCellAtIndexPath:(NSIndexPath *) indexPath {
     switch (editingStyle) {
-        case CVThumbnailGridViewCellEditingStyleInsert:
+        case CVThumbnailViewCellEditingStyleInsert:
             // TODO: We don't have a built-in Insert Action like UITableView yet, so this is never called
             break;
-        case CVThumbnailGridViewCellEditingStyleDelete:
+        case CVThumbnailViewCellEditingStyleDelete:
             [thumbnailView deleteCellsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil]];
             [demoItems_ removeObjectAtIndex:[indexPath indexForNumOfColumns:[thumbnailView numOfColumns]]];
             break;
@@ -250,7 +253,7 @@
 
 }
 
-- (void) thumbnailView:(CVThumbnailGridView *) thumbnailView didSelectCellAtIndexPath:(NSIndexPath *) indexPath {
+- (void) thumbnailView:(CVThumbnailView *) thumbnailView didSelectCellAtIndexPath:(NSIndexPath *) indexPath {
     NSUInteger index = indexPath.row * [thumbnailView numOfColumns] + indexPath.column;
 }
 
@@ -276,8 +279,11 @@
 - (void) configurationUpdatedForGridConfigViewController:(CVSettingsViewController *) controller{
     ConfigOptions *configOptions = controller.settingsData;
         
-    [self.thumbnailView setNumOfColumns:configOptions.numOfColumns];
-    [self.thumbnailView setFitNumberOfColumnsToFullWidth:configOptions.fitNumberOfColumnsToFullWidth];
+//    [self.thumbnailView setNumOfColumns:configOptions.numOfColumns];
+//    [self.thumbnailView setFitNumberOfColumnsToFullWidth:configOptions.fitNumberOfColumnsToFullWidth];
+    [self.thumbnailView setLeftMargin:configOptions.leftMargin];
+    [self.thumbnailView setRightMargin:configOptions.rightMargin];
+    [self.thumbnailView setColumnSpacing:configOptions.columnSpacing];
     [self.thumbnailView setThumbnailCellSize:CGSizeMake(configOptions.thumbnailWidth, configOptions.thumbnailHeight)];
     
     CVBorderStyle *borderStyle = nil;

@@ -4,26 +4,40 @@
 <array>
 	<dict>
 		<key>sectionName</key>
-		<string>GridView General Config</string>
+		<string>View Configuration</string>
 		<key>sectionOptions</key>
 		<array>
 			<dict>
 				<key>identifier</key>
-				<string>BoolCell</string>
+				<string>TextCell</string>
 				<key>label</key>
-				<string>Auto Columns</string>
+				<string>Left Margin</string>
 				<key>keyPath</key>
-				<string>fitNumberOfColumnsToFullWidth</string>
+				<string>leftMargin</string>
 				<key>cellHandlerClass</key>
-				<string>BoolCellHandler</string>
+				<string>TextCellHandler</string>
+				<key>keyboardType</key>
+				<string>Numeric</string>
 			</dict>
 			<dict>
 				<key>identifier</key>
 				<string>TextCell</string>
 				<key>label</key>
-				<string># of Columns</string>
+				<string>Right Margin</string>
 				<key>keyPath</key>
-				<string>numOfColumns</string>
+				<string>rightMargin</string>
+				<key>cellHandlerClass</key>
+				<string>TextCellHandler</string>
+				<key>keyboardType</key>
+				<string>Numeric</string>
+			</dict>
+			<dict>
+				<key>identifier</key>
+				<string>TextCell</string>
+				<key>label</key>
+				<string>Column Spacing</string>
+				<key>keyPath</key>
+				<string>columnSpacing</string>
 				<key>cellHandlerClass</key>
 				<string>TextCellHandler</string>
 				<key>keyboardType</key>
@@ -33,7 +47,7 @@
 	</dict>
 	<dict>
 		<key>sectionName</key>
-		<string>Thumbnail Config</string>
+		<string>Thumbnail Configuration</string>
 		<key>sectionOptions</key>
 		<array>
 			<dict>
@@ -64,7 +78,7 @@
 	</dict>
 	<dict>
 		<key>sectionName</key>
-		<string>Border Config</string>
+		<string>Border Configuration</string>
 		<key>sectionOptions</key>
 		<array>
 			<dict>
@@ -129,7 +143,7 @@
 	</dict>
 	<dict>
 		<key>sectionName</key>
-		<string>Shadow Config</string>
+		<string>Shadow Configuration</string>
 		<key>sectionOptions</key>
 		<array>
 			<dict>
