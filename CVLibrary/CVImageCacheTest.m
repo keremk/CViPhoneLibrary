@@ -10,8 +10,6 @@
 //  Link to OCUnit:	http://www.sente.ch/s/?p=276&lang=en
 //  Link to OCMock:	http://www.mulle-kybernetik.com/software/OCMock/
 
-
-
 #import <UIKit/UIKit.h>
 #import <OCMock/OCMock.h>
 #import <OCMock/OCMConstraint.h>
@@ -33,92 +31,75 @@
 #define TEST_CACHE_SIZE 20000000 // 10M
 #define SMALL_CACHE_SIZE 10000 // 10K
 
-- (void) setUp {
-    // Because (unfortunately) CVImageCache is a singleton not much needed here.
-    // Just initialize with the test cache size, rather than the default one
-    // Do not forget to clear the cache after each test and change memory cache size
+- (void) setUp {    
+    imageCache_ = [[CVImageCache alloc] init]; 
     
-    CVImageCache *imageCache = [CVImageCache sharedCVImageCache]; 
-    
-    [imageCache setMemoryCacheSize:TEST_CACHE_SIZE];     
+    [imageCache_ setMemoryCacheSize:TEST_CACHE_SIZE];     
 }
 
 - (void) testCacheSize {
-    CVImageCache *imageCache = [CVImageCache sharedCVImageCache];
-    NSUInteger size = [imageCache memoryCacheSize];
+    NSUInteger size = [imageCache_ memoryCacheSize];
     STAssertTrue(size == TEST_CACHE_SIZE, @"Size is not set correct");
     
     CVImage *image = [[CVImage alloc] initWithUrl:@"1" indexPath:nil];
-    [imageCache setImage:image];
+    [imageCache_ setImage:image];
     [image release]; 
     image = nil;
         
-    [imageCache setMemoryCacheSize:SMALL_CACHE_SIZE];
+    [imageCache_ setMemoryCacheSize:SMALL_CACHE_SIZE];
     
-    image = [imageCache imageForKey:@"1"];
+    image = [imageCache_ imageForKey:@"1"];
     STAssertTrue(image == nil, @"Changing memory size should clear cache");
     
-    size = [imageCache memoryCacheSize];
+    size = [imageCache_ memoryCacheSize];
     STAssertTrue(size == SMALL_CACHE_SIZE, @"Changing memory size, should return new memory size");
-    
-    // Set the memory back to test size, clear memory cache
-    [imageCache setMemoryCacheSize:TEST_CACHE_SIZE];
 }
 
-- (void) testImageSizeInCache {
-    CVImageCache *imageCache = [CVImageCache sharedCVImageCache];
-    
+- (void) testImageSizeInCache {    
     UIImage *image = [self fakeImageForText:@"1" size:CGSizeMake(80.0, 80.0)];
     NSUInteger imageSize = [image imageMemorySize];
     
     CVImage *cvImage = [[CVImage alloc] initWithUrl:@"1" indexPath:nil];
     [cvImage setImage:image];
-    [imageCache setImage:cvImage];
+    [imageCache_ setImage:cvImage];
     [cvImage release];
     
-    NSUInteger memoryCacheSize = [imageCache currentMemoryCacheSize];
+    NSUInteger memoryCacheSize = [imageCache_ currentMemoryCacheSize];
     STAssertTrue(memoryCacheSize == imageSize, @"Cache memory size should be equal to the sum of mem sizes of images");
-    
-    [imageCache clearMemoryCache];
 }
 
-- (void) testImageSizeChange {
-    CVImageCache *imageCache = [CVImageCache sharedCVImageCache];
-    
+- (void) testImageSizeChange {    
     // Step 1
     UIImage *image = [self fakeImageForText:@"1" size:CGSizeMake(80.0, 80.0)];
     NSUInteger imageSize = [image imageMemorySize];
     CVImage *cvImage = [[CVImage alloc] initWithUrl:@"1" indexPath:nil];
-    [imageCache setImage:cvImage];
-    NSUInteger memoryCacheSize = [imageCache currentMemoryCacheSize];
+    [imageCache_ setImage:cvImage];
+    NSUInteger memoryCacheSize = [imageCache_ currentMemoryCacheSize];
     STAssertTrue(memoryCacheSize == 0, @"When there is no image contents, cache size should stay the same");
     
     // Step 2
     [cvImage setImage:image];    
-    memoryCacheSize = [imageCache currentMemoryCacheSize];    
+    memoryCacheSize = [imageCache_ currentMemoryCacheSize];    
     STAssertTrue(memoryCacheSize == imageSize, @"When the image contents change, cache should update");
     
     // Step 3
     image = [self fakeImageForText:@"1" size:CGSizeMake(150.0, 150.0)];
     imageSize = [image imageMemorySize];    
     [cvImage setImage:image];
-    memoryCacheSize = [imageCache currentMemoryCacheSize];
+    memoryCacheSize = [imageCache_ currentMemoryCacheSize];
     STAssertTrue(memoryCacheSize == imageSize, @"When the image contents change again, cache should update");
     
     [cvImage release];    
-    [imageCache clearMemoryCache];
 }
 
 - (void) testCacheAllocation {
-    CVImageCache *imageCache = [CVImageCache sharedCVImageCache];
-    
     for (NSInteger i = 0; i < 1000; i++) {
         NSString *imageName = [NSString stringWithFormat:@"%d", i];
         CVImage *cvImage = [[CVImage alloc] initWithUrl:imageName indexPath:nil];
-        [imageCache setImage:cvImage];
+        [imageCache_ setImage:cvImage];
         [cvImage release];
     }
-    NSUInteger memoryCacheSize = [imageCache currentMemoryCacheSize];
+    NSUInteger memoryCacheSize = [imageCache_ currentMemoryCacheSize];
     STAssertTrue(memoryCacheSize == 0, @"Should have 0 size, no actual images in memory");
     
     NSUInteger totalSize = 0;
@@ -129,22 +110,20 @@
         NSUInteger imageSize = [image imageMemorySize];
         totalSize += imageSize;
         
-        CVImage *cvImage = [imageCache imageForKey:imageName];
+        CVImage *cvImage = [imageCache_ imageForKey:imageName];
         [cvImage setImage:image];        
     }
-    memoryCacheSize = [imageCache currentMemoryCacheSize];
+    memoryCacheSize = [imageCache_ currentMemoryCacheSize];
     if (totalSize > TEST_CACHE_SIZE) {
         STAssertTrue(memoryCacheSize < totalSize, @"Some images should be deleted and cache should be less than allowed max");
     } else {
         STAssertTrue(memoryCacheSize == totalSize, @"No images deleted, cache should be equal total size of images");
     }
-
-    
-    [imageCache clearMemoryCache];    
 }
 
 - (void) tearDown {
-    // Because CVImageCache is a singleton not much needed here.
+    [imageCache_ clearMemoryCache];
+    [imageCache_ release], imageCache_ = nil;
 }
 
 #pragma mark Helper Functions

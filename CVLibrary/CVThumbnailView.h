@@ -10,6 +10,7 @@
 #import "CVThumbnailViewCell.h"
 #import "CVImageAdorner.h"
 
+
 typedef enum {
    CVThumbnailViewCellEditingStyleNone,
    CVThumbnailViewCellEditingStyleDelete,
@@ -17,6 +18,8 @@ typedef enum {
 } CVThumbnailViewCellEditingStyle;
 
 @protocol CVThumbnailViewDataSource, CVThumbnailViewDelegate;
+
+@class CVImageCache;
 
 /**
  * An instance of thumbnail view is a means for displaying and editing a list of thumbnail images.
@@ -27,6 +30,8 @@ typedef enum {
 	id<CVThumbnailViewDelegate> delegate_;
 	NSInteger numOfRows_; 
     NSInteger thumbnailCount_;
+    
+    CVImageCache *imageCache_;
     
 	CGFloat leftMargin_;
     CGFloat rightMargin_;

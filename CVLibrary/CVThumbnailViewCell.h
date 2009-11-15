@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CVImage.h"
 #import "CVImageAdorner.h"
 #import "CVTitleStyle.h"
 

@@ -77,6 +77,7 @@
 @synthesize showTitles = showTitles_;
 
 - (void)dealloc {
+    [imageCache_ release], imageCache_ = nil;
     [titleStyle_ release], titleStyle_ = nil;
     [imageAdorner_ release], imageAdorner_ = nil;
     [selectedImageAdorner_ release], selectedImageAdorner_ = nil;
@@ -153,6 +154,7 @@
     selectionBorderWidth_ = SELECTION_BORDER_WIDTH_DEFAULT;
     showDefaultSelectionEffect_ = YES;
     showTitles_ = NO;
+    imageCache_ = [[CVImageCache alloc] init];
 }
 
 - (void) setImageAdorner:(CVImageAdorner *) imageAdorner {
@@ -179,7 +181,7 @@
 }
 
 - (void) resetCachedImages {
-    [[CVImageCache sharedCVImageCache] clearMemoryCache];    
+    [imageCache_ clearMemoryCache];    
 }
 
 - (void) reloadData {
@@ -208,11 +210,11 @@
         if (nil != image) {
             UIImage *adornedImage = [adorner adornedImageFromImage:image usingTargetImageSize:self.targetImageSize];
             
-            CVImage *cachedImage = [[CVImageCache sharedCVImageCache] imageForKey:cell.imageUrl];
+            CVImage *cachedImage = [imageCache_ imageForKey:cell.imageUrl];
             if (nil == cachedImage) {
                 cachedImage = [[CVImage alloc] initWithUrl:cell.imageUrl indexPath:cell.indexPath];
                 [cachedImage setImage:adornedImage];
-                [[CVImageCache sharedCVImageCache] setImage:cachedImage];
+                [imageCache_ setImage:cachedImage];
                 [cachedImage release];
             } else {
                 [cachedImage setImage:adornedImage];
@@ -380,7 +382,7 @@
 //        [cell setImageAdorner:imageAdorner_];
         
         if (nil != cell.imageUrl) {
-            CVImage *demoImage = [[CVImageCache sharedCVImageCache] imageForKey:cell.imageUrl];
+            CVImage *demoImage = [imageCache_ imageForKey:cell.imageUrl];
             if (nil == demoImage) {
                 // Start loading the image for url
                 [dataSource_ thumbnailView:self loadImageForUrl:cell.imageUrl forCellAtIndexPath:indexPath];
@@ -460,7 +462,7 @@
     UIImage *adornedImage = [self.imageAdorner adornedImageFromImage:image usingTargetImageSize:self.targetImageSize];
     CVImage *cachedImage = [[CVImage alloc] initWithUrl:url indexPath:indexPath];
     [cachedImage setImage:adornedImage];
-    [[CVImageCache sharedCVImageCache] setImage:cachedImage];
+    [imageCache_ setImage:cachedImage];
     [cachedImage release];
 
     // Set the thumbnail cell in main thread
