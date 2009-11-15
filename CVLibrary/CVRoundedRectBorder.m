@@ -19,8 +19,11 @@
 @synthesize cornerOvalHeight = cornerOvalHeight_;
 @synthesize dimensions = dimensions_;
 @synthesize radius = radius_;
+@synthesize color = color_;
+@synthesize width = width_;
 
 - (void) dealloc {
+    [color_ release], color_ = nil;
     [super dealloc];
 }
 
@@ -97,13 +100,5 @@
     
     return CGSizeMake(self.dimensions.left + self.dimensions.right, self.dimensions.top + self.dimensions.bottom);
 }
-
-- (CGPoint) upperLeftCorner {
-    CGPoint center = CGPointZero;
-    
-    return center;
-}
-
-
 
 @end

@@ -13,8 +13,6 @@
 
 @synthesize borderColor = borderColor_;
 @synthesize borderRoundedRadius = borderRoundedRadius_;
-//@synthesize numOfColumns = numOfColumns_;
-//@synthesize fitNumberOfColumnsToFullWidth = fitNumberOfColumnsToFullWidth_;
 @synthesize thumbnailWidth = thumbnailWidth_;
 @synthesize thumbnailHeight = thumbnailHeight_;
 @synthesize borderWidth = borderWidth_;
@@ -26,6 +24,7 @@
 @synthesize leftMargin = leftMargin_;
 @synthesize rightMargin = rightMargin_;
 @synthesize columnSpacing = columnSpacing_;
+@synthesize rotationAngle = rotationAngle_;
 
 - (void) dealloc {
     [borderColor_ release], borderColor_ = nil;

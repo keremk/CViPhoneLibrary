@@ -7,15 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "CVBorderStyle.h"
 #import "CVShadowStyle.h"
 
 @interface CVImageAdorner : NSObject {
-    CVBorderStyle *borderStyle_;
+    id<CVBorderStyle> borderStyle_;
     CVShadowStyle *shadowStyle_;
 }
 
-@property (nonatomic, retain) CVBorderStyle *borderStyle;
+@property (nonatomic, retain) id<CVBorderStyle> borderStyle;
 @property (nonatomic, retain) CVShadowStyle *shadowStyle;
 
 - (UIImage *) adornedImageFromImage:(UIImage *) image usingTargetImageSize:(CGSize) targetImageSize;

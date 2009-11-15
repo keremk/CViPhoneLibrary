@@ -7,12 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "CVBorderStyle.h"
+#import "CVStyleProtocols.h"
 
-@interface CVPolygonBorder : CVBorderStyle {
+@interface CVPolygonBorder : NSObject<CVBorderStyle> {
+    CGFloat width_;
+    CGFloat rotationAngle_;
+    UIColor *color_;
     NSUInteger numOfSides_;
 }
 
 @property (nonatomic) NSUInteger numOfSides;
-
+@property (nonatomic) CGFloat rotationAngle;
 @end

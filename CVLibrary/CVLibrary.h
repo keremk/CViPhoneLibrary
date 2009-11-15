@@ -14,8 +14,6 @@
 #import "CVRoundedRectBorder.h"
 #import "CVPolygonBorder.h"
 #import "CVEllipseBorder.h"
-#import "CVImageCache.h"
-#import "CVImage.h"
 #import "UIImage+Adornments.h"
 #import "CVSettingsViewController.h"
 #import "CellHandler.h"

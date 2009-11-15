@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BD144F8210AE133C00A249CD /* CVTitleStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = BD144F8010AE133C00A249CD /* CVTitleStyle.h */; };
+		BD144F8310AE133C00A249CD /* CVTitleStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = BD144F8110AE133C00A249CD /* CVTitleStyle.m */; };
+		BD144F8410AE133C00A249CD /* CVTitleStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = BD144F8110AE133C00A249CD /* CVTitleStyle.m */; };
 		BD439A031059C08000CD1CED /* CVPolygonBorder.h in Headers */ = {isa = PBXBuildFile; fileRef = BD439A011059C08000CD1CED /* CVPolygonBorder.h */; };
 		BD439A041059C08000CD1CED /* CVPolygonBorder.m in Sources */ = {isa = PBXBuildFile; fileRef = BD439A021059C08000CD1CED /* CVPolygonBorder.m */; };
 		BD439A051059C08000CD1CED /* CVPolygonBorder.m in Sources */ = {isa = PBXBuildFile; fileRef = BD439A021059C08000CD1CED /* CVPolygonBorder.m */; };
@@ -55,9 +58,6 @@
 		BD80A79A0F8D2EA50067878C /* GTMSenTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = BD80A7950F8D2EA50067878C /* GTMSenTestCase.m */; };
 		BD80A79B0F8D2EA50067878C /* GTMIPhoneUnitTestMain.m in Sources */ = {isa = PBXBuildFile; fileRef = BD80A7970F8D2EA50067878C /* GTMIPhoneUnitTestMain.m */; };
 		BD80A79C0F8D2EA50067878C /* GTMIPhoneUnitTestDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BD80A7980F8D2EA50067878C /* GTMIPhoneUnitTestDelegate.m */; };
-		BD82C4CA1030B34300B9A1CE /* CVBorderStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = BD82C4C81030B34300B9A1CE /* CVBorderStyle.h */; };
-		BD82C4CB1030B34300B9A1CE /* CVBorderStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = BD82C4C91030B34300B9A1CE /* CVBorderStyle.m */; };
-		BD82C4CC1030B34300B9A1CE /* CVBorderStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = BD82C4C91030B34300B9A1CE /* CVBorderStyle.m */; };
 		BD82C4CF1030B3BC00B9A1CE /* CVShadowStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = BD82C4CD1030B3BC00B9A1CE /* CVShadowStyle.h */; };
 		BD82C4D01030B3BC00B9A1CE /* CVShadowStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = BD82C4CE1030B3BC00B9A1CE /* CVShadowStyle.m */; };
 		BD82C4D11030B3BC00B9A1CE /* CVShadowStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = BD82C4CE1030B3BC00B9A1CE /* CVShadowStyle.m */; };
@@ -105,6 +105,8 @@
 
 /* Begin PBXFileReference section */
 		32DBCF5E0370ADEE00C91783 /* CVLibrary_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVLibrary_Prefix.pch; sourceTree = "<group>"; };
+		BD144F8010AE133C00A249CD /* CVTitleStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVTitleStyle.h; sourceTree = "<group>"; };
+		BD144F8110AE133C00A249CD /* CVTitleStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVTitleStyle.m; sourceTree = "<group>"; };
 		BD439A011059C08000CD1CED /* CVPolygonBorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVPolygonBorder.h; sourceTree = "<group>"; };
 		BD439A021059C08000CD1CED /* CVPolygonBorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVPolygonBorder.m; sourceTree = "<group>"; };
 		BD4A29D0101E9BD200044AEE /* CVSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVSettingsViewController.h; sourceTree = "<group>"; };
@@ -143,8 +145,6 @@
 		BD80A7980F8D2EA50067878C /* GTMIPhoneUnitTestDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMIPhoneUnitTestDelegate.m; sourceTree = SOURCE_ROOT; };
 		BD80A7990F8D2EA50067878C /* GTMDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMDefines.h; sourceTree = SOURCE_ROOT; };
 		BD80A79E0F8D3B310067878C /* RunIPhoneUnitTest.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = RunIPhoneUnitTest.sh; sourceTree = SOURCE_ROOT; };
-		BD82C4C81030B34300B9A1CE /* CVBorderStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVBorderStyle.h; sourceTree = "<group>"; };
-		BD82C4C91030B34300B9A1CE /* CVBorderStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVBorderStyle.m; sourceTree = "<group>"; };
 		BD82C4CD1030B3BC00B9A1CE /* CVShadowStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVShadowStyle.h; sourceTree = "<group>"; };
 		BD82C4CE1030B3BC00B9A1CE /* CVShadowStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVShadowStyle.m; sourceTree = "<group>"; };
 		BD82C4D71030CDFF00B9A1CE /* CVStyleProtocols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVStyleProtocols.h; sourceTree = "<group>"; };
@@ -293,8 +293,6 @@
 				BD82C4D71030CDFF00B9A1CE /* CVStyleProtocols.h */,
 				BDF8764C0FBCD5C500D8973C /* CVImageAdorner.h */,
 				BDF8764D0FBCD5C500D8973C /* CVImageAdorner.m */,
-				BD82C4C81030B34300B9A1CE /* CVBorderStyle.h */,
-				BD82C4C91030B34300B9A1CE /* CVBorderStyle.m */,
 				BD82C4CD1030B3BC00B9A1CE /* CVShadowStyle.h */,
 				BD82C4CE1030B3BC00B9A1CE /* CVShadowStyle.m */,
 				BD7B9F600FBF67DB00E49BF7 /* CGUtils.h */,
@@ -305,6 +303,8 @@
 				BD439A021059C08000CD1CED /* CVPolygonBorder.m */,
 				BD6717B3105EE6F400E0ECE3 /* CVEllipseBorder.h */,
 				BD6717B4105EE6F400E0ECE3 /* CVEllipseBorder.m */,
+				BD144F8010AE133C00A249CD /* CVTitleStyle.h */,
+				BD144F8110AE133C00A249CD /* CVTitleStyle.m */,
 			);
 			name = CVImageAdornment;
 			sourceTree = "<group>";
@@ -353,12 +353,12 @@
 				BD4A29E5101E9BD200044AEE /* EnumCellHandler.h in Headers */,
 				BD4A29E7101E9BD200044AEE /* EnumOptionsViewController.h in Headers */,
 				BD4A29E9101E9BD200044AEE /* BoolCellHandler.h in Headers */,
-				BD82C4CA1030B34300B9A1CE /* CVBorderStyle.h in Headers */,
 				BD82C4CF1030B3BC00B9A1CE /* CVShadowStyle.h in Headers */,
 				BD82C4D81030CDFF00B9A1CE /* CVStyleProtocols.h in Headers */,
 				BD797DA71056F43300914624 /* CVRoundedRectBorder.h in Headers */,
 				BD439A031059C08000CD1CED /* CVPolygonBorder.h in Headers */,
 				BD6717B5105EE6F400E0ECE3 /* CVEllipseBorder.h in Headers */,
+				BD144F8210AE133C00A249CD /* CVTitleStyle.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -485,11 +485,11 @@
 				BD4A29DD101E9BD200044AEE /* EnumCellHandler.m in Sources */,
 				BD4A29DE101E9BD200044AEE /* EnumOptionsViewController.m in Sources */,
 				BD4A29DF101E9BD200044AEE /* BoolCellHandler.m in Sources */,
-				BD82C4CC1030B34300B9A1CE /* CVBorderStyle.m in Sources */,
 				BD82C4D11030B3BC00B9A1CE /* CVShadowStyle.m in Sources */,
 				BD797DAA1056F43300914624 /* CVRoundedRectBorder.m in Sources */,
 				BD439A051059C08000CD1CED /* CVPolygonBorder.m in Sources */,
 				BD6717B7105EE6F400E0ECE3 /* CVEllipseBorder.m in Sources */,
+				BD144F8410AE133C00A249CD /* CVTitleStyle.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -510,11 +510,11 @@
 				BD4A29E6101E9BD200044AEE /* EnumCellHandler.m in Sources */,
 				BD4A29E8101E9BD200044AEE /* EnumOptionsViewController.m in Sources */,
 				BD4A29EA101E9BD200044AEE /* BoolCellHandler.m in Sources */,
-				BD82C4CB1030B34300B9A1CE /* CVBorderStyle.m in Sources */,
 				BD82C4D01030B3BC00B9A1CE /* CVShadowStyle.m in Sources */,
 				BD797DA81056F43300914624 /* CVRoundedRectBorder.m in Sources */,
 				BD439A041059C08000CD1CED /* CVPolygonBorder.m in Sources */,
 				BD6717B6105EE6F400E0ECE3 /* CVEllipseBorder.m in Sources */,
+				BD144F8310AE133C00A249CD /* CVTitleStyle.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

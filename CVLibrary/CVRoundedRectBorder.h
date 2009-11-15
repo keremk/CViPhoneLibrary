@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import "CVStyleProtocols.h"
-#import "CVBorderStyle.h"
 
 struct CVBorderDimensions  {
     CGFloat top;
@@ -29,8 +28,11 @@ CVBorderDimensionsMake(CGFloat top, CGFloat right, CGFloat bottom, CGFloat left)
     return dimensions;
 }
 
-@interface CVRoundedRectBorder : CVBorderStyle  {
+@interface CVRoundedRectBorder : NSObject<CVBorderStyle>  {
 @private
+    CGFloat width_;
+    UIColor *color_;
+
     CGFloat cornerOvalWidth_;
     CGFloat cornerOvalHeight_;
     CVBorderDimensions dimensions_;

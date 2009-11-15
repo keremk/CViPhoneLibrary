@@ -7,7 +7,7 @@
  *
  */
 
-@class CVImageAdorner, CVImage;
+@class CVImageAdorner;
 
 @protocol DemoDataServiceDelegate <NSObject>
 @required
@@ -25,6 +25,6 @@
 @optional
 - (void) beginLoadDemoDataForPage:(NSUInteger) pageNo;
 - (void) beginLoadImageForUrl:(NSString *) url;
-//- (void) beginLoadImageForUrl:(NSString *) url usingStyle:(CVImageAdorner *)style;
+- (UIImage *) selectedImageForUrl:(NSString *) url;
 @end
 

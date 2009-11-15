@@ -31,6 +31,12 @@
     [super dealloc];
 }
 
+- (void)viewDidUnload {
+	// Release any retained subviews of the main view.
+	// e.g. self.myOutlet = nil;
+    [dataService_ setDelegate:nil];
+}
+
 - (void) loadDemoItems {
     // Set up the demo items
     if (nil == demoItems_) {
@@ -110,18 +116,7 @@
         int randomId = (arc4random() % 501) + 500;
         NSNumber *demoItemId = [NSNumber numberWithInt:randomId];
         NSString *title = [NSString stringWithFormat:@"Title_%d", randomId];
-        DemoItem *demoItem = [fakeDataService createDummyDemoItemForId:demoItemId title:title url:itemName];
-
-        // Create a fake image for it
-        NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:itemName, @"url", [self.thumbnailView imageAdorner], @"style", nil];
-        UIImage *image = [fakeDataService createFakeImageForUrl:args];
-        
-        // Add to cache if it does not exist yet
-        CVImage *cvImage = [[CVImageCache sharedCVImageCache] imageForKey:itemName];
-        if (nil != cvImage && nil != image) {
-            [cvImage setImage:image];
-        }
-        
+        DemoItem *demoItem = [fakeDataService createDummyDemoItemForId:demoItemId title:title url:itemName];                
         [demoItems_ insertObject:demoItem atIndex:index];
         
         NSIndexPath *indexPath = [NSIndexPath indexPathForIndex:index forNumOfColumns:[self.thumbnailView numOfColumns]];
@@ -142,8 +137,6 @@
     configOptions.columnSpacing = self.thumbnailView.columnSpacing;
     configOptions.thumbnailWidth = self.thumbnailView.thumbnailCellSize.width;
     configOptions.thumbnailHeight = self.thumbnailView.thumbnailCellSize.height;    
-//    configOptions.numOfColumns = self.thumbnailView.numOfColumns;
-//    configOptions.fitNumberOfColumnsToFullWidth = self.thumbnailView.fitNumberOfColumnsToFullWidth;
     configOptions.borderWidth = self.thumbnailView.imageAdorner.borderStyle.width;
     configOptions.borderColor = self.thumbnailView.imageAdorner.borderStyle.color;
     
@@ -167,7 +160,14 @@
         configOptions.numOfSides = 0;
     }
     
-    
+    if ([self.thumbnailView.imageAdorner.borderStyle respondsToSelector:@selector(rotationAngle)]) {
+        // Convert degrees to radians
+        CVPolygonBorder *polygonBorder = (CVPolygonBorder *) self.thumbnailView.imageAdorner.borderStyle;
+        configOptions.rotationAngle = [polygonBorder rotationAngle] * 180.0 / M_PI;
+    } else {
+        configOptions.rotationAngle = 0;
+    }
+
     configOptions.shadowBlur = self.thumbnailView.imageAdorner.shadowStyle.blur;
     configOptions.shadowOffsetWidth = self.thumbnailView.imageAdorner.shadowStyle.offset.width;
     configOptions.shadowOffsetHeight = self.thumbnailView.imageAdorner.shadowStyle.offset.height;    
@@ -196,11 +196,6 @@
 	// Release any cached data, images, etc that aren't in use.
 }
 
-- (void)viewDidUnload {
-	// Release any retained subviews of the main view.
-	// e.g. self.myOutlet = nil;
-    [dataService_ setDelegate:nil];
-}
 
 #pragma mark CVThumbnailViewDelegate methods
 
@@ -220,12 +215,22 @@
     
     DemoItem *demoItem = (DemoItem *) [demoItems_ objectAtIndex:[indexPath indexForNumOfColumns:[self.thumbnailView numOfColumns]]];
     [cell setImageUrl:demoItem.imageUrl];
+    [cell setTitle:demoItem.title];
     return cell;
 }
 
-- (void) thumbnailView:(CVThumbnailView *)thumbnailView loadImageForUrl:(NSString *) url forCellAtIndexPath:(NSIndexPath *) indexPath {
+- (void) thumbnailView:(CVThumbnailView *) thumbnailView loadImageForUrl:(NSString *) url forCellAtIndexPath:(NSIndexPath *) indexPath {
     [activeDownloads_ setObject:indexPath forKey:url];
     [dataService_ beginLoadImageForUrl:url]; 
+}
+
+- (UIImage *) thumbnailView:(CVThumbnailView *) thumbnailView selectedImageForUrl:(NSString *) url forCellAtIndexPath:(NSIndexPath *) indexPath {
+    UIImage *image = nil;
+    
+    if ([dataService_ respondsToSelector:@selector(selectedImageForUrl:)]) {
+        image = [dataService_ selectedImageForUrl:url];
+    }
+    return image;
 }
 
 - (void)thumbnailView:(CVThumbnailView *)thumbnailView moveCellAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
@@ -279,14 +284,12 @@
 - (void) configurationUpdatedForGridConfigViewController:(CVSettingsViewController *) controller{
     ConfigOptions *configOptions = controller.settingsData;
         
-//    [self.thumbnailView setNumOfColumns:configOptions.numOfColumns];
-//    [self.thumbnailView setFitNumberOfColumnsToFullWidth:configOptions.fitNumberOfColumnsToFullWidth];
     [self.thumbnailView setLeftMargin:configOptions.leftMargin];
     [self.thumbnailView setRightMargin:configOptions.rightMargin];
     [self.thumbnailView setColumnSpacing:configOptions.columnSpacing];
     [self.thumbnailView setThumbnailCellSize:CGSizeMake(configOptions.thumbnailWidth, configOptions.thumbnailHeight)];
     
-    CVBorderStyle *borderStyle = nil;
+    id<CVBorderStyle> borderStyle = nil;
     if ([configOptions.shape isEqualToString:ROUNDEDRECT_SHAPE]) {
         borderStyle = [[CVRoundedRectBorder alloc] init];
         if ([borderStyle respondsToSelector:@selector(setRadius:)]) {
@@ -298,6 +301,8 @@
         if ([borderStyle respondsToSelector:@selector(setNumOfSides:)]) {
             CVPolygonBorder *polygonBorder = (CVPolygonBorder *) borderStyle;
             [polygonBorder setNumOfSides:configOptions.numOfSides];
+            CGFloat rotationAngle = configOptions.rotationAngle * M_PI / 180.0;
+            [polygonBorder setRotationAngle:rotationAngle];
         }
     } else if ([configOptions.shape isEqualToString:CIRCLE_SHAPE]) {
         borderStyle = [[CVEllipseBorder alloc] init];

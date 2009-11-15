@@ -27,7 +27,6 @@
 - (id) init {
     self = [super init];
     if (self != nil) {
-        borderStyle_ = [[CVBorderStyle alloc] init];
         shadowStyle_ = [[CVShadowStyle alloc] init];
     }
     return self;
@@ -83,20 +82,16 @@
 
 - (CGSize) paddingRequiredForUpperLeftBadgeSize:(CGSize) badgeSize {
     //  paddingRequiredForUpperLeftBadgeSize: depends on the shadow direction and the shape of the border
-    //  upperLeftCorner: Each border shape defines a point as its designated upperLeftCorner
-    //                   e.g. For rectangle, it is (0,0), 
-    //                        For circle, it is the point on the circle where angle = -45
-
 
     CGSize shadowOffset = self.shadowStyle.offsetWithBlurPixels;
     
     CGFloat widthAdjustment = (shadowOffset.width < 0) ? abs(shadowOffset.width) : 0.0;
     CGFloat heightAdjustment = (shadowOffset.height > 0) ? shadowOffset.height : 0.0;
     
-    CGFloat xPadding = self.borderStyle.upperLeftCorner.x - (badgeSize.width / 2) + widthAdjustment;
+    CGFloat xPadding = widthAdjustment - (badgeSize.width / 2);
     xPadding = (xPadding > 0) ? 0.0 : abs(xPadding);
     
-    CGFloat yPadding = self.borderStyle.upperLeftCorner.y - (badgeSize.width / 2) + heightAdjustment;
+    CGFloat yPadding = heightAdjustment - (badgeSize.width / 2);
     yPadding = (yPadding > 0) ? 0.0 : abs(yPadding);
 
     return CGSizeMake(xPadding, yPadding);

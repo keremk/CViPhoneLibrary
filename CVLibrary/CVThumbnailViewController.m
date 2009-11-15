@@ -1,6 +1,6 @@
 //
-//  ThumbnailViewController.m
-//  ColoringBook
+//  CVThumbnailViewController.m
+//  CVLibrary
 //
 //  Created by Kerem Karatal on 1/22/09.
 //  Copyright 2009 Coding Ventures. All rights reserved.

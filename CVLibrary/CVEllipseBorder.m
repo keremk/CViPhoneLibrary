@@ -15,8 +15,11 @@
 
 @implementation CVEllipseBorder
 @synthesize radius = radius_;
+@synthesize color = color_;
+@synthesize width = width_;
 
 - (void) dealloc {
+    [color_ release], color_ = nil;
     [super dealloc];
 }
 
@@ -58,11 +61,6 @@
     adornedImageSize.width += 2 * self.width;
     adornedImageSize.height += 2 * self.width;
     return adornedImageSize;
-}
-
-- (CGPoint) upperLeftCorner {
-
-    return CGPointZero;
 }
 
 @end

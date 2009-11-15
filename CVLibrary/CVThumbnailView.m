@@ -1,6 +1,6 @@
 //
-//  ThumbnailView.m
-//  ColoringBook
+//  CVThumbnailView.m
+//  CVLibrary
 //
 //  Created by Kerem Karatal on 1/22/09.
 //  Copyright 2009 Coding Ventures. All rights reserved.
@@ -15,7 +15,6 @@
 @interface CVThumbnailView()
 - (void) commonInit;
 - (void) animateThumbnailViewCell:(CVThumbnailViewCell *) cell;
-//- (NSUInteger) calculateNumOfColumns;
 - (CGRect) rectForColumn:(NSUInteger) column row:(NSUInteger) row;
 - (CVThumbnailViewCell *) createCellFromDataSourceForIndexPath:(NSIndexPath *) indexPath;
 - (NSString *) keyFromIndexPath:(NSIndexPath *) indexPath;
@@ -30,13 +29,14 @@
                   withIncrement:(NSInteger) increment
                   excludingCell:(CVThumbnailViewCell *) excludedCell;
 - (void) asyncDoImageAdornmentUsingArgs:(NSDictionary *) args;
-- (void) setThumbnailImage:(NSDictionary *) args;
+- (void) setThumbnailImageWithArgs:(NSDictionary *) args;
 - (void) updateSelectionForNewSelectedIndex:(NSIndexPath *) selectedIndex;
 - (CGSize) targetImageSize;
 - (CGFloat) headerHeight;
 - (CGFloat) footerHeight;
 - (NSInteger) startingRowOnPage;
 - (NSInteger) endingRowOnPage;
+- (void) createAdornedImageForCell:(CVThumbnailViewCell *) cell usingImageAdorner:(CVImageAdorner *) adorner;
 
 @property (nonatomic, readonly) NSOperationQueue *operationQueue;
 @property (nonatomic, retain) UIImage *adornedImageLoadingIcon;
@@ -46,7 +46,6 @@
 @synthesize dataSource = dataSource_;
 @synthesize delegate = delegate_;
 @synthesize numOfRows = numOfRows_;
-//@synthesize numOfColumns = numOfColumns_;
 @synthesize leftMargin = leftMargin_;
 @synthesize rightMargin = rightMargin_;
 @synthesize topMargin = topMargin_;
@@ -55,7 +54,6 @@
 @synthesize columnSpacing = columnSpacing_;
 @synthesize thumbnailCount = thumbnailCount_;
 @synthesize imageAdorner = imageAdorner_;
-//@synthesize fitNumberOfColumnsToFullWidth = fitNumberOfColumnsToFullWidth_;
 @synthesize animateSelection = animateSelection_;
 @synthesize editing = editing_;
 @synthesize editModeEnabled = editModeEnabled_;
@@ -73,9 +71,15 @@
 @synthesize allowsSelection = allowsSelection_;
 @synthesize selectionBorderColor = selectionBorderColor_;
 @synthesize selectionBorderWidth = selectionBorderWidth_;
+@synthesize showDefaultSelectionEffect = showDefaultSelectionEffect_;
+@synthesize selectedImageAdorner = selectedImageAdorner_;
+@synthesize titleStyle = titleStyle_;
+@synthesize showTitles = showTitles_;
 
 - (void)dealloc {
+    [titleStyle_ release], titleStyle_ = nil;
     [imageAdorner_ release], imageAdorner_ = nil;
+    [selectedImageAdorner_ release], selectedImageAdorner_ = nil;
     [reusableThumbnails_ release], reusableThumbnails_ = nil;
     [thumbnailsInUse_ release], thumbnailsInUse_ = nil;
     [adornedImageLoadingIcon_ release], adornedImageLoadingIcon_ = nil;
@@ -98,7 +102,6 @@
 #define TOP_MARGIN_DEFAULT 0.0 // TODO: Top margin is always half of ROW_SPACING 
 #define ROW_SPACING_DEFAULT 10.0
 #define COLUMN_SPACING_DEFAULT 0.0
-//#define COLUMN_COUNT_DEFAULT 1
 #define DELETE_SIGN_SIDE_LENGTH_DEFAULT 34.0
 #define SELECTION_BORDER_WIDTH_DEFAULT 3.0
 
@@ -123,14 +126,14 @@
     topMargin_ = TOP_MARGIN_DEFAULT;
     rowSpacing_ = ROW_SPACING_DEFAULT;
     columnSpacing_ = COLUMN_SPACING_DEFAULT;
-//    numOfColumns_ = COLUMN_COUNT_DEFAULT;
     isAnimated_ = NO;
     animateSelection_ = YES;
-//    fitNumberOfColumnsToFullWidth_ = NO;
     editing_ = NO;
     editModeEnabled_ = NO;
     adornedImageLoadingIcon_ = nil;
-    imageAdorner_ = [[CVImageAdorner alloc] init];     
+    imageAdorner_ = [[CVImageAdorner alloc] init]; 
+    selectedImageAdorner_ = [[CVImageAdorner alloc] init];
+    titleStyle_ = [[CVTitleStyle alloc] init];
     thumbnailsInUse_ = [[NSMutableDictionary alloc] init];
     reusableThumbnails_ = [[NSMutableSet alloc] init];
     firstVisibleRow_ = NSIntegerMax;
@@ -148,6 +151,8 @@
     allowsSelection_ = YES;
     selectionBorderColor_ = [UIColor redColor];
     selectionBorderWidth_ = SELECTION_BORDER_WIDTH_DEFAULT;
+    showDefaultSelectionEffect_ = YES;
+    showTitles_ = NO;
 }
 
 - (void) setImageAdorner:(CVImageAdorner *) imageAdorner {
@@ -173,21 +178,6 @@
     return numOfColumns;
 }
 
-//- (void) setNumOfColumns:(NSInteger) numOfColumns {    
-//    // If numOfColumns == 0, set it to 1, 0 is not expected.
-//    numOfColumns_ = (numOfColumns <= 0) ? 1 : numOfColumns;
-//}
-
-
-//- (NSUInteger) calculateNumOfColumns {
-//    NSUInteger numOfColumns;
-//    CGRect visibleBounds = [self bounds];
-//    CGSize thumbnailCellSize = [self thumbnailCellSize];
-//    numOfColumns = floorf((visibleBounds.size.width - leftMargin_ - rightMargin_)/thumbnailCellSize.width);
-//    numOfColumns = (numOfColumns == 0) ? 1 : numOfColumns;
-//    return numOfColumns;
-//}
-
 - (void) resetCachedImages {
     [[CVImageCache sharedCVImageCache] clearMemoryCache];    
 }
@@ -209,16 +199,41 @@
     [self setNeedsLayout];
 }
 
+#pragma mark Selection 
+
+- (void) createAdornedImageForCell:(CVThumbnailViewCell *) cell usingImageAdorner:(CVImageAdorner *) adorner {
+    if ([dataSource_ respondsToSelector:@selector(thumbnailView:selectedImageForUrl:forCellAtIndexPath:)]) {
+        UIImage *image = [dataSource_ thumbnailView:self selectedImageForUrl:cell.imageUrl forCellAtIndexPath:cell.indexPath];
+        
+        if (nil != image) {
+            UIImage *adornedImage = [adorner adornedImageFromImage:image usingTargetImageSize:self.targetImageSize];
+            
+            CVImage *cachedImage = [[CVImageCache sharedCVImageCache] imageForKey:cell.imageUrl];
+            if (nil == cachedImage) {
+                cachedImage = [[CVImage alloc] initWithUrl:cell.imageUrl indexPath:cell.indexPath];
+                [cachedImage setImage:adornedImage];
+                [[CVImageCache sharedCVImageCache] setImage:cachedImage];
+                [cachedImage release];
+            } else {
+                [cachedImage setImage:adornedImage];
+            }
+            [cell setImage:adornedImage];
+        }
+    }
+}
+
 - (void) updateSelectionForNewSelectedIndex:(NSIndexPath *) selectedIndex {
     if (allowsSelection_ && (selectedIndex != indexPathForSelectedCell_)) {
         // Deselect the previous selection
         CVThumbnailViewCell *cell = [self cellForIndexPath:indexPathForSelectedCell_];
         [cell setSelected:NO];
-        
+        [self createAdornedImageForCell:cell usingImageAdorner:self.imageAdorner];
+
         // Select new selection
         indexPathForSelectedCell_ = selectedIndex;
         cell = [self cellForIndexPath:indexPathForSelectedCell_];
         [cell setSelected:YES];
+        [self createAdornedImageForCell:cell usingImageAdorner:self.selectedImageAdorner];
     }
     if ([delegate_ respondsToSelector:@selector(thumbnailView:didSelectCellAtIndexPath:)]) {
         [delegate_ thumbnailView:self didSelectCellAtIndexPath:selectedIndex];
@@ -226,20 +241,6 @@
 }
 
 #pragma mark Layout 
-
-//- (void) setLeftMargin:(CGFloat) leftMargin {
-//    leftMargin_ = leftMargin;
-//    if (fitNumberOfColumnsToFullWidth_) {
-//        numOfColumns_ = [self calculateNumOfColumns];
-//    }
-//}
-//
-//- (void) setRightMargin:(CGFloat) rightMargin {
-//    rightMargin_ = rightMargin;
-//    if (fitNumberOfColumnsToFullWidth_) {
-//        numOfColumns_ = [self calculateNumOfColumns];
-//    }
-//}
 
 - (CGFloat) headerHeight {
     return (nil != headerView_) ? headerView_.frame.size.height : 0;
@@ -270,20 +271,6 @@
     return rect;
 }
 
-//- (CGFloat) columnSpacing {
-//    CGFloat columnSpacing = 0;
-//    CGSize thumbnailCellSize = [self thumbnailCellSize];
-//    if (columnSpacing_ == COLUMN_SPACING_DEFAULT) {
-//        if (self.numOfColumns > 1) {
-//            columnSpacing = MAX(0, (self.bounds.size.width - (thumbnailCellSize.width * self.numOfColumns) - leftMargin_ - rightMargin_) / (self.numOfColumns - 1));
-//        }
-//    } else {
-//        columnSpacing = columnSpacing_;
-//    }
-//
-//    return columnSpacing;
-//}
-
 - (CVThumbnailViewCell *) dequeueReusableCellWithIdentifier:(NSString *) identifier {
     CVThumbnailViewCell *cell = [reusableThumbnails_ anyObject];
     
@@ -306,9 +293,6 @@
     thumbnailCount_ = [dataSource_ numberOfCellsForThumbnailView:self];    
     CGSize thumbnailCellSize = [self thumbnailCellSize];
 
-//    if (fitNumberOfColumnsToFullWidth_) {
-//        numOfColumns_ = [self calculateNumOfColumns];
-//    }
     numOfRows_ = ceil( (CGFloat) thumbnailCount_ / self.numOfColumns);
 
     if (isAnimated_ || numOfRows_ == 0)
@@ -393,7 +377,7 @@
             [cell setSelected:NO];
         }
 
-        [cell setImageAdorner:imageAdorner_];
+//        [cell setImageAdorner:imageAdorner_];
         
         if (nil != cell.imageUrl) {
             CVImage *demoImage = [[CVImageCache sharedCVImageCache] imageForKey:cell.imageUrl];
@@ -454,6 +438,16 @@
         targetImageSize.width -= paddingRequiredForDeleteSign.width;
         targetImageSize.height -= paddingRequiredForDeleteSign.height;
     }
+    
+    if (self.showTitles) {
+        // Adjust height of the target image size to allocate for title text (single line only)
+        
+        // First use a sample title text. We are only interested in the height based on the specified font in titleStyle. 
+        NSString *sampleTitleText = @"Title";
+        CGSize sizeRequiredForTitle = [sampleTitleText sizeWithFont:self.titleStyle.font];
+        
+        targetImageSize.height -= sizeRequiredForTitle.height;
+    }
 
     return targetImageSize;
 }
@@ -462,7 +456,7 @@
     NSString *url = [args objectForKey:@"url"]; 
     UIImage *image = [args objectForKey:@"image"];
     NSIndexPath *indexPath = [args objectForKey:@"index_path"];
-
+        
     UIImage *adornedImage = [self.imageAdorner adornedImageFromImage:image usingTargetImageSize:self.targetImageSize];
     CVImage *cachedImage = [[CVImage alloc] initWithUrl:url indexPath:indexPath];
     [cachedImage setImage:adornedImage];
@@ -471,10 +465,10 @@
 
     // Set the thumbnail cell in main thread
     NSDictionary *newArgs = [NSDictionary dictionaryWithObjectsAndKeys:adornedImage, @"image", indexPath, @"index_path", nil];
-    [self performSelectorOnMainThread:@selector(setThumbnailImage:) withObject:newArgs waitUntilDone:YES];
+    [self performSelectorOnMainThread:@selector(setThumbnailImageWithArgs:) withObject:newArgs waitUntilDone:YES];
 }
 
-- (void) setThumbnailImage:(NSDictionary *) args{
+- (void) setThumbnailImageWithArgs:(NSDictionary *) args{
     UIImage *image = [args objectForKey:@"image"];
     NSIndexPath *indexPath = [args objectForKey:@"index_path"];
 

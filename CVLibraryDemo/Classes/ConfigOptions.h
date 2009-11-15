@@ -10,8 +10,6 @@
 
 
 @interface ConfigOptions : NSObject {
-//    NSInteger numOfColumns_;
-//    BOOL fitNumberOfColumnsToFullWidth_;
     CGFloat thumbnailWidth_;
     CGFloat thumbnailHeight_;
     CGFloat borderWidth_;
@@ -25,11 +23,10 @@
     CGFloat leftMargin_;
     CGFloat rightMargin_;
     CGFloat columnSpacing_;
+    CGFloat rotationAngle_;
 }
 
 @property (nonatomic, retain) UIColor *borderColor;
-//@property (nonatomic) NSInteger numOfColumns;
-//@property (nonatomic) BOOL fitNumberOfColumnsToFullWidth;
 @property (nonatomic) CGFloat thumbnailWidth;
 @property (nonatomic) CGFloat thumbnailHeight;
 @property (nonatomic) CGFloat borderWidth;
@@ -42,5 +39,6 @@
 @property (nonatomic) CGFloat leftMargin;
 @property (nonatomic) CGFloat rightMargin;
 @property (nonatomic) CGFloat columnSpacing;
+@property (nonatomic) CGFloat rotationAngle;
 
 @end

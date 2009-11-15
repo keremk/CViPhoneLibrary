@@ -1,6 +1,6 @@
 //
-//  ThumbnailView.h
-//  ColoringBook
+//  CVThumbnailView.h
+//  CVLibrary
 //
 //  Created by Kerem Karatal on 1/22/09.
 //  Copyright 2009 Coding Ventures. All rights reserved.
@@ -26,7 +26,6 @@ typedef enum {
 	id<CVThumbnailViewDataSource> dataSource_;
 	id<CVThumbnailViewDelegate> delegate_;
 	NSInteger numOfRows_; 
-//    NSInteger numOfColumns_;
     NSInteger thumbnailCount_;
     
 	CGFloat leftMargin_;
@@ -40,9 +39,11 @@ typedef enum {
 
     BOOL animateSelection_;
     BOOL allowsSelection_;
+    BOOL showDefaultSelectionEffect_;
     CGFloat selectionBorderWidth_;
     UIColor *selectionBorderColor_;
     
+    CVImageAdorner *selectedImageAdorner_;
     CVImageAdorner *imageAdorner_;
     CGSize thumbnailCellSize_;
     
@@ -51,8 +52,6 @@ typedef enum {
     NSMutableDictionary *thumbnailsInUse_;
     NSInteger firstVisibleRow_;
     NSInteger lastVisibleRow_;
-
-//    BOOL fitNumberOfColumnsToFullWidth_;
     
     BOOL editModeEnabled_;
     BOOL editing_;
@@ -72,6 +71,9 @@ typedef enum {
     UIView *footerView_;
 
     NSOperationQueue *operationQueue_;
+    
+    CVTitleStyle *titleStyle_;
+    BOOL showTitles_;
 }
 
 /*!
@@ -141,22 +143,67 @@ typedef enum {
 */
 @property (nonatomic) CGFloat columnSpacing;
 /*!
-    @abstract   Instance of the class used to adorn thumbnails in the thumbnail view.
+    @abstract   Indicates whether the selected thumbnail should be animated when selected
 
-    @discussion There can only be one instance of CVImageAdorner for all the thumbnails in the thumbnail view.
+    @discussion The default is YES. The animation is a built-in one, if you need to provide your own animation for selection, this should be set to NO.
 */
-@property (nonatomic, retain) CVImageAdorner *imageAdorner;
 @property (nonatomic) BOOL animateSelection;
+/*!
+    @abstract   A Boolean value that determines whether the receiver is in editing mode.
+
+    @discussion The default value is NO. When the value of this property is YES, the thumbnail view will be in editing mode. The cells will have a delete sign to enable deleting of a specific cell.
+*/
 @property (nonatomic) BOOL editing;
+/*!
+    @abstract   A UIImage that is shown before the thumbnail in a cell is loaded.
+
+    @discussion Once the thumbnail is loaded this cell is replaced by the actual thumbnail image.
+*/
 @property (nonatomic, retain) UIImage *imageLoadingIcon;
+/*!
+    @abstract   Foreground color of the default delete sign icon.
+
+    @discussion This icon is only shown when the thumbnail view is in editing mode.
+*/
 @property (nonatomic, retain) UIColor *deleteSignForegroundColor;
+/*!
+    @abstract   Background color of the default delete sign icon.
+
+    @discussion This icon is only shown when the thumbnail view is in editing mode.
+*/
 @property (nonatomic, retain) UIColor *deleteSignBackgroundColor;
+/*!
+    @abstract   Side length of the delete sign icon.
+
+    @discussion The default delete sign icon is a square and this specifies the side length of that square.
+*/
 @property (nonatomic) CGFloat deleteSignSideLength;
+/*!
+    @abstract   The optional UIView that is shown in the header part of the thumbnail view.
+
+    @discussion 
+*/
 @property (nonatomic, retain) UIView *headerView;
+/*!
+    @abstract   The optional UIView that is shown in the footer part of the thumbnail view.
+
+    @discussion 
+*/
 @property (nonatomic, retain) UIView *footerView;
+/*!
+    @abstract   Size of thumbnail view cell.
+
+    @discussion This specifies the total size of the cell. The actual image size that is shown is dependent on the editing mode (size required for delete sign) and the image adornments as specified by the CVImageAdorner
+*/
 @property (nonatomic) CGSize thumbnailCellSize;
+/*!
+    @abstract   Index path for the recently selected cell.
+
+    @discussion This is dependent on whether selection is allowed by allowSelection property.
+*/
 @property (nonatomic, readonly) NSIndexPath *indexPathForSelectedCell;
 @property (nonatomic) BOOL allowsSelection;
+@property (nonatomic) BOOL showDefaultSelectionEffect;
 
 /*!
     @abstract   Initializes and returns a thumbnail view object having the given frame
@@ -186,7 +233,20 @@ typedef enum {
     @result     A CVThumbnailViewCell object with the associated identifier or nil if no such object exists in the reusable-cell queue.
 */
 - (CVThumbnailViewCell *) dequeueReusableCellWithIdentifier:(NSString *) identifier;
+/*!
+    @abstract   Returns the thumbnail view cell object for a given index path.
+
+    @discussion 
+    @param      indexPath indexPath for the thumbnail view cell object to be returned.
+    @result     A CVThumbnailViewCell object.
+*/
 - (CVThumbnailViewCell *) cellForIndexPath:(NSIndexPath *) indexPath;
+/*!
+    @abstract   <#(brief description)#>
+
+    @discussion <#(comprehensive description)#>
+    @param      indexPaths <#(description)#>
+*/
 - (void) deleteCellsAtIndexPaths:(NSArray *)indexPaths;
 - (void) insertCellsAtIndexPaths:(NSArray *) indexPaths;
 - (void) image:(UIImage *) image loadedForUrl:(NSString *) url forCellAtIndexPath:(NSIndexPath *) indexPath;
@@ -199,6 +259,7 @@ typedef enum {
 - (CVThumbnailViewCell *)thumbnailView:(CVThumbnailView *)thumbnailView cellAtIndexPath:(NSIndexPath *)indexPath;
 @optional
 - (void) thumbnailView:(CVThumbnailView *)thumbnailView loadImageForUrl:(NSString *) url forCellAtIndexPath:(NSIndexPath *) indexPath;
+- (UIImage *) thumbnailView:(CVThumbnailView *) thumbnailView selectedImageForUrl:(NSString *) url forCellAtIndexPath:(NSIndexPath *) indexPath;
 - (BOOL) thumbnailView:(CVThumbnailView *)thumbnailView canMoveCellAtIndexPath:(NSIndexPath *)indexPath;
 - (void) thumbnailView:(CVThumbnailView *)thumbnailView moveCellAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath;
 - (BOOL) thumbnailView:(CVThumbnailView *)thumbnailView canEditCellAtIndexPath:(NSIndexPath *)indexPath;

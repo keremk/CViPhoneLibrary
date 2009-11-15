@@ -126,12 +126,26 @@
 				<string>borderRoundedRadius</string>
 				<key>cellHandlerClass</key>
 				<string>TextCellHandler</string>
+				<key>keyboardType</key>
+				<string>Numeric</string>
 			</dict>
 			<dict>
 				<key>identifier</key>
 				<string>TextCell</string>
 				<key>label</key>
-				<string># sides</string>
+				<string>Rotation Angle</string>
+				<key>keyPath</key>
+				<string>rotationAngle</string>
+				<key>cellHandlerClass</key>
+				<string>TextCellHandler</string>
+				<key>keyboardType</key>
+				<string>Numeric</string>
+			</dict>
+			<dict>
+				<key>identifier</key>
+				<string>TextCell</string>
+				<key>label</key>
+				<string>Sides</string>
 				<key>keyPath</key>
 				<string>numOfSides</string>
 				<key>cellHandlerClass</key>

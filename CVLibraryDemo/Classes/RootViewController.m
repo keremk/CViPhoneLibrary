@@ -8,8 +8,6 @@
 
 #import "RootViewController.h"
 #import "DataServices.h"
-#import "FakeDataService.h"
-#import "FlickrDataService.h"
 #import "CVLibrary.h"
 #import "DemoGridViewController.h"
 #import "FlickrDemoViewController.h"
@@ -25,12 +23,22 @@
 
 - (void)dealloc {
     [listOfDemos_ release], listOfDemos_ = nil;
+    [flickrDataService_ release], flickrDataService_ = nil;
+    [fakeDataService_ release], fakeDataService_ = nil;
     [super dealloc];
+}
+
+- (void)viewDidUnload {
+	// Release anything that can be recreated in viewDidLoad or on demand.
+	// e.g. self.myOutlet = nil;
 }
 
 - (id) initWithCoder:(NSCoder *) coder {
     if (self = [super initWithCoder:coder]) {
         listOfDemos_ = [[NSArray alloc] initWithObjects:@"Generated Image List", @"Flickr Image List", @"Edit Image List", @"Many Images Demo", nil];
+        flickrDataService_ = [[FlickrDataService alloc] init];
+        [flickrDataService_ cleanupDiskCache];
+        fakeDataService_ = [[FakeDataService alloc] init];
     }
     return self;
 }
@@ -45,12 +53,6 @@
 	
 	// Release any cached data, images, etc that aren't in use.
 }
-
-- (void)viewDidUnload {
-	// Release anything that can be recreated in viewDidLoad or on demand.
-	// e.g. self.myOutlet = nil;
-}
-
 
 #pragma mark Table view methods
 
@@ -97,9 +99,14 @@
 
     CVPolygonBorder *borderStyle = [[CVPolygonBorder alloc] init];
     borderStyle.width = 5.0;
-//    borderStyle.radius = THUMBNAIL_WIDTH / 2;
     borderStyle.color = [UIColor orangeColor];
     borderStyle.numOfSides = 5;
+
+    CVPolygonBorder *selectedBorderStyle = [[CVPolygonBorder alloc] init];
+    selectedBorderStyle.width = 5.0;
+    selectedBorderStyle.color = [UIColor redColor];
+    selectedBorderStyle.numOfSides = 5;
+    
 //
 //    CVEllipseBorder *borderStyle = [[CVEllipseBorder alloc] init];
 //    borderStyle.width = 5.0;
@@ -107,30 +114,29 @@
     
     CVShadowStyle *shadowStyle = [[CVShadowStyle alloc] init];
     shadowStyle.offset = CGSizeMake(-10.0, 10.0);
-//    shadowStyle.offset = CGSizeZero;
     shadowStyle.blur = 5.0;
     
     CVImageAdorner *imageAdorner = [[CVImageAdorner alloc] init];
     imageAdorner.borderStyle = borderStyle;
     imageAdorner.shadowStyle = shadowStyle;
-//    imageAdorner.targetImageSize = CGSizeMake(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
     
-    id<DemoDataService> dataService = nil;
+    CVImageAdorner *selectedImageAdorner = [[CVImageAdorner alloc] init];
+    selectedImageAdorner.borderStyle = selectedBorderStyle;
+    selectedImageAdorner.shadowStyle = shadowStyle;
+    
     switch (indexPath.row) {
         case GENERATED_IMAGE_LIST_DEMO : {
             DemoGridViewController *demoGridViewController = [[DemoGridViewController alloc] initWithNibName:nil bundle:nil];
-            dataService = [[FakeDataService alloc] init];
-            [demoGridViewController setDataService:dataService];
+            [demoGridViewController setDataService:fakeDataService_];
             [self.navigationController pushViewController:demoGridViewController animated:YES];
             
             CVThumbnailView *gridView = [demoGridViewController thumbnailView];
             [gridView setImageAdorner:imageAdorner];
-//            [gridView setNumOfColumns:0];
+            [gridView setSelectedImageAdorner:selectedImageAdorner];
             [gridView setRightMargin:20.0];
             [gridView setLeftMargin:20.0];
             [gridView setEditing:YES];
             [gridView setEditModeEnabled:YES];
-//            [gridView setFitNumberOfColumnsToFullWidth:YES];
             [gridView setThumbnailCellSize:CGSizeMake(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)];
             [demoGridViewController release];
             
@@ -138,37 +144,35 @@
         }
         case FLICKR_IMAGE_LIST_DEMO : {
             DemoGridViewController *demoGridViewController = [[DemoGridViewController alloc] initWithNibName:nil bundle:nil];
-            dataService = [[FlickrDataService alloc] init];
-            [demoGridViewController setDataService:dataService];
+            [demoGridViewController setDataService:flickrDataService_];
             [self.navigationController pushViewController:demoGridViewController animated:YES];
             
             CVThumbnailView *gridView = [demoGridViewController thumbnailView];
             [gridView setImageAdorner:imageAdorner];
-//            [gridView setNumOfColumns:0];
+            [gridView setSelectedImageAdorner:selectedImageAdorner];   
+            [gridView setShowDefaultSelectionEffect:NO];
             [gridView setEditModeEnabled:NO];
-//            [gridView setFitNumberOfColumnsToFullWidth:YES];
             [gridView setThumbnailCellSize:CGSizeMake(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)];
+            [gridView setShowTitles:YES];
             [demoGridViewController release];
             
             break;
         }
         case EDIT_IMAGE_LIST_DEMO : {
             DemoGridViewController *demoGridViewController = [[DemoGridViewController alloc] initWithNibName:nil bundle:nil];
-            dataService = [[FakeDataService alloc] init];
             [demoGridViewController setConfigEnabled:NO];
             demoGridViewController.navigationItem.rightBarButtonItem = [demoGridViewController editButtonItem];
-            [demoGridViewController setDataService:dataService];    
+            [demoGridViewController setDataService:fakeDataService_];    
             [self.navigationController pushViewController:demoGridViewController animated:YES];
             
             CVThumbnailView *gridView = [demoGridViewController thumbnailView];
             [gridView setImageAdorner:imageAdorner];
-//            [gridView setNumOfColumns:0];
+            [gridView setSelectedImageAdorner:selectedImageAdorner];
             [gridView setEditModeEnabled:YES];
             [demoGridViewController setConfigEnabled:NO];
             demoGridViewController.navigationItem.rightBarButtonItem = [demoGridViewController editButtonItem];
             [gridView setHeaderView:[self testViewWithText:@"Header View"]];
             [gridView setFooterView:[self testViewWithText:@"Footer View"]];            
-//            [gridView setFitNumberOfColumnsToFullWidth:YES];
             [gridView setThumbnailCellSize:CGSizeMake(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)];
             [demoGridViewController release];
             
@@ -176,15 +180,14 @@
         }
         case MANY_IMAGES_DEMO : {
             FlickrDemoViewController *flickrDemoViewController = [[FlickrDemoViewController alloc] initWithNibName:nil bundle:nil];
-            dataService = [[FlickrDataService alloc] init];
-            [flickrDemoViewController setDataService:dataService];
+            [flickrDemoViewController setDataService:flickrDataService_];
             [self.navigationController pushViewController:flickrDemoViewController animated:YES];
             
             CVThumbnailView *gridView = [flickrDemoViewController thumbnailView];
             [gridView setImageAdorner:imageAdorner];
-//            [gridView setNumOfColumns:0];
+            [gridView setSelectedImageAdorner:selectedImageAdorner];
             [gridView setEditModeEnabled:NO];
-//            [gridView setFitNumberOfColumnsToFullWidth:YES];
+            [gridView setShowTitles:NO];
             [gridView setThumbnailCellSize:CGSizeMake(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)];
             [flickrDemoViewController release];
             break;
@@ -193,10 +196,12 @@
             break;
     }    
         
-    [borderStyle release];
-    [shadowStyle release];
-    [imageAdorner release];
-    [dataService release];    
+    [borderStyle release], borderStyle = nil;
+    [selectedBorderStyle release], selectedBorderStyle = nil;
+    [shadowStyle release], shadowStyle = nil;
+    [imageAdorner release], imageAdorner = nil;
+    [selectedImageAdorner release], selectedImageAdorner = nil;
+    
 }
 
 - (UIView *) testViewWithText:(NSString *) text {

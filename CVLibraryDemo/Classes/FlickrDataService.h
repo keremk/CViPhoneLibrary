@@ -16,4 +16,6 @@
     NSOperationQueue *operationQueue_;
 }
 
+- (void) cleanupDiskCache;
+
 @end

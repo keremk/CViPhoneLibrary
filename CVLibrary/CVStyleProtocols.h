@@ -7,17 +7,20 @@
  *
  */
 
-@protocol CVRenderStyle
+@protocol CVRenderStyle<NSObject>
 @required
 // Image size is the requested resized image size 
 - (void) drawInContext:(CGContextRef) context forImageSize:(CGSize) imageSize; 
 - (CGSize) sizeRequiredForRendering;
-
-@optional
-- (CGPoint) upperLeftCorner;
 @end
 
 @protocol CVRenderPath
 @required
 - (void) addShapeToPath:(CGMutablePathRef) path boundedByRect:(CGRect) rect;
+@end
+
+@protocol CVBorderStyle<CVRenderStyle> 
+@required
+@property (nonatomic, retain) UIColor *color;
+@property (nonatomic) CGFloat width;
 @end

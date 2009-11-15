@@ -20,6 +20,7 @@
 
 @interface CVImageCacheTest : GTMTestCase {
 	id mock; // Mock object used in tests	
+    CVImageCache *imageCache_;
 }
 
 - (UIImage *) fakeImageForText:(NSString *) text size:(CGSize) size;

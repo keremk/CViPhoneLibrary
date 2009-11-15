@@ -7,9 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "CVBorderStyle.h"
+#import "CVStyleProtocols.h"
 
-@interface CVEllipseBorder : CVBorderStyle {
+@interface CVEllipseBorder : NSObject<CVBorderStyle> {
+    CGFloat width_;
+    UIColor *color_;
+
     CGFloat radius_;
 }
 

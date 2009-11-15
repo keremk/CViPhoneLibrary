@@ -27,6 +27,12 @@
     [super dealloc];
 }
 
+- (void)viewDidUnload {
+	// Release any retained subviews of the main view.
+	// e.g. self.myOutlet = nil;
+    [dataService_ setDelegate:nil];
+}
+
 - (void) loadFlickrItems {
     // Set up the demo items
     if (nil == flickrItems_) {
@@ -72,11 +78,6 @@
 	// Release any cached data, images, etc that aren't in use.
 }
 
-- (void)viewDidUnload {
-	// Release any retained subviews of the main view.
-	// e.g. self.myOutlet = nil;
-    [dataService_ setDelegate:nil];
-}
 
 #pragma mark CVThumbnailViewDelegate methods
 
