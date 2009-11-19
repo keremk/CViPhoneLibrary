@@ -18,8 +18,6 @@
 @synthesize memoryCacheSize = memoryCacheSize_;
 @synthesize currentMemoryCacheSize = currentMemCacheSize_;
 
-//SYNTHESIZE_SINGLETON_FOR_CLASS(CVImageCache)
-
 static NSUInteger const kDefaultMemCacheSize = 10000 * 1024; // 10MB
 
 - (void) dealloc {

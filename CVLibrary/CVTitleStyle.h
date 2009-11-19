@@ -9,6 +9,11 @@
 #import <Foundation/Foundation.h>
 
 
+/*!
+    @abstract   The CVTitleStyle class describes how to render the titles in the thumbnails. 
+
+    @discussion 
+*/
 @interface CVTitleStyle : NSObject {
     UIFont *font_;
     UILineBreakMode lineBreakMode_;
@@ -16,9 +21,29 @@
     UIColor *foregroundColor_;
 }
 
+/*!
+    @abstract   Instance of UIFont class that describes the font to be used. 
+
+    @discussion 
+*/
 @property (nonatomic, retain) UIFont *font;
+/*!
+    @abstract   Describes what happens when the text can not fit on one line. Assumes one-line always.
+
+    @discussion Same as the UILineBreakMode in UIKit.
+*/
 @property (nonatomic) UILineBreakMode lineBreakMode;
+/*!
+    @abstract   Text background color to be used.
+
+    @discussion Stretches the full line regardless of the text length.
+*/
 @property (nonatomic, retain) UIColor *backgroundColor;
+/*!
+    @abstract   Text foreground color to be used.
+
+    @discussion 
+*/
 @property (nonatomic, retain) UIColor *foregroundColor;
 
 @end

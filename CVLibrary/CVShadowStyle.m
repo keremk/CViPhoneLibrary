@@ -32,7 +32,7 @@
     return self;
 }
 
-#define SHADOW_BLUR_PIXELS 3 // Fudge factor used to take into account the fading of blur effect
+#define SHADOW_BLUR_PIXELS 3 // Fudge factor used to take into account the fading of blur effect. This is a HACK!!! We need a better way to calculate this!!!
 
 - (CGPoint) zeroClippedOffsetAsPoint {
     // Take into account the shadow based on its direction

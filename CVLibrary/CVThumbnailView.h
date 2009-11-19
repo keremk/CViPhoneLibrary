@@ -207,8 +207,13 @@ typedef enum {
     @discussion This is dependent on whether selection is allowed by allowSelection property.
 */
 @property (nonatomic, readonly) NSIndexPath *indexPathForSelectedCell;
+/*!
+    @abstract   If allowsSelection is YES, then when a user clicks on a cell, the cell stays selected.
+
+    @discussion 
+*/
 @property (nonatomic) BOOL allowsSelection;
-@property (nonatomic) BOOL showDefaultSelectionEffect;
+
 
 /*!
     @abstract   Initializes and returns a thumbnail view object having the given frame
@@ -241,45 +246,175 @@ typedef enum {
 /*!
     @abstract   Returns the thumbnail view cell object for a given index path.
 
-    @discussion 
+    @discussion This will return the cell even if the cell is not currently visible. If the cell is not in the visible cells list, then the view will ask its data source delegate for the current data it shows.
     @param      indexPath indexPath for the thumbnail view cell object to be returned.
     @result     A CVThumbnailViewCell object.
 */
 - (CVThumbnailViewCell *) cellForIndexPath:(NSIndexPath *) indexPath;
 /*!
-    @abstract   <#(brief description)#>
+    @abstract   Deletes all the cells specified by their index paths. 
 
-    @discussion <#(comprehensive description)#>
-    @param      indexPaths <#(description)#>
+    @discussion If the cells are visible, an animation happens to show deletion effect.
+    @param      indexPaths array of NSIndexPath objects that indicate the cells to be deleted.
 */
 - (void) deleteCellsAtIndexPaths:(NSArray *)indexPaths;
+/*!
+    @abstract   Inserts all the cells specified by their index paths.
+
+    @discussion If the cells are visible, an animation happens to show insert effect. The new cell data is retrieved from the CVThumbnailViewDataSource.
+    @param      indexPaths array of NSIndexPath objects that indicate the cells to be inserted.
+*/
 - (void) insertCellsAtIndexPaths:(NSArray *) indexPaths;
+/*!
+    @abstract   Notify thumbnail view when an image is loaded.
+
+    @discussion This method is called by the data source object of the thumbnail view, when an image is loaded asynchronously, usually in response to the thumbnailView:loadImageForUrl:forCellAtIndexPath: call.
+    @param      image The UIImage object that is loaded.
+    @param      url Url of the image.
+    @param      indexPath NSIndexPath object that describes the index path of the cell for the image.
+    @see CVThumbnailViewDataSource
+*/
 - (void) image:(UIImage *) image loadedForUrl:(NSString *) url forCellAtIndexPath:(NSIndexPath *) indexPath;
 @end
 
 
+/*!
+    @abstract   The CVThumbnailViewDataSource protocol is adopted by a object that mediates the application’s data model for a CVThumbnailView object. 
+    @discussion The data source provides the thumbnail-view object with the information it needs to construct and modify a thumbnail view.
+
+*/
 @protocol CVThumbnailViewDataSource<NSObject>
 @required
+/*!
+    @abstract   Asks the data source to return the number of cells in the thumbnail view.
+
+    @discussion 
+    @param      thumbnailView An object representing the thumbnail view requesting this information.
+    @result     The number of cells in the thumbnail view. 
+*/
 - (NSInteger) numberOfCellsForThumbnailView:(CVThumbnailView *)thumbnailView;
+/*!
+    @abstract   Asks the data source for a cell to insert in a particular location of the thumbnail view. 
+
+    @discussion 
+    @param      thumbnailView A thumbnail view object requesting the cell.
+    @param      indexPath An index path locating a row and column in thumbnailView.
+    @result     A CVThumbnailViewCell object that the thumbnail view can use for the specified row and column. An assertion is raised if you return nil. 
+*/
 - (CVThumbnailViewCell *)thumbnailView:(CVThumbnailView *)thumbnailView cellAtIndexPath:(NSIndexPath *)indexPath;
 @optional
+/*!
+    @abstract   Asks the data source to start loading an image for a given url.
+
+    @discussion Data sources that implement this method, should load the image asynchronously and return from this method as fast as possible. In order for this method to be called, the imageUrl of the CVThumbnailViewCell must be set priorly at the thumbnailView:cellAtIndexPath: implementation.
+    @param      thumbnailView A thumbnail view object requesting the cell.
+    @param      url Url of the image being requested.
+    @param      indexPath An index path locating a row and column in thumbnailView.
+*/
 - (void) thumbnailView:(CVThumbnailView *)thumbnailView loadImageForUrl:(NSString *) url forCellAtIndexPath:(NSIndexPath *) indexPath;
+/*!
+    @abstract   Asks the data source to synchronously return the thumbnail image of the selected cell.
+
+    @discussion It is highly recommended that the image requested is already downloaded and cached locally at this point. The method implementation should return as fast as possible with an image. 
+    @param      thumbnailView A thumbnail view object requesting the cell.
+    @param      url Url of the image being requested.
+    @param      indexPath An index path locating a row and column in thumbnailView.
+    @result     A UIImage object without any adornments. The adornments are applied by the thumbnail view using the selectedImageAdorner object.
+*/
 - (UIImage *) thumbnailView:(CVThumbnailView *) thumbnailView selectedImageForUrl:(NSString *) url forCellAtIndexPath:(NSIndexPath *) indexPath;
+/*!
+    @abstract   Asks the permission from the delegate for the specified cell to be moved.
+
+    @discussion 
+    @param      thumbnailView A thumbnail view object informing the delegate about the new cell selection.
+    @param      indexPath An index path locating a row and column in thumbnailView.
+    @result     Return NO if you do not want the cell to be moved. Otherwise YES.
+*/
 - (BOOL) thumbnailView:(CVThumbnailView *)thumbnailView canMoveCellAtIndexPath:(NSIndexPath *)indexPath;
+/*!
+    @abstract   Tells the delegate that the specified cell is going to be moved to another position.
+
+    @discussion 
+    @param      thumbnailView A thumbnail view object informing the delegate about the new cell selection.
+    @param      fromIndexPath An index path locating a row and column in thumbnailView that indicates the origin of location.
+    @param      toIndexPath An index path locating a row and column in thumbnailView that indicates the new location.
+*/
 - (void) thumbnailView:(CVThumbnailView *)thumbnailView moveCellAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath;
-- (BOOL) thumbnailView:(CVThumbnailView *)thumbnailView canEditCellAtIndexPath:(NSIndexPath *)indexPath;
+/*!
+    @abstract   Asks the permission from the delegate for the specified cell to be edited.
+
+    @discussion The cell is about to be deleted or inserted.
+    @param      thumbnailView A thumbnail view object informing the delegate about the new cell selection.
+    @param      indexPath An index path locating a row and column in thumbnailView.
+    @param      editingStyle The cell editing style corresponding to a insertion or deletion requested for the row specified by indexPath. Possible editing styles are CVThumbnailViewCellEditingStyleDelete or CVThumbnailViewCellEditingStyleInsert.
+    @result     Return NO if you do not want the editing operation to be performed on the cell. Otherwise YES.
+*/
+- (BOOL) thumbnailView:(CVThumbnailView *)thumbnailView canEditCellAtIndexPath:(NSIndexPath *)indexPath usingEditingStyle:(CVThumbnailViewCellEditingStyle) editingStyle;
+/*!
+    @abstract   Asks the data source to commit the insertion or deletion of a specified cell in the receiver.
+
+    @discussion 
+    @param      thumbnailView A thumbnail view object informing the delegate about the new cell selection.
+    @param      editingStyle The cell editing style corresponding to a insertion or deletion requested for the row specified by indexPath. Possible editing styles are CVThumbnailViewCellEditingStyleDelete or CVThumbnailViewCellEditingStyleInsert.
+    @param      indexPath An index path locating a row and column in thumbnailView.
+*/
 - (void) thumbnailView:(CVThumbnailView *)thumbnailView commitEditingStyle:(CVThumbnailViewCellEditingStyle) editingStyle forCellAtIndexPath:(NSIndexPath *) indexPath;
 @end
 
+/*!
+    @abstract   The delegate of a CVThumbnailView object must adopt the CVThumbnailViewDelegate protocol.
+
+    @discussion Optional methods of the protocol allow the delegate to manage selections.
+*/
 @protocol CVThumbnailViewDelegate<NSObject>
 @optional
+/*!
+    @abstract   Tells the delegate that the specified cell is now selected.
+
+    @discussion 
+    @param      thumbnailView A thumbnail view object informing the delegate about the new cell selection.
+    @param      indexPath An index path locating a row and column in thumbnailView.
+*/
 - (void) thumbnailView:(CVThumbnailView *) thumbnailView didSelectCellAtIndexPath:(NSIndexPath *) indexPath;
 @end
 
 
+/*!
+    @abstract   This category on NSIndexPath introduces columns instead of the sections.
+
+    @discussion 
+*/
 @interface NSIndexPath (ThumbnailView)
+/*!
+    @abstract   Returns an instance of NSIndexPath object for a given row and column.
+
+    @discussion Do not use the same NSIndexPath for UITableView objects. UITableView expects a section instead of a column.
+    @param      row Row of the index path.
+    @param      column Column of the index path, replaces the section. 
+    @result     Instance of NSIndexPath object.
+*/
 + (NSIndexPath *) indexPathForRow:(NSUInteger)row column:(NSUInteger)column;
+/*!
+    @abstract   Calculates and returns an instance of NSIndexPath object for given absolute index number and numOfColumns.
+
+    @discussion 
+    @param      index Index is the value calculated by rows * numOfcolumns + column 
+    @param      numOfColumns The number of columns used to calculate the index.
+    @result     Instance of the NSIndexPath object.
+*/
 + (NSIndexPath *) indexPathForIndex:(NSUInteger) index forNumOfColumns:(NSUInteger) numOfColumns;
+/*!
+    @abstract   Column value of the NSIndexPath
+
+    @discussion This value is overloaded by the same value of section. It is mainly a renaming of section to column so that it makes more sense within the context of the thumbnail view.
+*/
 @property (nonatomic, readonly) NSUInteger column;
+/*!
+    @abstract   Returns the index value for given numOfColumns.
+
+    @discussion 
+    @param      numOfColumns The number of columns used to calculate the index.
+    @result     Returns the index as the value calculated by rows * numOfcolumns + column 
+*/
 - (NSUInteger) indexForNumOfColumns:(NSUInteger) numOfColumns;
 @end

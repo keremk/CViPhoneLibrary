@@ -11,6 +11,7 @@
 #import "CVThumbnailView.h"
 #import "UIImage+Adornments.h"
 #import "CVImageCache.h"
+#import "CVThumbnailViewCell_Private.h"
 
 @interface CVThumbnailView()
 - (void) commonInit;
@@ -572,7 +573,7 @@
     }
 }
 
-#pragma mark CVThumbnailGridViewCellDelegate methods 
+#pragma mark CVThumbnailViewCellDelegate methods 
 
 - (UIImage *) adornedImageLoadingIcon {
     if (nil == adornedImageLoadingIcon_) {
@@ -640,8 +641,8 @@
 }
 
 - (void) deleteSignWasTapped:(CVThumbnailViewCell *) cell {
-    if ([dataSource_ respondsToSelector:@selector(thumbnailView:canEditCellAtIndexPath:)]) {
-        if (![dataSource_ thumbnailView:self canEditCellAtIndexPath:cell.indexPath]) 
+    if ([dataSource_ respondsToSelector:@selector(thumbnailView:canEditCellAtIndexPath:usingEditingStyle:)]) {
+        if (![dataSource_ thumbnailView:self canEditCellAtIndexPath:cell.indexPath usingEditingStyle:CVThumbnailViewCellEditingStyleDelete]) 
             return;
     }
 
@@ -650,7 +651,7 @@
     }
 }
 
-- (void)thumbnailGridViewCellWasTapped:(CVThumbnailViewCell *) cell {
+- (void)thumbnailViewCellWasTapped:(CVThumbnailViewCell *) cell {
     if (animateSelection_) {
         [self animateThumbnailViewCell:cell];
     } else {
@@ -659,11 +660,15 @@
     }
 }
 
-- (void)thumbnailGridViewCellStartedTracking:(CVThumbnailViewCell *) cell {
+- (void)thumbnailViewCellStartedTracking:(CVThumbnailViewCell *) cell {
     [self bringSubviewToFront:cell];
 }
 
-- (void)thumbnailGridViewCellMoved:(CVThumbnailViewCell *) draggingThumb {
+- (void)thumbnailViewCellMoved:(CVThumbnailViewCell *) draggingThumb {
+    if ([dataSource_ respondsToSelector:@selector(thumbnailView:canMoveCellAtIndexPath:)]) {
+        if (![dataSource_ thumbnailView:self canMoveCellAtIndexPath:draggingThumb.indexPath]) 
+            return;
+    }
     [self maybeAutoscrollForThumb:draggingThumb];
     
     CGSize thumbnailCellSize = [self thumbnailCellSize];
@@ -705,7 +710,7 @@
     }
 }
 
-- (void)thumbnailGridViewCellStoppedTracking:(CVThumbnailViewCell *) cell {
+- (void)thumbnailViewCellStoppedTracking:(CVThumbnailViewCell *) cell {
     autoscrollDistance_ = 0;
     [autoscrollTimer_ invalidate];
     autoscrollTimer_ = nil;

@@ -14,7 +14,6 @@
 
 
 @implementation CVEllipseBorder
-@synthesize radius = radius_;
 @synthesize color = color_;
 @synthesize width = width_;
 
@@ -29,9 +28,7 @@
     CGSize borderSize = [self sizeAfterRenderingGivenInitialSize:imageSize];
     
     CGRect borderRect = CGRectMake(0.0, 0.0, borderSize.width, borderSize.height);
-    if (self.width > 0.0) {
-        // Prepare the rounded rect path (or simple rect if radius = 0)
-        
+    if (self.width > 0.0) {        
         CGContextBeginPath(context);
         CGContextAddEllipseInRect(context, borderRect);
         CGContextClosePath(context);

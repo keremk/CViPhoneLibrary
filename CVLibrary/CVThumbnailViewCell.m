@@ -7,6 +7,7 @@
 //
 
 #import "CVThumbnailViewCell.h"
+#import "CVThumbnailViewCell_Private.h"
 #import "CVThumbnailView.h"
 #import "CVTitleStyle.h"
 #include "CGUtils.h"
@@ -18,14 +19,6 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
     CGFloat deltaY = a.y - b.y;
     return sqrtf( (deltaX * deltaX) + (deltaY * deltaY) );
 }
-
-@interface CVThumbnailViewCell()
-@property (nonatomic, retain) UIImage *thumbnailImage;
-@property (nonatomic, readonly) CVImageAdorner *imageAdorner;
-- (UIImage *) deleteSignIcon;
-- (CGFloat) deleteSignSideLength;
-- (CGRect) deleteSignRect;
-@end
 
 @implementation CVThumbnailViewCell
 @synthesize delegate = delegate_;
@@ -166,6 +159,10 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
     return CGRectMake(deleteSignOriginX, deleteSignOriginY, self.deleteSignSideLength, self.deleteSignSideLength);
 }
 
+- (UIImage *) image { 
+    return self.thumbnailImage;
+}
+
 - (void) setImage:(UIImage *)image {
     if (nil != image) {
         self.thumbnailImage = image;
@@ -180,8 +177,8 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
         // store the location of the starting touch so we can decide when we've moved far enough to drag
         touchLocation_ = [[touches anyObject] locationInView:self];
 //        NSLog(@"Cell %f, %f", touchLocation_.x, touchLocation_.y);
-        if ([delegate_ respondsToSelector:@selector(thumbnailGridViewCellStartedTracking:)])
-            [delegate_ thumbnailGridViewCellStartedTracking:self];
+        if ([delegate_ respondsToSelector:@selector(thumbnailViewCellStartedTracking:)])
+            [delegate_ thumbnailViewCellStartedTracking:self];
     }
 }
 
@@ -216,14 +213,14 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
                 [delegate_ deleteSignWasTapped:self];
             }
         } else {
-            if ([delegate_ respondsToSelector:@selector(thumbnailGridViewCellWasTapped:)])
-                [delegate_ thumbnailGridViewCellWasTapped:self];
+            if ([delegate_ respondsToSelector:@selector(thumbnailViewCellWasTapped:)])
+                [delegate_ thumbnailViewCellWasTapped:self];
         }
             
     }
     
-    if (editing_ && [delegate_ respondsToSelector:@selector(thumbnailGridViewCellStoppedTracking:)]) 
-        [delegate_ thumbnailGridViewCellStoppedTracking:self];
+    if (editing_ && [delegate_ respondsToSelector:@selector(thumbnailViewCellStoppedTracking:)]) 
+        [delegate_ thumbnailViewCellStoppedTracking:self];
 }
 
 - (void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -231,8 +228,8 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
     
     [self goHome];
     dragging_ = NO;
-    if ([delegate_ respondsToSelector:@selector(thumbnailGridViewCellStoppedTracking:)]) 
-        [delegate_ thumbnailGridViewCellStoppedTracking:self];
+    if ([delegate_ respondsToSelector:@selector(thumbnailViewCellStoppedTracking:)]) 
+        [delegate_ thumbnailViewCellStoppedTracking:self];
 }
 
 - (void) goHome {
@@ -249,8 +246,8 @@ CGFloat distanceBetweenPoints(CGPoint a, CGPoint b) {
     frame.origin.x += offset.x;
     frame.origin.y += offset.y;
     [self setFrame:frame];
-    if ([delegate_ respondsToSelector:@selector(thumbnailGridViewCellMoved:)])
-        [delegate_ thumbnailGridViewCellMoved:self];
+    if ([delegate_ respondsToSelector:@selector(thumbnailViewCellMoved:)])
+        [delegate_ thumbnailViewCellMoved:self];
 }    
 
 @end

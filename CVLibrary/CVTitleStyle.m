@@ -28,7 +28,7 @@
 - (id) init {
     self = [super init];
     if (self != nil) {
-        self.backgroundColor = [UIColor yellowColor];
+        self.backgroundColor = [UIColor whiteColor];
         self.foregroundColor = [UIColor blackColor];
         lineBreakMode_ = UILineBreakModeMiddleTruncation;
         self.font = [UIFont fontWithName:DEFAULT_FONT_FAMILY_NAME size:DEFAULT_FONT_SIZE];

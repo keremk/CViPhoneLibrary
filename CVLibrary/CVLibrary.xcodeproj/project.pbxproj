@@ -75,6 +75,7 @@
 		BDE55D700F90866E004EBA23 /* CVThumbnailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BDE55D650F90866E004EBA23 /* CVThumbnailViewController.m */; };
 		BDE55D710F90866E004EBA23 /* CVThumbnailViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BDE55D660F90866E004EBA23 /* CVThumbnailViewCell.m */; };
 		BDE55D720F90866E004EBA23 /* CVThumbnailView.m in Sources */ = {isa = PBXBuildFile; fileRef = BDE55D670F90866E004EBA23 /* CVThumbnailView.m */; };
+		BDEF9C4910B35515009DC06F /* CVThumbnailViewCell_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = BDEF9C4810B35515009DC06F /* CVThumbnailViewCell_Private.h */; };
 		BDF8764E0FBCD5C500D8973C /* CVImageAdorner.h in Headers */ = {isa = PBXBuildFile; fileRef = BDF8764C0FBCD5C500D8973C /* CVImageAdorner.h */; };
 		BDF8764F0FBCD5C500D8973C /* CVImageAdorner.m in Sources */ = {isa = PBXBuildFile; fileRef = BDF8764D0FBCD5C500D8973C /* CVImageAdorner.m */; };
 		BDF876500FBCD5C500D8973C /* CVImageAdorner.m in Sources */ = {isa = PBXBuildFile; fileRef = BDF8764D0FBCD5C500D8973C /* CVImageAdorner.m */; };
@@ -157,6 +158,7 @@
 		BDE55D670F90866E004EBA23 /* CVThumbnailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVThumbnailView.m; sourceTree = "<group>"; };
 		BDE55D680F90866E004EBA23 /* CVThumbnailViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVThumbnailViewCell.h; sourceTree = "<group>"; };
 		BDE55D690F90866E004EBA23 /* CVThumbnailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVThumbnailView.h; sourceTree = "<group>"; };
+		BDEF9C4810B35515009DC06F /* CVThumbnailViewCell_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVThumbnailViewCell_Private.h; sourceTree = "<group>"; };
 		BDF8764C0FBCD5C500D8973C /* CVImageAdorner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVImageAdorner.h; sourceTree = "<group>"; };
 		BDF8764D0FBCD5C500D8973C /* CVImageAdorner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVImageAdorner.m; sourceTree = "<group>"; };
 		D2AAC07E0554694100DB518D /* libCVLibrary.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCVLibrary.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -251,6 +253,7 @@
 				BDE55D640F90866E004EBA23 /* CVThumbnailViewController.h */,
 				BDE55D650F90866E004EBA23 /* CVThumbnailViewController.m */,
 				BDE55D680F90866E004EBA23 /* CVThumbnailViewCell.h */,
+				BDEF9C4810B35515009DC06F /* CVThumbnailViewCell_Private.h */,
 				BDE55D660F90866E004EBA23 /* CVThumbnailViewCell.m */,
 				BDE55D690F90866E004EBA23 /* CVThumbnailView.h */,
 				BDE55D670F90866E004EBA23 /* CVThumbnailView.m */,
@@ -359,6 +362,7 @@
 				BD439A031059C08000CD1CED /* CVPolygonBorder.h in Headers */,
 				BD6717B5105EE6F400E0ECE3 /* CVEllipseBorder.h in Headers */,
 				BD144F8210AE133C00A249CD /* CVTitleStyle.h in Headers */,
+				BDEF9C4910B35515009DC06F /* CVThumbnailViewCell_Private.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -17,8 +17,6 @@
     NSUInteger currentMemCacheSize_;
 }
 
-//+ (CVImageCache *) sharedCVImageCache;
-
 - (id) init;
 - (void) setImage:(CVImage *) image;
 - (CVImage *) imageForKey:(NSString *) key;

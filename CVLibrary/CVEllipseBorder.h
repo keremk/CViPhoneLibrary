@@ -9,12 +9,14 @@
 #import <Foundation/Foundation.h>
 #import "CVStyleProtocols.h"
 
+/*!
+    @abstract   The CVEllipseBorder class describes how to provide an elliptical border for a given image.
+
+    @discussion The image is cropped to stay within the border. The ellipse is automatically created to fit within the rectangular area of the required final image size.
+*/
 @interface CVEllipseBorder : NSObject<CVBorderStyle> {
     CGFloat width_;
     UIColor *color_;
-
-    CGFloat radius_;
 }
 
-@property (nonatomic) CGFloat radius;
 @end
