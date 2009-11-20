@@ -40,7 +40,7 @@
     CGContextTranslateCTM(context, self.width, self.width);
 
     // Clip the image with inner circle
-    CGRect innerRect = CGRectMake(0, 0, imageSize.width, imageSize.width);
+    CGRect innerRect = CGRectMake(0, 0, imageSize.width, imageSize.height);
     CGContextBeginPath(context);
     CGContextAddEllipseInRect(context, innerRect);
     CGContextClosePath(context);

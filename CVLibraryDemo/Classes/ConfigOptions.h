@@ -24,6 +24,7 @@
     CGFloat rightMargin_;
     CGFloat columnSpacing_;
     CGFloat rotationAngle_;
+    BOOL showTitles_;
 }
 
 @property (nonatomic, retain) UIColor *borderColor;
@@ -40,5 +41,5 @@
 @property (nonatomic) CGFloat rightMargin;
 @property (nonatomic) CGFloat columnSpacing;
 @property (nonatomic) CGFloat rotationAngle;
-
+@property (nonatomic) BOOL showTitles;
 @end

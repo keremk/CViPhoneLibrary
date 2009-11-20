@@ -105,8 +105,8 @@
     char *textChar = malloc(textLen + 1); // +1 for the NULL terminator
     [url getCString:textChar maxLength:textLen + 1 encoding:NSUTF8StringEncoding];
     CGContextSetTextMatrix(context, CGAffineTransformIdentity);
-    CGContextSelectFont(context, "Arial", 64.0, kCGEncodingMacRoman);
-    CGContextShowTextAtPoint(context, 5.0, 10.0, textChar, textLen);
+    CGContextSelectFont(context, "Arial", 40.0, kCGEncodingMacRoman);
+    CGContextShowTextAtPoint(context, 15.0, 18.0, textChar, textLen);
     free(textChar);
     CGImageRef cgImage = CGBitmapContextCreateImage(context);
     UIImage *image = [UIImage imageWithCGImage:cgImage];

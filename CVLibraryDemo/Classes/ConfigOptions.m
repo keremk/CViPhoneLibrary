@@ -25,6 +25,7 @@
 @synthesize rightMargin = rightMargin_;
 @synthesize columnSpacing = columnSpacing_;
 @synthesize rotationAngle = rotationAngle_;
+@synthesize showTitles = showTitles_;
 
 - (void) dealloc {
     [borderColor_ release], borderColor_ = nil;

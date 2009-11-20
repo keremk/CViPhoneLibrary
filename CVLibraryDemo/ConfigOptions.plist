@@ -43,6 +43,16 @@
 				<key>keyboardType</key>
 				<string>Numeric</string>
 			</dict>
+			<dict>
+				<key>identifier</key>
+				<string>BoolCell</string>
+				<key>label</key>
+				<string>Show Titles</string>
+				<key>keyPath</key>
+				<string>showTitles</string>
+				<key>cellHandlerClass</key>
+				<string>BoolCellHandler</string>
+			</dict>
 		</array>
 	</dict>
 	<dict>

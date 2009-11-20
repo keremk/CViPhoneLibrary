@@ -139,6 +139,7 @@
     configOptions.thumbnailHeight = self.thumbnailView.thumbnailCellSize.height;    
     configOptions.borderWidth = self.thumbnailView.imageAdorner.borderStyle.width;
     configOptions.borderColor = self.thumbnailView.imageAdorner.borderStyle.color;
+    configOptions.showTitles = self.thumbnailView.showTitles;
     
     if ([self.thumbnailView.imageAdorner.borderStyle isKindOfClass:[CVRoundedRectBorder class]]) {
         configOptions.shape = ROUNDEDRECT_SHAPE;
@@ -283,7 +284,8 @@
 #pragma mark GridConfigViewControllerDelegate methods
 - (void) configurationUpdatedForGridConfigViewController:(CVSettingsViewController *) controller{
     ConfigOptions *configOptions = controller.settingsData;
-        
+    
+    [self.thumbnailView setShowTitles:configOptions.showTitles];
     [self.thumbnailView setLeftMargin:configOptions.leftMargin];
     [self.thumbnailView setRightMargin:configOptions.rightMargin];
     [self.thumbnailView setColumnSpacing:configOptions.columnSpacing];
