@@ -168,19 +168,19 @@ typedef enum {
 /*!
     @abstract   Foreground color of the default delete sign icon.
 
-    @discussion This icon is only shown when the thumbnail view is in editing mode.
+    @discussion This icon is only shown when the thumbnail view is in editing mode. Default is white.
 */
 @property (nonatomic, retain) UIColor *deleteSignForegroundColor;
 /*!
     @abstract   Background color of the default delete sign icon.
 
-    @discussion This icon is only shown when the thumbnail view is in editing mode.
+    @discussion This icon is only shown when the thumbnail view is in editing mode. Default is black.
 */
 @property (nonatomic, retain) UIColor *deleteSignBackgroundColor;
 /*!
     @abstract   Side length of the delete sign icon.
 
-    @discussion The default delete sign icon is a square and this specifies the side length of that square.
+    @discussion The default delete sign icon is a square and this specifies the side length of that square. Default is 34 pixels.
 */
 @property (nonatomic) CGFloat deleteSignSideLength;
 /*!

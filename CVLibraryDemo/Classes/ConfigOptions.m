@@ -26,8 +26,14 @@
 @synthesize columnSpacing = columnSpacing_;
 @synthesize rotationAngle = rotationAngle_;
 @synthesize showTitles = showTitles_;
+@synthesize editMode = editMode_;
+@synthesize deleteSignSideLength = deleteSignSideLength_;
+@synthesize deleteSignBackgroundColor = deleteSignBackgroundColor_;
+@synthesize deleteSignForegroundColor = deleteSignForegroundColor_;
 
 - (void) dealloc {
+    [deleteSignBackgroundColor_ release], deleteSignBackgroundColor_ = nil;
+    [deleteSignForegroundColor_ release], deleteSignForegroundColor_ = nil;
     [borderColor_ release], borderColor_ = nil;
     [shape_ release], shape_ = nil;
     [super dealloc];
@@ -35,3 +41,4 @@
 
 
 @end
+

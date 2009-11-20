@@ -25,6 +25,10 @@
     CGFloat columnSpacing_;
     CGFloat rotationAngle_;
     BOOL showTitles_;
+    BOOL editMode_;
+    UIColor *deleteSignBackgroundColor_;
+    UIColor *deleteSignForegroundColor_;
+    CGFloat deleteSignSideLength_;
 }
 
 @property (nonatomic, retain) UIColor *borderColor;
@@ -42,4 +46,8 @@
 @property (nonatomic) CGFloat columnSpacing;
 @property (nonatomic) CGFloat rotationAngle;
 @property (nonatomic) BOOL showTitles;
+@property (nonatomic) BOOL editMode;
+@property (nonatomic, retain) UIColor *deleteSignBackgroundColor;
+@property (nonatomic, retain) UIColor *deleteSignForegroundColor;
+@property (nonatomic) CGFloat deleteSignSideLength;
 @end

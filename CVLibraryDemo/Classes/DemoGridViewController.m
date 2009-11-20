@@ -140,6 +140,7 @@
     configOptions.borderWidth = self.thumbnailView.imageAdorner.borderStyle.width;
     configOptions.borderColor = self.thumbnailView.imageAdorner.borderStyle.color;
     configOptions.showTitles = self.thumbnailView.showTitles;
+    configOptions.editMode = self.thumbnailView.editing;
     
     if ([self.thumbnailView.imageAdorner.borderStyle isKindOfClass:[CVRoundedRectBorder class]]) {
         configOptions.shape = ROUNDEDRECT_SHAPE;
@@ -171,7 +172,12 @@
 
     configOptions.shadowBlur = self.thumbnailView.imageAdorner.shadowStyle.blur;
     configOptions.shadowOffsetWidth = self.thumbnailView.imageAdorner.shadowStyle.offset.width;
-    configOptions.shadowOffsetHeight = self.thumbnailView.imageAdorner.shadowStyle.offset.height;    
+    configOptions.shadowOffsetHeight = self.thumbnailView.imageAdorner.shadowStyle.offset.height;  
+    
+    configOptions.deleteSignSideLength = self.thumbnailView.deleteSignSideLength;
+    configOptions.deleteSignBackgroundColor = self.thumbnailView.deleteSignBackgroundColor;
+    configOptions.deleteSignForegroundColor = self.thumbnailView.deleteSignForegroundColor;
+    
     configViewController.settingsData = configOptions;
     [configOptions release];
     
@@ -290,6 +296,7 @@
     [self.thumbnailView setRightMargin:configOptions.rightMargin];
     [self.thumbnailView setColumnSpacing:configOptions.columnSpacing];
     [self.thumbnailView setThumbnailCellSize:CGSizeMake(configOptions.thumbnailWidth, configOptions.thumbnailHeight)];
+    [self.thumbnailView setEditing:configOptions.editMode];
     
     id<CVBorderStyle> borderStyle = nil;
     if ([configOptions.shape isEqualToString:ROUNDEDRECT_SHAPE]) {
@@ -317,6 +324,10 @@
     imageAdorner.borderStyle = borderStyle;
     imageAdorner.shadowStyle.offset = CGSizeMake(configOptions.shadowOffsetWidth, configOptions.shadowOffsetHeight);
     imageAdorner.shadowStyle.blur = configOptions.shadowBlur;
+    
+    [self.thumbnailView setDeleteSignSideLength:configOptions.deleteSignSideLength];
+    [self.thumbnailView setDeleteSignBackgroundColor:configOptions.deleteSignBackgroundColor];
+    [self.thumbnailView setDeleteSignForegroundColor:configOptions.deleteSignForegroundColor];
 
     // Clear the image cache
     [self.thumbnailView resetCachedImages];

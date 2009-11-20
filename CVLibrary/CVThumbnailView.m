@@ -143,7 +143,7 @@
     self.backgroundColor = [UIColor clearColor];
     deleteSignSideLength_ = DELETE_SIGN_SIDE_LENGTH_DEFAULT;
     self.deleteSignBackgroundColor = [UIColor blackColor];
-    self.deleteSignForegroundColor = [UIColor redColor];
+    self.deleteSignForegroundColor = [UIColor whiteColor];
     headerView_ = nil;
     footerView_ = nil;
     operationQueue_ = nil;
@@ -570,6 +570,31 @@
     }
     if (i > 0) {
         [thumbnailsInUse_ removeObjectForKey:[self keyFromIndexPath:[NSIndexPath indexPathForRow:row column:column]]];
+    }
+}
+
+#pragma mark Delete Sign 
+
+- (void) setDeleteSignSideLength:(CGFloat) sideLength {
+    if (deleteSignSideLength_ != sideLength) {
+        deleteSignSideLength_ = sideLength;
+        deleteSignIcon_ = nil;
+    }
+}
+
+- (void) setDeleteSignForegroundColor:(UIColor *) color {
+    if (deleteSignForegroundColor_ != color) {
+        [deleteSignForegroundColor_ release];
+        deleteSignForegroundColor_ = color;
+        deleteSignIcon_ = nil;
+    }
+}
+
+- (void) setDeleteSignBackgroundColor:(UIColor *) color {
+    if (deleteSignBackgroundColor_ != color) {
+        [deleteSignBackgroundColor_ release];
+        deleteSignBackgroundColor_ = color;
+        deleteSignIcon_ = nil;
     }
 }
 

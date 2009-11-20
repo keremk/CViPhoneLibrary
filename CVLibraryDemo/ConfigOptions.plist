@@ -53,6 +53,16 @@
 				<key>cellHandlerClass</key>
 				<string>BoolCellHandler</string>
 			</dict>
+			<dict>
+				<key>identifier</key>
+				<string>BoolCell</string>
+				<key>label</key>
+				<string>Edit Mode</string>
+				<key>keyPath</key>
+				<string>editMode</string>
+				<key>cellHandlerClass</key>
+				<string>BoolCellHandler</string>
+			</dict>
 		</array>
 	</dict>
 	<dict>
@@ -199,6 +209,53 @@
 				<string>shadowBlur</string>
 				<key>cellHandlerClass</key>
 				<string>TextCellHandler</string>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>sectionName</key>
+		<string>Delete Icon Configuration</string>
+		<key>sectionOptions</key>
+		<array>
+			<dict>
+				<key>identifier</key>
+				<string>TextCell</string>
+				<key>label</key>
+				<string>Side Length</string>
+				<key>keyPath</key>
+				<string>deleteSignSideLength</string>
+				<key>cellHandlerClass</key>
+				<string>TextCellHandler</string>
+				<key>keyboardType</key>
+				<string>Numeric</string>
+			</dict>
+			<dict>
+				<key>identifier</key>
+				<string>EnumCell</string>
+				<key>label</key>
+				<string>Background Color</string>
+				<key>keyPath</key>
+				<string>deleteSignBackgroundColor</string>
+				<key>cellHandlerClass</key>
+				<string>EnumCellHandler</string>
+				<key>options</key>
+				<string>red,orange,green,blue,yellow,black,white,cyan,magenta,purple,brown,gray,lightGray,darkGray</string>
+				<key>dataConverter</key>
+				<string>ColorToStringConverter</string>
+			</dict>
+			<dict>
+				<key>identifier</key>
+				<string>EnumCell</string>
+				<key>label</key>
+				<string>Foreground Color</string>
+				<key>keyPath</key>
+				<string>deleteSignForegroundColor</string>
+				<key>cellHandlerClass</key>
+				<string>EnumCellHandler</string>
+				<key>options</key>
+				<string>red,orange,green,blue,yellow,black,white,cyan,magenta,purple,brown,gray,lightGray,darkGray</string>
+				<key>dataConverter</key>
+				<string>ColorToStringConverter</string>
 			</dict>
 		</array>
 	</dict>
