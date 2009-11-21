@@ -108,13 +108,13 @@
 /*!
     @abstract   Border width for the default selection adornment provided by the thumbnail view.
 
-    @discussion The default selection adornment is a rounded rectangle around the whole cell. See showDefaultSelectionEffect to turn this on/off. 
+    @discussion The default selection adornment is a rounded rectangle around the whole cell. See showDefaultSelectionEffect to turn this on/off. Default is 3 pixels.
 */
 @property (nonatomic) CGFloat selectionBorderWidth;
 /*!
     @abstract   Border color for the default selection adornment provided by the thumbnail view.
 
-    @discussion The default selection adornment is a rounded rectangle around the whole cell. See showDefaultSelectionEffect to turn this on/off.
+    @discussion The default selection adornment is a rounded rectangle around the whole cell. See showDefaultSelectionEffect to turn this on/off. Default is red.
 */
 @property (nonatomic, copy) UIColor *selectionBorderColor;
 /*!

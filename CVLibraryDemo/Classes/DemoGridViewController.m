@@ -320,7 +320,7 @@
     borderStyle.color = configOptions.borderColor;
     
     CVImageAdorner *imageAdorner = [self.thumbnailView imageAdorner];
-    
+                                       
     imageAdorner.borderStyle = borderStyle;
     imageAdorner.shadowStyle.offset = CGSizeMake(configOptions.shadowOffsetWidth, configOptions.shadowOffsetHeight);
     imageAdorner.shadowStyle.blur = configOptions.shadowBlur;

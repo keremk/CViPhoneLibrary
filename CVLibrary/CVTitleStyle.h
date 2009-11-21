@@ -24,25 +24,25 @@
 /*!
     @abstract   Instance of UIFont class that describes the font to be used. 
 
-    @discussion 
+    @discussion Default is Verdana, 10pt
 */
 @property (nonatomic, retain) UIFont *font;
 /*!
     @abstract   Describes what happens when the text can not fit on one line. Assumes one-line always.
 
-    @discussion Same as the UILineBreakMode in UIKit.
+    @discussion Same as the UILineBreakMode in UIKit. Default is UILineBreakModeMiddleTruncation
 */
 @property (nonatomic) UILineBreakMode lineBreakMode;
 /*!
     @abstract   Text background color to be used.
 
-    @discussion Stretches the full line regardless of the text length.
+    @discussion Stretches the full line regardless of the text length. Default is white.
 */
 @property (nonatomic, retain) UIColor *backgroundColor;
 /*!
     @abstract   Text foreground color to be used.
 
-    @discussion 
+    @discussion Default is black.
 */
 @property (nonatomic, retain) UIColor *foregroundColor;
 
